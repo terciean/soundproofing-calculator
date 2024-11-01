@@ -3,13 +3,10 @@ import sys
 import os
 import logging
 from pymongo import MongoClient
-import json
+from bson import json_util  # Use this instead of importing bson directly
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
-
-# Initialize Flask
+# Remove duplicate Flask initialization
 app = Flask(__name__)
 
 # Setup logging
