@@ -2,7 +2,8 @@ from flask import Flask, render_template, request, jsonify
 import sys
 import os
 import logging
-from pymongo.mongo_client import MongoClient
+from pymongo import MongoClient
+import json
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -15,11 +16,12 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.DEBUG, format='>>> %(message)s')
 logger = logging.getLogger(__name__)
 
-# MongoDB setup
-MONGODB_URI = os.getenv('MONGODB_URI')
-client = MongoClient(MONGODB_URI)
-
+# MongoDB setup with error handling
 try:
+    MONGODB_URI = os.getenv('MONGODB_URI')
+    if not MONGODB_URI:
+        raise ValueError("MONGODB_URI environment variable not set")
+    client = MongoClient(MONGODB_URI)
     client.admin.command('ping')
     logger.info("Successfully connected to MongoDB Atlas!")
 except Exception as e:
@@ -222,7 +224,5 @@ def index():
     return render_template('index.html', solution_types=solution_types)
 
 if __name__ == '__main__':
-    print("\nStarting Flask app...")
-    print("Current directory:", current_dir)
-    print("Calculator path:", calculator_path)
-    app.run(debug=True, port=5000)
+    port = int(os.getenv('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
