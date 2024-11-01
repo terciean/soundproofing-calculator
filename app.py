@@ -19,28 +19,33 @@ logger.addHandler(handler)
 # MongoDB setup with error handling
 # MongoDB setup with error handling
 # MongoDB setup with error handling
+# MongoDB setup with error handling
 try:
     MONGODB_URI = os.getenv('MONGODB_URI')
     if not MONGODB_URI:
         raise ValueError("MONGODB_URI environment variable not set")
     
-    # Updated connection with correct SSL/TLS options
+    # Simplified connection with minimal options
     client = MongoClient(
         MONGODB_URI,
-        tls=True,
-        tlsAllowInvalidCertificates=True,
-        retryWrites=True,
-        serverSelectionTimeoutMS=10000,
-        connect=True
+        serverSelectionTimeoutMS=30000,
+        connectTimeoutMS=20000,
+        socketTimeoutMS=20000,
+        maxPoolSize=1
     )
     
-    # Test connection with longer timeout
-    client.admin.command('ping', serverSelectionTimeoutMS=10000)
-    logger.info("Successfully connected to MongoDB Atlas!")
+    # Test connection
+    try:
+        # Send a ping to confirm a successful connection
+        client.admin.command('ping')
+        logger.info("Successfully connected to MongoDB Atlas!")
+    except Exception as e:
+        logger.error(f"Ping failed: {e}")
+        raise
+        
 except Exception as e:
     logger.error(f"MongoDB Connection Error: {e}")
     raise
-
 # Database and collections
 db = client["soundproofing"]
 wallsolutions = db["wallsolutions"]
