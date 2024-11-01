@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Soundproofing Calculator</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS -->
+</head>
+<body>
+    <header>
+        <h1>Comprehensive Soundproofing Calculator</h1>
+        <p>Calculate materials and costs for wall solutions.</p>
+    </header>
+
+    <div class="container">
+        <section class="input-section">
+            <h2>Project Specifications</h2>
+            <form id="quoteForm">
+                <label for="length">Length (m):</label>
+                <input type="number" id="length" required step="0.01" min="0">
+
+                <label for="height">Height (m):</label>
+                <input type="number" id="height" required step="0.01" min="0">
+
+                <label for="solutionType">Select Wall Solution:</label>
+                <select id="solutionType" required>
+                    <option value="M20 Standard">M20 Solution (Standard)</option>
+                    <option value="M20 Solution (SP15 Soundboard Upgrade)">M20 Solution (SP15 Soundboard Upgrade)</option>
+                    <option value="Independent Wall (Standard)">Independent Wall (Standard)</option>
+                    <option value="Genie Clip wall (Standard)">Genie Clip wall (Standard)</option>
+                    <option value="Genie Clip wall (SP15 Soundboard Upgrade)">Genie Clip wall (SP15 Soundboard Upgrade)</option>
+                    <option value="Independent Wall (SP15 Soundboard Upgrade)">Independent Wall (SP15 Soundboard Upgrade)</option>
+                    <option value="Resilient Bar Wall (Standard)">Resilient Bar Wall (Standard)</option>
+                    <option value="Resilient Bar Wall (SP15 Soundboard Upgrade)">Resilient Bar Wall (SP15 Soundboard Upgrade)</option>
+                </select>
+
+                <label for="fittingDays">Estimated Fitting Days:</label>
+                <select id="fittingDays">
+                    <option value="0">Select Days</option>
+                    <option value="1">1 Day</option>
+                    <option value="2">2 Days</option>
+                    <option value="3">3 Days</option>
+                    <option value="4">4 Days</option>
+                    <option value="5">5 Days</option>
+                </select>
+
+                <label for="removalRequired">Removal Required:</label>
+                <input type="checkbox" id="removalRequired" onchange="toggleRemovalInput()">
+                <div id="removalAreaInput" style="display:none;">
+                    <label for="removalArea">Area to Remove (m²):</label>
+                    <input type="number" id="removalArea" placeholder="Enter area in m²" min="0">
+                </div>
+
+                <!-- Changed button type to submit -->
+                <button type="submit" id="calculateButton">Calculate Materials and Cost</button>
+            </form>
+        </section>
+
+        <section class="results-section">
+            <h2>Calculation Results</h2>
+            <div class="results-content">
+                <h3>Required Materials:</h3>
+                <div id="materialDetails"></div>
+            </div>
+        </section>
+
+        <!-- Moved and styled total cost section -->
+        <section class="total-cost-section">
+            <h3>Total Solution Cost:</h3>
+            <div class="total-cost-box">
+                Total Cost: £<span id="totalCost">0.00</span> (ex VAT)
+            </div>
+        </section>
+    </div>
+    <section class="summary-section">
+        <h2>Quote Summary</h2>
+        <div id="quoteSummary">
+            <p><strong>Company Name:</strong> <span id="companyName">Soundproofing UK</span></p>
+            <p><strong>Surface Type:</strong> <span id="surfaceType">Walls</span></p>
+            <p><strong>Solution Type:</strong> <span id="solutionTypeDisplay"></span></p>
+            <p><strong>Additional Notes:</strong> <span id="additionalNotes">Only one layer of 12.5mm sound plasterboard.</span></p>
+            <p><strong>Total Cost:</strong> £<span id="totalCostDisplay">0.00</span> (ex VAT)</p>
+            <h3>Materials:</h3>
+            <div id="materialSummary"></div>
+        </div>
+    </section>
+
+    <script src="script.js"></script> <!-- Link to external JavaScript -->
+    
+    <script>
+        // Add the event listener to handle the form submission
+        document.getElementById('quoteForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Gather input values
+            const length = parseFloat(document.getElementById('length').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const solutionType = document.getElementById('solutionType').value;
+            const fittingDays = document.getElementById('fittingDays').value;
+            const removalRequired = document.getElementById('removalRequired').checked;
+            const removalArea = removalRequired ? parseFloat(document.getElementById('removalArea').value) : 0;
+
+            // Make an API request to fetch materials based on the selected solution type
+            const response = await fetch(`/api/materials/${solutionType}`);
+            const materials = await response.json();
+
+            // Here you would call your existing calculation functions
+            const totalCost = calculateTotalCost(materials, length, height, fittingDays, removalArea);
+
+            // Update the result sections with the calculated values
+            document.getElementById('materialDetails').innerHTML = JSON.stringify(materials); // Update with actual material details
+            document.getElementById('totalCost').innerText = totalCost.toFixed(2);
+            document.getElementById('totalCostDisplay').innerText = totalCost.toFixed(2);
+        });
+
+        // Your existing calculateTotalCost function here
+        function calculateTotalCost(materials, length, height, fittingDays, removalArea) {
+            let total = 0;
+            // Perform calculations based on materials and inputs
+            // Example calculation
+            materials.forEach(material => {
+                total += material.cost; // This would depend on your specific logic
+            });
+            return total; // Return the total cost
+        }
+
+        // Add your existing toggleRemovalInput function here
+        function toggleRemovalInput() {
+            const removalInputArea = document.getElementById('removalAreaInput');
+            removalInputArea.style.display = removalInputArea.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soundproofing Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Soundproofing Calculator</h1>
+        </header>
+
+        <main>
+            <!-- Display Errors -->
+            {% if error and message %}
+            <div class="error-container">
+                <h2>{{ error }}</h2>
+                <p class="error-message">{{ message }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Calculator Form -->
+            <form action="/" method="POST" class="calculator-form">
+                <div class="form-group">
+                    <label for="length">Wall Length (meters):</label>
+                    <input type="number" id="length" name="length" step="0.01" min="0.1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="height">Wall Height (meters):</label>
+                    <input type="number" id="height" name="height" step="0.01" min="0.1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="surfaceType">Surface Type:</label>
+                    <select id="surfaceType" name="surfaceType" required>
+                        <option value="walls" {% if request.form.get('surfaceType') == 'walls' %}selected{% endif %}>Walls</option>
+                        <option value="ceilings" {% if request.form.get('surfaceType') == 'ceilings' %}selected{% endif %}>Ceilings</option>
+                        <option value="floors" {% if request.form.get('surfaceType') == 'floors' %}selected{% endif %}>Floors</option>
+                    </select>
+                </div>
+                
+                <!-- Solution Type Select Element -->
+                <div class="form-group">
+                    <label for="solutionType">Solution Type:</label>
+                    <select id="solutionType" name="solutionType" required>
+                        {% for solution in solution_types %}
+                        <option value="{{ solution }}" {% if request.form.get('solutionType') == solution %}selected{% endif %}>{{ solution }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Installation Days Select -->
+                <div class="form-group">
+                    <label for="fittingDays">Installation Days (£685 per day inc. VAT):</label>
+                    <select id="fittingDays" name="fittingDays" required>
+                        <option value="0">No Installation Required</option>
+                        <option value="1">1 Day (£685)</option>
+                        <option value="2">2 Days (£1,370)</option>
+                        <option value="3">3 Days (£2,055)</option>
+                        <option value="4">4 Days (£2,740)</option>
+                        <option value="5">5 Days (£3,425)</option>
+                        <option value="6">6 Days (£4,110)</option>
+                        <option value="7">7 Days (£4,795)</option>
+                        <option value="8">8 Days (£5,480)</option>
+                    </select>
+                </div>
+
+                <!-- Removal Fee Section -->
+                <div class="form-group">
+                    <label for="removalRequired">Include Removal Fee (£25 per m²):</label>
+                    <select id="removalRequired" name="removalRequired" required>
+                        <option value="no">No</option>
+                        <option value="yes">Yes - £25 per m²</option>
+                    </select>
+                </div>
+
+                <!-- Removal Dimensions (initially hidden) -->
+                <div id="removalDimensions" class="form-group" style="display: none;">
+                    <div class="form-group">
+                        <label for="removalLength">Removal Area Length (meters):</label>
+                        <input type="number" id="removalLength" name="removalLength" step="0.01" min="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label for="removalHeight">Removal Area Height (meters):</label>
+                        <input type="number" id="removalHeight" name="removalHeight" step="0.01" min="0.1">
+                    </div>
+                </div>
+
+                <button type="submit" class="calculate-btn">Calculate Materials</button>
+            </form>
+
+            <!-- Display Results -->
+            {% if results and solution %}
+            <div class="results-container">
+                <h2>Calculation Results</h2>
+                
+                <!-- Solution Details -->
+                <div class="solution-details">
+                    <h3>{{ solution_type }}</h3>
+                    <p class="area-info">Total Area: {{ "%.2f"|format(area) }} m²</p>
+                </div>
+
+                <!-- Materials Table -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Material</th>
+                            <th>Coverage per Unit</th>
+                            <th>Required Quantity</th>
+                            <th>Unit Cost</th>
+                            <th>Total Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in results %}
+                        <tr>
+                            <td>{{ item.name|default('') }}</td>
+                            <td>{{ item.coverage|default('') }}</td>
+                            <td>{{ item.quantity|default('') }}</td>
+                            <td>£{{ "%.2f"|format(item.unit_cost|default(0)) }}</td>
+                            <td>£{{ "%.2f"|format(item.total_cost|default(0)) }}</td>
+                        </tr>
+                        {% endfor %}
+
+                        <!-- Total Row -->
+                        {% set materials_cost = namespace(value=0) %}
+                        {% for item in results %}
+                            {% if not item.name.startswith('Installation Fee') and item.name != 'Removal Fee' %}
+                                {% set materials_cost.value = materials_cost.value + item.total_cost %}
+                            {% endif %}
+                        {% endfor %}
+                        {% set total_cost = results|sum(attribute='total_cost') %}
+                        <tr class="total-row">
+                            <td colspan="4"><strong>Total Cost</strong></td>
+                            <td><strong>£{{ "%.2f"|format(total_cost) }}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Cost Breakdown Section -->
+                <div class="cost-breakdown">
+                    <h3>Cost Breakdown:</h3>
+                    <ul>
+                        <li>Materials Cost: £{{ "%.2f"|format(materials_cost.value) }}</li>
+                        {% if request.form.get('fittingDays')|int > 0 %}
+                            {% for item in results %}
+                                {% if item.name.startswith('Installation Fee') %}
+                                    <li>Installation Cost ({{ request.form.get('fittingDays') }} days): £{{ "%.2f"|format(item.total_cost) }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if request.form.get('removalRequired') == 'yes' %}
+                            {% for item in results %}
+                                {% if item.name == 'Removal Fee' %}
+                                    <li>Removal Cost ({{ "%.2f"|format(item.quantity) }} m²): £{{ "%.2f"|format(item.total_cost) }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <!-- Notes Section -->
+                {% if solution.notes %}
+                <div class="notes">
+                    <h3>Important Notes:</h3>
+                    <ul>
+                        {% for note in solution.notes %}
+                        <li>{{ note }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <div class="notes">
+                    <h3>General Notes:</h3>
+                    <ul>
+                        <li>Coverage values are per unit of material</li>
+                        <li>Installation fee is £685 per day (including VAT)</li>
+                        <li>Removal fee is £25 per m²</li>
+                    </ul>
+                </div>
+
+                <!-- Back Button -->
+                <div class="button-container">
+                    <a href="/" class="back-button">Calculate Another</a>
+                </div>
+            </div>
+            {% endif %}
+        </main>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const surfaceTypeSelect = document.getElementById('surfaceType');
+            const solutionTypeSelect = document.getElementById('solutionType');
+            const lengthLabel = document.querySelector('label[for="length"]');
+            const heightLabel = document.querySelector('label[for="height"]');
+            const removalRequiredSelect = document.getElementById('removalRequired');
+            const removalDimensions = document.getElementById('removalDimensions');
+
+            function updateDimensionLabels(surfaceType) {
+                if (surfaceType === 'ceilings') {
+                    lengthLabel.textContent = 'Ceiling Length (meters):';
+                    heightLabel.textContent = 'Ceiling Width (meters):';
+                } else if (surfaceType === 'walls') {
+                    lengthLabel.textContent = 'Wall Length (meters):';
+                    heightLabel.textContent = 'Wall Height (meters):';
+                }
+            }
+
+            function updateSolutionTypes(surfaceType) {
+                fetch(`/get_solutions/${surfaceType}`)
+                    .then(response => response.json())
+                    .then(solutions => {
+                        solutionTypeSelect.innerHTML = '';
+                        solutions.forEach(solution => {
+                            const option = document.createElement('option');
+                            option.value = solution;
+                            option.textContent = solution;
+                            solutionTypeSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching solutions:', error));
+            }
+
+            surfaceTypeSelect.addEventListener('change', function() {
+                const selectedSurfaceType = this.value;
+                updateSolutionTypes(selectedSurfaceType);
+                updateDimensionLabels(selectedSurfaceType);
+            });
+
+            removalRequiredSelect.addEventListener('change', function() {
+                if (this.value === 'yes') {
+                    removalDimensions.style.display = 'block';
+                    document.getElementById('removalLength').required = true;
+                    document.getElementById('removalHeight').required = true;
+                } else {
+                    removalDimensions.style.display = 'none';
+                    document.getElementById('removalLength').required = false;
+                    document.getElementById('removalHeight').required = false;
+                }
+            });
+
+            // Initial updates
+            updateSolutionTypes(surfaceTypeSelect.value);
+            updateDimensionLabels(surfaceTypeSelect.value);
+            if (removalRequiredSelect.value === 'yes') {
+                removalDimensions.style.display = 'block';
+                document.getElementById('removalLength').required = true;
+                document.getElementById('removalHeight').required = true;
+            }
+        });
+    </script>
+</body>
+</html>
