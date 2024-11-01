@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: soundproofing-calculator
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: MONGODB_URI
+        value: mongodb+srv://guyrazor:bell123lol123@cluster0.rxg93.mongodb.net/soundproofing?retryWrites=true&w=majority&tls=true
+    healthCheckPath: /
+    autoDeploy: true
