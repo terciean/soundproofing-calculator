@@ -17,22 +17,25 @@ logger.addHandler(handler)
 
 # Setup logging
 # MongoDB setup with error handling
+# MongoDB setup with error handling
 try:
     MONGODB_URI = os.getenv('MONGODB_URI')
     if not MONGODB_URI:
         raise ValueError("MONGODB_URI environment variable not set")
     
-    # Updated connection with SSL settings
+    # Updated connection with more SSL/TLS options
     client = MongoClient(
         MONGODB_URI,
         tls=True,
-        tlsAllowInvalidCertificates=False,
+        tlsAllowInvalidCertificates=True,  # Changed to True for testing
         retryWrites=True,
-        serverSelectionTimeoutMS=5000
+        serverSelectionTimeoutMS=5000,
+        ssl_cert_reqs=None,  # Added this option
+        connect=True  # Added this option
     )
     
-    # Test connection
-    client.admin.command('ping')
+    # Test connection with longer timeout
+    client.admin.command('ping', serverSelectionTimeoutMS=10000)
     logger.info("Successfully connected to MongoDB Atlas!")
 except Exception as e:
     logger.error(f"MongoDB Connection Error: {e}")
