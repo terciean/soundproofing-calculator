@@ -8,17 +8,30 @@ from dotenv import load_dotenv
 
 # Remove duplicate Flask initialization
 app = Flask(__name__)
+# Setup logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+handler = logging.StreamHandler(sys.stdout)
+handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+logger.addHandler(handler)
 
 # Setup logging
-logging.basicConfig(level=logging.DEBUG, format='>>> %(message)s')
-logger = logging.getLogger(__name__)
-
 # MongoDB setup with error handling
 try:
     MONGODB_URI = os.getenv('MONGODB_URI')
     if not MONGODB_URI:
         raise ValueError("MONGODB_URI environment variable not set")
-    client = MongoClient(MONGODB_URI)
+    
+    # Updated connection with SSL settings
+    client = MongoClient(
+        MONGODB_URI,
+        tls=True,
+        tlsAllowInvalidCertificates=False,
+        retryWrites=True,
+        serverSelectionTimeoutMS=5000
+    )
+    
+    # Test connection
     client.admin.command('ping')
     logger.info("Successfully connected to MongoDB Atlas!")
 except Exception as e:
