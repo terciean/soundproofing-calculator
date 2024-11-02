@@ -193,8 +193,10 @@
     </div>
 
     <!-- JavaScript -->
+    <!-- Replace just the JavaScript section at the bottom of your file -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded');
             const surfaceTypeSelect = document.getElementById('surfaceType');
             const solutionTypeSelect = document.getElementById('solutionType');
             const lengthLabel = document.querySelector('label[for="length"]');
@@ -203,6 +205,7 @@
             const removalDimensions = document.getElementById('removalDimensions');
 
             function updateDimensionLabels(surfaceType) {
+                console.log('Updating dimension labels for:', surfaceType);
                 if (surfaceType === 'ceilings') {
                     lengthLabel.textContent = 'Ceiling Length (meters):';
                     heightLabel.textContent = 'Ceiling Width (meters):';
@@ -212,28 +215,54 @@
                 }
             }
 
-            function updateSolutionTypes(surfaceType) {
-                fetch(`/get_solutions/${surfaceType}`)
-                    .then(response => response.json())
-                    .then(solutions => {
-                        solutionTypeSelect.innerHTML = '';
-                        solutions.forEach(solution => {
-                            const option = document.createElement('option');
-                            option.value = solution;
-                            option.textContent = solution;
-                            solutionTypeSelect.appendChild(option);
-                        });
-                    })
-                    .catch(error => console.error('Error fetching solutions:', error));
+            async function updateSolutionTypes(surfaceType) {
+                try {
+                    console.log('Fetching solutions for:', surfaceType);
+                    const response = await fetch(`/get_solutions/${surfaceType}`);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const solutions = await response.json();
+                    console.log('Solutions received:', solutions);
+
+                    if (!Array.isArray(solutions)) {
+                        throw new Error('Received invalid solutions data');
+                    }
+
+                    // Store current selection if it exists
+                    const currentSelection = solutionTypeSelect.value;
+                    
+                    // Clear and update options
+                    solutionTypeSelect.innerHTML = '';
+                    solutions.forEach(solution => {
+                        const option = document.createElement('option');
+                        option.value = solution;
+                        option.textContent = solution;
+                        if (solution === currentSelection) {
+                            option.selected = true;
+                        }
+                        solutionTypeSelect.appendChild(option);
+                    });
+
+                    console.log('Solutions updated successfully');
+                } catch (error) {
+                    console.error('Error updating solutions:', error);
+                    // Add fallback behavior
+                    solutionTypeSelect.innerHTML = '<option value="">Error loading solutions</option>';
+                }
             }
 
             surfaceTypeSelect.addEventListener('change', function() {
+                console.log('Surface type changed to:', this.value);
                 const selectedSurfaceType = this.value;
                 updateSolutionTypes(selectedSurfaceType);
                 updateDimensionLabels(selectedSurfaceType);
             });
 
             removalRequiredSelect.addEventListener('change', function() {
+                console.log('Removal required changed to:', this.value);
                 if (this.value === 'yes') {
                     removalDimensions.style.display = 'block';
                     document.getElementById('removalLength').required = true;
@@ -245,13 +274,18 @@
                 }
             });
 
-            // Initial updates
-            updateSolutionTypes(surfaceTypeSelect.value);
-            updateDimensionLabels(surfaceTypeSelect.value);
-            if (removalRequiredSelect.value === 'yes') {
-                removalDimensions.style.display = 'block';
-                document.getElementById('removalLength').required = true;
-                document.getElementById('removalHeight').required = true;
+            // Initial updates with error handling
+            try {
+                console.log('Performing initial updates');
+                updateSolutionTypes(surfaceTypeSelect.value);
+                updateDimensionLabels(surfaceTypeSelect.value);
+                if (removalRequiredSelect.value === 'yes') {
+                    removalDimensions.style.display = 'block';
+                    document.getElementById('removalLength').required = true;
+                    document.getElementById('removalHeight').required = true;
+                }
+            } catch (error) {
+                console.error('Error during initial setup:', error);
             }
         });
     </script>
