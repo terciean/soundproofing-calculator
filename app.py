@@ -197,11 +197,15 @@ def index():
 
             # Get solution from database
                         # Get solution from database
+                        # Get solution from database
             collection = wallsolutions if surface_type == 'walls' else ceilingsolutions
             
-            logger.info(f"DEBUG - Searching for exact solution: '{solution_type}'")
+            # Debug: List all solutions in the collection
+            all_solutions = list(collection.find({}, {'solution': 1, '_id': 0}))
+            logger.info(f"Available solutions in database: {all_solutions}")
+            logger.info(f"Looking for solution type: '{solution_type}'")
+            
             solution = collection.find_one({'solution': solution_type})
-            logger.info(f"DEBUG - Query result: {solution}")
             if not solution:
                 logger.error(f"Solution not found in database. Searched for: {solution_type}")
                 return render_template('index.html',
