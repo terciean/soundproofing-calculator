@@ -5,94 +5,80 @@ class IndependentWallStandard:
     Calculates materials for the Independent Wall (Standard) solution.
     Accounts for 2 layers of 12.5mm Sound Plasterboard and applies material-specific wastage.
     """
-    def __init__(self, length, height):
-        self.length = float(length)
-        self.height = float(height)
-        self.area = self.length * self.height
-        self.extra_multiplier = 1.10  # 10% extra for wastage
+def calculate(self, materials):
+    try:
+        results = []
+        print("\nStarting IndependentWallStandard.calculate()")
+        print(f"Wall Dimensions: Length = {self.length}m, Height = {self.height}m, Area = {self.area}m²")
+        
+        # Calculate perimeter for acoustic sealant
+        perimeter = 2 * (self.length + self.height)
+        print(f"Perimeter = {perimeter}m")
 
-    def calculate(self, materials):
-        """
-        Calculate quantities for Independent Wall Standard solution.
+        for material in materials:
+            # Convert material name to lowercase for comparison, but keep original for display
+            original_name = material.get('name', '')
+            material_name = original_name.strip().lower()
+            coverage_str = str(material.get('coverage', '0')).strip()
+            coverage = float(coverage_str)
+            cost = float(material.get('cost', 0))
 
-        Args:
-            materials (list): List of material dictionaries from MongoDB.
+            print(f"\nProcessing Material: {original_name}")
+            print(f"Coverage per Unit: {coverage}m², Unit Cost: £{cost}")
 
-        Returns:
-            list: List of calculated material requirements with quantities and costs.
-        """
-        try:
-            results = []
-            print("\nStarting IndependentWallStandard.calculate()")
-            print(f"Wall Dimensions: Length = {self.length}m, Height = {self.height}m, Area = {self.area}m²")
+            if coverage <= 0:
+                raise ValueError(f"Invalid coverage value for material: {original_name}")
+
+            # Initialize variables
+            quantity = 0
+            area_needed = self.area
+            layers = 1
+
+            # Special handling for different materials - using lowercase for comparison
+            if '12.5mm sound plasterboard' in material_name:
+                layers = 2
+                area_needed = self.area * layers * self.extra_multiplier
+                quantity = math.ceil(area_needed / coverage)
+                print(f"Plasterboard: {layers} layers with 10% extra, Area needed: {area_needed}m²")
             
-            # Calculate perimeter for acoustic sealant
-            perimeter = 2 * (self.length + self.height)
-            print(f"Perimeter = {perimeter}m")
+            elif 'acoustic sealant' in material_name:
+                quantity = math.ceil(perimeter / coverage)
+                print(f"Acoustic Sealant: Based on perimeter: {perimeter}m")
+            
+            elif 'rockwool rwa45' in material_name or 'tecsound' in material_name:
+                area_needed = self.area * self.extra_multiplier
+                quantity = math.ceil(area_needed / coverage)
+                print(f"{original_name}: 10% extra, Area needed: {area_needed}m²")
+            
+            elif any(x in material_name for x in ['metal frame', 'resilient bar', 'floor protection']):
+                quantity = math.ceil(self.area / coverage)
+                print(f"{original_name}: Standard calculation")
+            
+            elif 'screws' in material_name:
+                quantity = 1
+                print(f"Screws: Minimum 1 box required for any size wall")
+            
+            else:
+                quantity = math.ceil(self.area / coverage)
+                print(f"{original_name}: Default calculation")
 
-            for material in materials:
-                material_name = material.get('name', '').strip().lower()
-                coverage_str = material.get('coverage', '0').strip()
-                coverage = float(coverage_str)
-                cost = float(material.get('cost', 0))
+            total_cost = quantity * cost
+            print(f"Final Quantity: {quantity}, Total Cost: £{total_cost}")
 
-                print(f"\nProcessing Material: {material_name}")
-                print(f"Coverage per Unit: {coverage}m², Unit Cost: £{cost}")
+            results.append({
+                'name': original_name,
+                'quantity': quantity,
+                'unit_cost': cost,
+                'total_cost': total_cost,
+                'coverage': coverage,
+                'layers': layers
+            })
 
-                if coverage <= 0:
-                    raise ValueError(f"Invalid coverage value for material: {material_name}")
+        return results
 
-                # Initialize variables
-                quantity = 0
-                area_needed = self.area
-                layers = 1
-
-                # Special handling for different materials
-                if material_name == '12.5mm sound plasterboard':
-                    layers = 2
-                    area_needed = self.area * layers * self.extra_multiplier
-                    quantity = math.ceil(area_needed / coverage)
-                    print(f"Plasterboard: {layers} layers with 10% extra, Area needed: {area_needed}m²")
-                
-                elif material_name == 'acoustic sealant':
-                    quantity = math.ceil(perimeter / coverage)
-                    print(f"Acoustic Sealant: Based on perimeter: {perimeter}m")
-                
-                elif material_name in ['rockwool rwa45 50mm', 'tecsound 50']:
-                    area_needed = self.area * self.extra_multiplier
-                    quantity = math.ceil(area_needed / coverage)
-                    print(f"{material_name}: 10% extra, Area needed: {area_needed}m²")
-                
-                elif material_name in ['metal frame work', 'resilient bar', 'screws', 'floor protection']:
-                    quantity = math.ceil(self.area / coverage)
-                    print(f"{material_name}: Standard calculation")
-                elif material_name == 'screws':
-                    # For screws, always use 1 box
-                    quantity = 1
-                    print(f"Screws: Minimum 1 box required for any size wall")
-                
-                else:
-                    quantity = math.ceil(self.area / coverage)
-                    print(f"{material_name}: Default calculation")
-
-                total_cost = quantity * cost
-                print(f"Final Quantity: {quantity}, Total Cost: £{total_cost}")
-
-                results.append({
-                    'name': material.get('name'),
-                    'quantity': quantity,
-                    'unit_cost': cost,
-                    'total_cost': total_cost,
-                    'coverage': coverage,
-                    'layers': layers
-                })
-
-            return results
-
-        except Exception as e:
-            print(f"Error in Independent Wall Standard calculation: {str(e)}")
-            return None
-
+    except Exception as e:
+        print(f"Error in Independent Wall Standard calculation: {str(e)}")
+        return None
 class IndependentWallSP15(IndependentWallStandard):
     def calculate(self, materials):
         """
