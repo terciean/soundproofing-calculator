@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS  # 
 import os
 import logging
 import sys
@@ -9,7 +10,7 @@ from pymongo.server_api import ServerApi
 
 # Initialize Flask app
 app = Flask(__name__)
-
+CORS(app) 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -17,6 +18,7 @@ logger = logging.getLogger(__name__)
 # MongoDB setup with error handling
 # MongoDB setup with error handling
 # MongoDB setup with error handling
+# First, establish MongoDB connection
 try:
     MONGODB_URI = os.getenv('MONGODB_URI')
     if not MONGODB_URI:
@@ -24,20 +26,42 @@ try:
     
     client = MongoClient(
         MONGODB_URI,
-        server_api=ServerApi('1'),  # Add this line
+        server_api=ServerApi('1'),
         tls=True,
         tlsCAFile=certifi.where()
     )
     
     # Test connection
     client.admin.command('ping')
-    db = client.get_database("soundproofing")
+    
+    # Define database and collections
+    db = client["soundproofing"]
+    wallsolutions = db["wallsolutions"]
+    ceilingsolutions = db["ceilingsolutions"]
+    
     logger.info("Successfully connected to MongoDB Atlas!")
+    
+    # Now add the debug logging
+    logger.info("Available collections:")
+    logger.info(db.list_collection_names())
+    
+    # Check wall solutions
+    logger.info("Wall solutions:")
+    wall_count = wallsolutions.count_documents({})
+    logger.info(f"Found {wall_count} wall solutions")
+    for doc in wallsolutions.find():
+        logger.info(doc)
+    
+    # Check ceiling solutions
+    logger.info("Ceiling solutions:")
+    ceiling_count = ceilingsolutions.count_documents({})
+    logger.info(f"Found {ceiling_count} ceiling solutions")
+    for doc in ceilingsolutions.find():
+        logger.info(doc)
     
 except Exception as e:
     logger.error(f"MongoDB Connection Error: {e}")
     sys.exit(1)
-
 
 # Database and collections
 db = client["soundproofing"]
@@ -123,22 +147,31 @@ CALCULATORS = {
 def get_solutions(surface_type):
     try:
         logger.info(f"Getting solutions for surface type: {surface_type}")
-        if surface_type == 'walls':
-            collection = wallsolutions
-        elif surface_type == 'ceilings':
-            collection = ceilingsolutions
-        else:
-            logger.error(f"Invalid surface type requested: {surface_type}")
+        
+        # Validate surface type
+        if surface_type not in ['walls', 'ceilings']:
+            logger.error(f"Invalid surface type: {surface_type}")
             return jsonify({'error': 'Invalid surface type'}), 400
+            
+        # Get correct collection
+        collection = wallsolutions if surface_type == 'walls' else ceilingsolutions
         
-        solutions = list(collection.find({'surface_type': surface_type}, {'solution': 1, '_id': 0}))
+        # Find solutions
+        solutions = list(collection.find({}, {'solution': 1, '_id': 0}))
         logger.info(f"Found {len(solutions)} solutions")
-        logger.debug(f"Solutions: {solutions}")
         
-        return jsonify([s['solution'] for s in solutions])
-    
+        if not solutions:
+            logger.warning(f"No solutions found for {surface_type}")
+            return jsonify([]), 200
+            
+        # Extract solution names
+        solution_names = [s['solution'] for s in solutions]
+        logger.debug(f"Returning solutions: {solution_names}")
+        
+        return jsonify(solution_names)
+        
     except Exception as e:
-        logger.error(f"Error getting solutions: {str(e)}")
+        logger.error(f"Error in get_solutions: {str(e)}")
         return jsonify({'error': str(e)}), 500
 @app.route('/health')
 def health_check():
