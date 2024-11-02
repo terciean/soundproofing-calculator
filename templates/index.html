@@ -33,25 +33,24 @@
                     <input type="number" id="height" name="height" step="0.01" min="0.1" required>
                 </div>
 
-                <div class="form-group">
-                    <label for="surfaceType">Surface Type:</label>
-                    <select id="surfaceType" name="surfaceType" required>
-                        <option value="walls" {% if request.form.get('surfaceType') == 'walls' %}selected{% endif %}>Walls</option>
-                        <option value="ceilings" {% if request.form.get('surfaceType') == 'ceilings' %}selected{% endif %}>Ceilings</option>
-                        <option value="floors" {% if request.form.get('surfaceType') == 'floors' %}selected{% endif %}>Floors</option>
-                    </select>
-                </div>
-                
                 <!-- Solution Type Select Element -->
-                <div class="form-group">
-                    <label for="solutionType">Solution Type:</label>
-                    <select id="solutionType" name="solutionType" required>
-                        {% for solution in solution_types %}
-                        <option value="{{ solution }}" {% if request.form.get('solutionType') == solution %}selected{% endif %}>{{ solution }}</option>
-                        {% endfor %}
+                <!-- Surface Type Select Element -->
+<div class="form-group">
+    <label for="surfaceType">Surface Type:</label>
+    <select id="surfaceType" name="surfaceType" required>
+        <option value="">Select Surface Type</option>
+        <option value="walls">Walls</option>
+        <option value="ceilings">Ceilings</option>
+    </select>
+</div>
+
+<!-- Solution Type Select Element -->
+<div class="form-group">
+    <label for="solutionType">Solution Type:</label>
+    <select id="solutionType" name="solutionType" required disabled>
+        <option value="">Please select a surface type first</option>
                     </select>
                 </div>
-
                 <!-- Installation Days Select -->
                 <div class="form-group">
                     <label for="fittingDays">Installation Days (£685 per day inc. VAT):</label>
@@ -68,12 +67,12 @@
                     </select>
                 </div>
 
-                <!-- Removal Fee Section -->
+                <!-- Removal Required Section -->
                 <div class="form-group">
-                    <label for="removalRequired">Include Removal Fee (£25 per m²):</label>
+                    <label for="removalRequired">Removal of Existing Materials Required?</label>
                     <select id="removalRequired" name="removalRequired" required>
                         <option value="no">No</option>
-                        <option value="yes">Yes - £25 per m²</option>
+                        <option value="yes">Yes</option>
                     </select>
                 </div>
 
@@ -93,7 +92,7 @@
             </form>
 
             <!-- Display Results -->
-            {% if results and solution %}
+            {% if results and solution_type %}
             <div class="results-container">
                 <h2>Calculation Results</h2>
                 
@@ -168,7 +167,7 @@
                     <h3>Important Notes:</h3>
                     <ul>
                         {% for note in solution.notes %}
-                        <li>{{ note }}</li>
+                            <li>{{ note }}</li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -193,101 +192,103 @@
     </div>
 
     <!-- JavaScript -->
-    <!-- Replace just the JavaScript section at the bottom of your file -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM Content Loaded');
-            const surfaceTypeSelect = document.getElementById('surfaceType');
-            const solutionTypeSelect = document.getElementById('solutionType');
-            const lengthLabel = document.querySelector('label[for="length"]');
-            const heightLabel = document.querySelector('label[for="height"]');
-            const removalRequiredSelect = document.getElementById('removalRequired');
-            const removalDimensions = document.getElementById('removalDimensions');
+        async function updateSolutionTypes() {
+    try {
+        console.log('Fetching solutions');
+        const wallResponse = await fetch('/get_solutions/walls');
+        const ceilingResponse = await fetch('/get_solutions/ceilings');
+        
+        if (!wallResponse.ok || !ceilingResponse.ok) {
+            throw new Error(`HTTP error! status: ${wallResponse.status} ${ceilingResponse.status}`);
+        }
+        
+        const wallSolutions = await wallResponse.json();
+        const ceilingSolutions = await ceilingResponse.json();
+        const solutions = [...wallSolutions, ...ceilingSolutions];
+        
+        console.log('Solutions received:', solutions);
 
-            function updateDimensionLabels(surfaceType) {
-                console.log('Updating dimension labels for:', surfaceType);
-                if (surfaceType === 'ceilings') {
-                    lengthLabel.textContent = 'Ceiling Length (meters):';
-                    heightLabel.textContent = 'Ceiling Width (meters):';
-                } else if (surfaceType === 'walls') {
-                    lengthLabel.textContent = 'Wall Length (meters):';
-                    heightLabel.textContent = 'Wall Height (meters):';
+        // Clear and update options
+        solutionTypeSelect.innerHTML = '';
+        
+        if (solutions.length === 0) {
+            const option = document.createElement('option');
+            option.value = "";
+            option.textContent = "No solutions available";
+            solutionTypeSelect.appendChild(option);
+        } else {
+            // Add a default option
+            const defaultOption = document.createElement('option');
+            defaultOption.value = "";
+            defaultOption.textContent = "Select a solution";
+            solutionTypeSelect.appendChild(defaultOption);
+            
+            // Add the solutions
+            solutions.forEach(solution => {
+                const option = document.createElement('option');
+                option.value = solution;
+                option.textContent = solution;
+                solutionTypeSelect.appendChild(option);
+            });
+        }
+
+        console.log('Solutions updated successfully');
+    } catch (error) {
+        console.error('Error updating solutions:', error);
+        solutionTypeSelect.innerHTML = '<option value="">Error loading solutions</option>';
+    }
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const surfaceTypeSelect = document.getElementById('surfaceType');
+    const solutionTypeSelect = document.getElementById('solutionType');
+
+    surfaceTypeSelect.addEventListener('change', async function() {
+        const selectedSurface = this.value;
+        solutionTypeSelect.disabled = !selectedSurface;
+
+        if (selectedSurface) {
+            try {
+                const response = await fetch(`/get_solutions/${selectedSurface}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-            }
-
-            async function updateSolutionTypes(surfaceType) {
-                try {
-                    console.log('Fetching solutions for:', surfaceType);
-                    const response = await fetch(`/get_solutions/${surfaceType}`);
+                
+                const solutions = await response.json();
+                
+                // Clear and update options
+                solutionTypeSelect.innerHTML = '';
+                
+                if (solutions.length === 0) {
+                    const option = document.createElement('option');
+                    option.value = "";
+                    option.textContent = `No ${selectedSurface} solutions available`;
+                    solutionTypeSelect.appendChild(option);
+                } else {
+                    // Add a default option
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = "";
+                    defaultOption.textContent = `Select a ${selectedSurface.slice(0, -1)} solution`;
+                    solutionTypeSelect.appendChild(defaultOption);
                     
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    
-                    const solutions = await response.json();
-                    console.log('Solutions received:', solutions);
-
-                    if (!Array.isArray(solutions)) {
-                        throw new Error('Received invalid solutions data');
-                    }
-
-                    // Store current selection if it exists
-                    const currentSelection = solutionTypeSelect.value;
-                    
-                    // Clear and update options
-                    solutionTypeSelect.innerHTML = '';
+                    // Add the solutions
                     solutions.forEach(solution => {
                         const option = document.createElement('option');
                         option.value = solution;
                         option.textContent = solution;
-                        if (solution === currentSelection) {
-                            option.selected = true;
-                        }
                         solutionTypeSelect.appendChild(option);
                     });
-
-                    console.log('Solutions updated successfully');
-                } catch (error) {
-                    console.error('Error updating solutions:', error);
-                    // Add fallback behavior
-                    solutionTypeSelect.innerHTML = '<option value="">Error loading solutions</option>';
-                }
-            }
-
-            surfaceTypeSelect.addEventListener('change', function() {
-                console.log('Surface type changed to:', this.value);
-                const selectedSurfaceType = this.value;
-                updateSolutionTypes(selectedSurfaceType);
-                updateDimensionLabels(selectedSurfaceType);
-            });
-
-            removalRequiredSelect.addEventListener('change', function() {
-                console.log('Removal required changed to:', this.value);
-                if (this.value === 'yes') {
-                    removalDimensions.style.display = 'block';
-                    document.getElementById('removalLength').required = true;
-                    document.getElementById('removalHeight').required = true;
-                } else {
-                    removalDimensions.style.display = 'none';
-                    document.getElementById('removalLength').required = false;
-                    document.getElementById('removalHeight').required = false;
-                }
-            });
-
-            // Initial updates with error handling
-            try {
-                console.log('Performing initial updates');
-                updateSolutionTypes(surfaceTypeSelect.value);
-                updateDimensionLabels(surfaceTypeSelect.value);
-                if (removalRequiredSelect.value === 'yes') {
-                    removalDimensions.style.display = 'block';
-                    document.getElementById('removalLength').required = true;
-                    document.getElementById('removalHeight').required = true;
                 }
             } catch (error) {
-                console.error('Error during initial setup:', error);
+                console.error('Error fetching solutions:', error);
+                solutionTypeSelect.innerHTML = '<option value="">Error loading solutions</option>';
             }
+        } else {
+            solutionTypeSelect.innerHTML = '<option value="">Please select a surface type first</option>';
+        }
         });
+    });
+
     </script>
 </body>
 </html>

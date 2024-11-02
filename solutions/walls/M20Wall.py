@@ -1,9 +1,8 @@
-from ..base_calculator import BaseCalculator
+from solutions.base_calculator import BaseCalculator
+import math
 
 class M20WallStandard(BaseCalculator):
-    """
-    Calculates materials for the M20 Wall Standard solution.
-    """
+    """Calculates materials for the M20 Wall Standard solution."""
     def __init__(self, length, height):
         super().__init__(length, height)
         self.plasterboard_layers = 2  # Two layers by default
@@ -16,20 +15,6 @@ class M20WallStandard(BaseCalculator):
             self.logger.info(f"Wall Dimensions: Length={self.length}m, Height={self.height}m, Area={self.area}m²")
 
             for material in materials:
-                name = material.get('name')
-                
-                # Handle plasterboard layers
-                if name == "12.5mm Sound Plasterboard":
-                    self.logger.info(f"Adjusting coverage for {self.plasterboard_layers} layers of plasterboard")
-                    material['coverage'] = float(material['coverage']) / self.plasterboard_layers
-                
-                # Special handling for M20 specific materials
-                elif name == "M20 Rubber wall panel":
-                    self.logger.info("Calculating M20 panel requirements")
-                
-                elif name == "M20 adhesive":
-                    self.logger.info("Calculating M20 adhesive requirements")
-                
                 result = self.calculate_material_quantity(material)
                 results.append(result)
 
@@ -38,7 +23,6 @@ class M20WallStandard(BaseCalculator):
         except Exception as e:
             self.logger.error(f"Error in M20 Solution (Standard) calculation: {str(e)}")
             return None
-
 
 class M20WallSP15(M20WallStandard):
     """SP15 version uses single layer of plasterboard plus SP15 Soundboard."""

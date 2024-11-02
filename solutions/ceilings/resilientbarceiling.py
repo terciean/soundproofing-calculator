@@ -1,4 +1,8 @@
-from ..base_calculator import BaseCalculator
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from base_calculator import BaseCalculator
+import math
 
 class ResilientBarCeilingStandard(BaseCalculator):
     """

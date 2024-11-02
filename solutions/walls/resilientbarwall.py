@@ -1,10 +1,8 @@
-from ..base_calculator import BaseCalculator
+from solutions.base_calculator import BaseCalculator
 import math
 
 class ResilientBarWallStandard(BaseCalculator):
-    """
-    Calculates materials for the Resilient Bar Wall Standard solution.
-    """
+    """Calculates materials for the Resilient Bar Wall Standard solution."""
     def __init__(self, length, height):
         super().__init__(length, height)
         self.plasterboard_layers = 2  # Two layers by default
@@ -24,24 +22,6 @@ class ResilientBarWallStandard(BaseCalculator):
             self.logger.info(f"Wall Dimensions: Length={self.length}m, Height={self.height}m, Area={self.area}m²")
 
             for material in materials:
-                name = material.get('name')
-                
-                if name == "12.5mm Sound Plasterboard":
-                    self.logger.info(f"Adjusting coverage for {self.plasterboard_layers} layers of plasterboard")
-                    material['coverage'] = float(material['coverage']) / self.plasterboard_layers
-                
-                elif name == "Resilient bar":
-                    quantity = self.calculate_bar_quantity()
-                    result = {
-                        'name': name,
-                        'quantity': quantity,
-                        'unit_cost': float(material.get('cost', 0)),
-                        'total_cost': quantity * float(material.get('cost', 0)),
-                        'coverage': float(material.get('coverage', 0))
-                    }
-                    results.append(result)
-                    continue
-                
                 result = self.calculate_material_quantity(material)
                 results.append(result)
 

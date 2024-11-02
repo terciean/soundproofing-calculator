@@ -1,9 +1,10 @@
-from ..base_calculator import BaseCalculator
+from solutions.base_calculator import BaseCalculator
+import math
+
+
 
 class IndependentWallStandard(BaseCalculator):
-    """
-    Calculates materials for the Independent Wall Standard solution.
-    """
+    """Calculates materials for the Independent Wall Standard solution."""
     def __init__(self, length, height):
         super().__init__(length, height)
         self.plasterboard_layers = 2  # Two layers by default
@@ -16,15 +17,6 @@ class IndependentWallStandard(BaseCalculator):
             self.logger.info(f"Wall Dimensions: Length={self.length}m, Height={self.height}m, Area={self.area}m²")
 
             for material in materials:
-                name = material.get('name')
-                
-                if name == "12.5mm Sound Plasterboard":
-                    self.logger.info(f"Adjusting coverage for {self.plasterboard_layers} layers of plasterboard")
-                    material['coverage'] = float(material['coverage']) / self.plasterboard_layers
-                
-                elif name == "Metal Frame Work":
-                    self.logger.info("Calculating metal framework requirements")
-                
                 result = self.calculate_material_quantity(material)
                 results.append(result)
 
