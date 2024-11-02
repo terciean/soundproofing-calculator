@@ -4,6 +4,7 @@ import logging
 import sys
 from pymongo import MongoClient
 import certifi
+from pymongo.server_api import ServerApi
 
 
 # Initialize Flask app
@@ -15,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 # MongoDB setup with error handling
 # MongoDB setup with error handling
+# MongoDB setup with error handling
 try:
     MONGODB_URI = os.getenv('MONGODB_URI')
     if not MONGODB_URI:
@@ -22,11 +24,9 @@ try:
     
     client = MongoClient(
         MONGODB_URI,
+        server_api=ServerApi('1'),  # Add this line
         tls=True,
-        tlsCAFile=certifi.where(),
-        serverSelectionTimeoutMS=5000,
-        connectTimeoutMS=5000,
-        socketTimeoutMS=5000
+        tlsCAFile=certifi.where()
     )
     
     # Test connection
@@ -36,9 +36,7 @@ try:
     
 except Exception as e:
     logger.error(f"MongoDB Connection Error: {e}")
-    sys.exit(1)  # Exit if can't connect to database
-
-# Remove the duplicate except block
+    sys.exit(1)
 
 
 # Database and collections
