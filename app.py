@@ -51,10 +51,7 @@ try:
         tlsCAFile=certifi.where()
     )
     
-    # Test connection
     client.admin.command('ping')
-    
-    # Define database and collections
     db = client["soundproofing"]
     wallsolutions = db["wallsolutions"]
     ceilingsolutions = db["ceilingsolutions"]
@@ -65,12 +62,11 @@ except Exception as e:
     logger.error(f"MongoDB Connection Error: {e}")
     sys.exit(1)
 
-# Setup paths
+# Setup paths and imports
 current_dir = os.path.dirname(os.path.abspath(__file__))
 calculator_path = os.path.join(current_dir, 'solutions')
 sys.path.append(calculator_path)
 
-# Import solutions# Change these import lines (around line 70-80)
 try:
     # Wall solutions
     from solutions.walls.Independentwall import IndependentWallStandard, IndependentWallSP15
@@ -114,45 +110,34 @@ CALCULATORS = {
 @app.route('/check_db')
 def check_db():
     try:
-        # Check wall solutions
         wall_solutions = list(wallsolutions.find({}, {'solution': 1, 'surface_type': 1, '_id': 0}))
-        wall_count = len(wall_solutions)
-        
-        # Check ceiling solutions
         ceiling_solutions = list(ceilingsolutions.find({}, {'solution': 1, 'surface_type': 1, '_id': 0}))
-        ceiling_count = len(ceiling_solutions)
-        
-        # Get one complete document as example
         example_doc = wallsolutions.find_one({})
         if example_doc:
-            example_doc['_id'] = str(example_doc['_id'])  # Convert ObjectId to string
+            example_doc['_id'] = str(example_doc['_id'])
         
         return jsonify({
             'wall_solutions': wall_solutions,
-            'wall_count': wall_count,
+            'wall_count': len(wall_solutions),
             'ceiling_solutions': ceiling_solutions,
-            'ceiling_count': ceiling_count,
+            'ceiling_count': len(ceiling_solutions),
             'example_document': example_doc,
             'calculator_keys': list(CALCULATORS.keys())
         })
     except Exception as e:
-        return jsonify({'error': str(e)})# Routes
+        return jsonify({'error': str(e)})
+
 @app.route('/get_solutions/<surface_type>')
 def get_solutions(surface_type):
     try:
         logger.info(f"Getting solutions for surface type: {surface_type}")
+        solutions = WALL_SOLUTIONS if surface_type == 'walls' else CEILING_SOLUTIONS if surface_type == 'ceilings' else None
         
-        if surface_type == 'walls':
-            solutions = WALL_SOLUTIONS
-        elif surface_type == 'ceilings':
-            solutions = CEILING_SOLUTIONS
-        else:
+        if solutions is None:
             logger.error(f"Invalid surface type: {surface_type}")
             return jsonify([]), 400
             
         logger.info(f"Found {len(solutions)} solutions")
-        logger.info(f"Solutions: {solutions}")
-        
         return jsonify(solutions)
         
     except Exception as e:
@@ -194,40 +179,29 @@ def index():
             height = float(request.form.get('height'))
             solution_type = request.form.get('solutionType')
             surface_type = request.form.get('surfaceType')
-            fitting_days = int(request.form.get('fittingDays', 0))
-            removal_required = request.form.get('removalRequired') == 'yes'
-
-            # Add error checking for removal dimensions
-            if removal_required:
-                removal_length = float(request.form.get('removalLength', 0))
-                removal_height = float(request.form.get('removalHeight', 0))
-                if removal_length <= 0 or removal_height <= 0:
-                    raise ValueError("Invalid removal dimensions")
+            fitting_days = int(request.form.get('fitting_days', 0))
+            removal_required = request.form.get('removal_required') == 'true'
+            
+            logger.info(f"Form data received - Solution: {solution_type}, Surface: {surface_type}")
+            logger.info(f"Solution type: {solution_type}")
+            logger.info(f"Available calculators: {list(CALCULATORS.keys())}")
 
             # Get solution from database
-            if surface_type == 'walls':
-                collection = wallsolutions
-            else:
-                collection = ceilingsolutions
+            collection = wallsolutions if surface_type == 'walls' else ceilingsolutions
+            
+            all_solutions = list(collection.find({}, {'solution': 1}))
+            logger.info(f"Available solutions in database: {[s['solution'] for s in all_solutions]}")
             
             solution = collection.find_one({'solution': solution_type})
             if not solution:
-                logger.error("Solution not found in database.")
+                logger.error(f"Solution not found in database. Searched for: {solution_type}")
                 return render_template('index.html',
                                     error="Invalid solution",
-                                    message="The selected solution was not found in the database.",
-                                    solution_types=solution_types)
-
-            # Get calculator class
-            calculator_class = CALCULATORS.get(solution_type)
-            if not calculator_class:
-                logger.error("Calculator class not found.")
-                return render_template('index.html',
-                                    error="Invalid solution type",
-                                    message="The selected solution type is not supported.",
+                                    message=f"The selected solution '{solution_type}' was not found in the database.",
                                     solution_types=solution_types)
 
             # Calculate results
+            calculator_class = CALCULATORS[solution_type]
             calculator = calculator_class(length, height)
             results = calculator.calculate(solution['materials'])
 
@@ -275,7 +249,6 @@ def index():
                                 message=f"An error occurred: {str(e)}",
                                 solution_types=solution_types)
 
-    # If GET request, render the form with all solution types
     return render_template('index.html', solution_types=solution_types)
 
 if __name__ == '__main__':
