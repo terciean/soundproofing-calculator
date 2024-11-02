@@ -2,12 +2,20 @@ services:
   - type: web
     name: soundproofing-calculator
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app --bind 0.0.0.0:10000
+    buildCommand: |
+      pip install -r requirements.txt
+      echo "Current directory: $(pwd)"
+      echo "Directory contents:"
+      ls -la
+      echo "Solutions directory contents:"
+      ls -la solutions/
+      echo "Python path:"
+      python -c "import sys; print('\n'.join(sys.path))"
+    startCommand: |
+      PYTHONPATH=$PYTHONPATH:$(pwd) gunicorn app:app
     envVars:
       - key: MONGODB_URI
         sync: false
       - key: PORT
         value: "10000"
-    healthCheckPath: /
-    autoDeploy: true
+    healthCheckPath: /health
