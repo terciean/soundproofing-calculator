@@ -1,13 +1,13 @@
-   # Update render.yaml to use Render's PORT
-   services:
-     - type: web
-       name: soundproofing-calculator
-       env: python
-       buildCommand: pip install -r requirements.txt
-       startCommand: gunicorn app:app
-       envVars:
-         - key: MONGODB_URI
-           sync: false
-         # Remove the PORT variable - Render will set this automatically
-       healthCheckPath: /
-       autoDeploy: true
+services:
+  - type: web
+    name: soundproofing-calculator
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: PORT
+        value: "5000"
+    healthCheckPath: /
+    autoDeploy: true
