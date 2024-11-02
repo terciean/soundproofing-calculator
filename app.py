@@ -167,7 +167,15 @@ def handle_404(e):
                          error="Not Found",
                          message="The requested page was not found.",
                          solution_types=list(CALCULATORS.keys()))
-
+@app.route('/debug_solutions')
+def debug_solutions():
+    wall_solutions = list(wallsolutions.find({}, {'solution': 1, '_id': 0}))
+    ceiling_solutions = list(ceilingsolutions.find({}, {'solution': 1, '_id': 0}))
+    return jsonify({
+        'wall_solutions': wall_solutions,
+        'ceiling_solutions': ceiling_solutions,
+        'calculators': list(CALCULATORS.keys())
+    })
 @app.route('/', methods=['GET', 'POST'])
 def index():
     solution_types = list(CALCULATORS.keys())
@@ -175,12 +183,13 @@ def index():
     if request.method == 'POST':
         try:
             # Get form data
+                        # Get form data
             length = float(request.form.get('length'))
             height = float(request.form.get('height'))
             solution_type = request.form.get('solutionType')
             surface_type = request.form.get('surfaceType')
-            fitting_days = int(request.form.get('fitting_days', 0))
-            removal_required = request.form.get('removal_required') == 'true'
+            fitting_days = int(request.form.get('fittingDays', 0))  # Changed to match HTML form
+            removal_required = request.form.get('removalRequired') == 'yes'  # Changed to match HTML form
             
             logger.info(f"Form data received - Solution: {solution_type}, Surface: {surface_type}")
             logger.info(f"Solution type: {solution_type}")
