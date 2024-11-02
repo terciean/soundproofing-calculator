@@ -62,7 +62,87 @@ try:
 except Exception as e:
     logger.error(f"MongoDB Connection Error: {e}")
     sys.exit(1)
+# MongoDB setup with error handling
+try:
+    MONGODB_URI = os.getenv('MONGODB_URI')
+    if not MONGODB_URI:
+        raise ValueError("MONGODB_URI environment variable not set")
+    
+    client = MongoClient(
+        MONGODB_URI,
+        server_api=ServerApi('1'),
+        tls=True,
+        tlsCAFile=certifi.where()
+    )
+    
+    # Test connection
+    client.admin.command('ping')
+    
+    # Define database and collections
+    db = client["soundproofing"]
+    wallsolutions = db["wallsolutions"]
+    ceilingsolutions = db["ceilingsolutions"]
+    
+    logger.info("Successfully connected to MongoDB Atlas!")
 
+    # Add the initialization function here
+    def initialize_solutions():
+        try:
+            # Wall Solutions
+            wall_solutions = [
+                "Independent Wall (Standard)",
+                "Independent Wall (SP15 Soundboard Upgrade)",
+                "Resilient bar wall (Standard)",
+                "Resilient bar wall (SP15 Soundboard Upgrade)",
+                "Genie Clip wall (Standard)",
+                "Genie Clip wall (SP15 Soundboard Upgrade)",
+                "M20 Solution (Standard)",
+                "M20 Solution (SP15 Soundboard upgrade)"
+            ]
+            
+            # Ceiling Solutions
+            ceiling_solutions = [
+                "Independent Ceiling",
+                "Independent Ceiling (SP15 Soundboard Upgrade)",
+                "Genie Clip ceiling",
+                "Genie Clip ceiling (SP15 Soundboard Upgrade)",
+                "LB3 Genie Clip",
+                "LB3 Genie Clip (SP15 Soundboard Upgrade)",
+                "Resilient bar Ceiling",
+                "Resilient bar Ceiling (SP15 Soundboard Upgrade)"
+            ]
+            
+            # Clear existing solutions
+            wallsolutions.delete_many({})
+            ceilingsolutions.delete_many({})
+            
+            # Insert wall solutions
+            for solution in wall_solutions:
+                wallsolutions.insert_one({
+                    "solution": solution,
+                    "surface_type": "walls",
+                    "materials": []  # You can add materials later
+                })
+                
+            # Insert ceiling solutions
+            for solution in ceiling_solutions:
+                ceilingsolutions.insert_one({
+                    "solution": solution,
+                    "surface_type": "ceilings",
+                    "materials": []  # You can add materials later
+                })
+                
+            logger.info("Solutions initialized successfully")
+            
+        except Exception as e:
+            logger.error(f"Error initializing solutions: {e}")
+
+    # Call the initialization function
+    initialize_solutions()
+    
+except Exception as e:
+    logger.error(f"MongoDB Connection Error: {e}")
+    sys.exit(1)
 # Database and collections
 db = client["soundproofing"]
 wallsolutions = db["wallsolutions"]
@@ -148,30 +228,18 @@ def get_solutions(surface_type):
     try:
         logger.info(f"Getting solutions for surface type: {surface_type}")
         
-        # Validate surface type
-        if surface_type not in ['walls', 'ceilings']:
-            logger.error(f"Invalid surface type: {surface_type}")
-            return jsonify({'error': 'Invalid surface type'}), 400
-            
-        # Get correct collection
+        # Select collection based on surface type
         collection = wallsolutions if surface_type == 'walls' else ceilingsolutions
+        logger.info(f"Using collection: {collection.name}")
         
-        # Find solutions
-        solutions = list(collection.find({}, {'solution': 1, '_id': 0}))
-        logger.info(f"Found {len(solutions)} solutions")
+        # Get all solutions from the collection
+        solutions = list(collection.distinct('solution'))
+        logger.info(f"Found solutions: {solutions}")
         
-        if not solutions:
-            logger.warning(f"No solutions found for {surface_type}")
-            return jsonify([]), 200
-            
-        # Extract solution names
-        solution_names = [s['solution'] for s in solutions]
-        logger.debug(f"Returning solutions: {solution_names}")
-        
-        return jsonify(solution_names)
+        return jsonify(solutions)
         
     except Exception as e:
-        logger.error(f"Error in get_solutions: {str(e)}")
+        logger.error(f"Error getting solutions: {str(e)}")
         return jsonify({'error': str(e)}), 500
 @app.route('/health')
 def health_check():
