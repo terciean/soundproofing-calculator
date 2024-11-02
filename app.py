@@ -1,51 +1,46 @@
 from flask import Flask, render_template, request, jsonify
-import sys
 import os
 import logging
+import sys
 from pymongo import MongoClient
-from bson import json_util
-from dotenv import load_dotenv
+import certifi
+
 
 # Initialize Flask app
 app = Flask(__name__)
 
 # Setup logging
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-handler = logging.StreamHandler(sys.stdout)
-handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-logger.addHandler(handler)
 
+# MongoDB setup with error handling
 # MongoDB setup with error handling
 try:
     MONGODB_URI = os.getenv('MONGODB_URI')
     if not MONGODB_URI:
         raise ValueError("MONGODB_URI environment variable not set")
     
-    # Simplified connection with minimal options
     client = MongoClient(
         MONGODB_URI,
-        serverSelectionTimeoutMS=30000,
-        connectTimeoutMS=20000,
-        socketTimeoutMS=20000
+        tls=True,
+        tlsCAFile=certifi.where(),
+        serverSelectionTimeoutMS=5000,
+        connectTimeoutMS=5000,
+        socketTimeoutMS=5000
     )
     
     # Test connection
     client.admin.command('ping')
+    db = client.get_database("soundproofing")
     logger.info("Successfully connected to MongoDB Atlas!")
     
-    # Initialize database and collections
-    db = client["soundproofing"]
-    wallsolutions = db["wallsolutions"]
-    ceilingsolutions = db["ceilingsolutions"]
-    
 except Exception as e:
     logger.error(f"MongoDB Connection Error: {e}")
-    raise
-        
-except Exception as e:
-    logger.error(f"MongoDB Connection Error: {e}")
-    raise
+    sys.exit(1)  # Exit if can't connect to database
+
+# Remove the duplicate except block
+
+
 # Database and collections
 db = client["soundproofing"]
 wallsolutions = db["wallsolutions"]
@@ -58,8 +53,21 @@ sys.path.append(calculator_path)
 
 # Rest of your existing code...
 
-# Initialize Flask
-app = Flask(__name__)
+# Add these near the other routes
+@app.errorhandler(500)
+def handle_500(e):
+    logger.error(f"Server error: {str(e)}")
+    return render_template('index.html', 
+                         error="Server Error",
+                         message="An internal server error occurred.",
+                         solution_types=list(CALCULATORS.keys()))
+
+@app.errorhandler(404)
+def handle_404(e):
+    return render_template('index.html',
+                         error="Not Found",
+                         message="The requested page was not found.",
+                         solution_types=list(CALCULATORS.keys()))
 
 # MongoDB setup
 
@@ -242,7 +250,5 @@ def index():
     return render_template('index.html', solution_types=solution_types)
 
 if __name__ == '__main__':
-    # Get port from environment variable with a default of 10000
     port = int(os.getenv('PORT', 10000))
-    # Bind to 0.0.0.0 to make the app accessible
     app.run(host='0.0.0.0', port=port)
