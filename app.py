@@ -121,16 +121,34 @@ CALCULATORS = {
 
 @app.route('/get_solutions/<surface_type>')
 def get_solutions(surface_type):
-    if surface_type == 'walls':
-        collection = wallsolutions
-    elif surface_type == 'ceilings':
-        collection = ceilingsolutions
-    else:
-        return jsonify([])
+    try:
+        logger.info(f"Getting solutions for surface type: {surface_type}")
+        if surface_type == 'walls':
+            collection = wallsolutions
+        elif surface_type == 'ceilings':
+            collection = ceilingsolutions
+        else:
+            logger.error(f"Invalid surface type requested: {surface_type}")
+            return jsonify({'error': 'Invalid surface type'}), 400
+        
+        solutions = list(collection.find({'surface_type': surface_type}, {'solution': 1, '_id': 0}))
+        logger.info(f"Found {len(solutions)} solutions")
+        logger.debug(f"Solutions: {solutions}")
+        
+        return jsonify([s['solution'] for s in solutions])
     
-    solutions = list(collection.find({'surface_type': surface_type}, {'solution': 1, '_id': 0}))
-    return jsonify([s['solution'] for s in solutions])
-
+    except Exception as e:
+        logger.error(f"Error getting solutions: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+@app.route('/health')
+def health_check():
+    try:
+        # Test MongoDB connection
+        client.admin.command('ping')
+        return jsonify({'status': 'healthy', 'database': 'connected'}), 200
+    except Exception as e:
+        logger.error(f"Health check failed: {e}")
+        return jsonify({'status': 'unhealthy', 'error': str(e)}), 500
 @app.route('/', methods=['GET', 'POST'])
 def index():
     solution_types = list(CALCULATORS.keys())
@@ -248,5 +266,5 @@ def index():
     return render_template('index.html', solution_types=solution_types)
 
 if __name__ == '__main__':
-    port = int(os.getenv('PORT', 5000))  # Change default to 5000
+    port = int(os.getenv('PORT', 10000))
     app.run(host='0.0.0.0', port=port)
