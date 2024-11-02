@@ -196,12 +196,12 @@ def index():
             logger.info(f"Available calculators: {list(CALCULATORS.keys())}")
 
             # Get solution from database
+                        # Get solution from database
             collection = wallsolutions if surface_type == 'walls' else ceilingsolutions
             
-            all_solutions = list(collection.find({}, {'solution': 1}))
-            logger.info(f"Available solutions in database: {[s['solution'] for s in all_solutions]}")
-            
+            logger.info(f"DEBUG - Searching for exact solution: '{solution_type}'")
             solution = collection.find_one({'solution': solution_type})
+            logger.info(f"DEBUG - Query result: {solution}")
             if not solution:
                 logger.error(f"Solution not found in database. Searched for: {solution_type}")
                 return render_template('index.html',
