@@ -17,56 +17,56 @@ def calculate(self, materials):
         print(f"Perimeter = {perimeter}m")
 
         for material in materials:
-            # Keep original name for display
-            original_name = material.get('name', '')
-            material_name = original_name.strip().lower()
-            coverage = float(str(material.get('coverage', '0')).strip())
+            # Keep original name for display and matching
+            material_name = material.get('name')
+            coverage_str = str(material.get('coverage', '0')).strip()
+            coverage = float(coverage_str)
             cost = float(material.get('cost', 0))
 
-            print(f"\nProcessing Material: {original_name}")
+            print(f"\nProcessing Material: {material_name}")
             print(f"Coverage per Unit: {coverage}m², Unit Cost: £{cost}")
 
             if coverage <= 0:
-                raise ValueError(f"Invalid coverage value for material: {original_name}")
+                raise ValueError(f"Invalid coverage value for material: {material_name}")
 
             # Initialize variables
             quantity = 0
             area_needed = self.area
             layers = 1
 
-            # Special handling for different materials using case-insensitive matching
-            if matches_material(material_name, 'sound plasterboard'):
-                layers = 2
+            # Exact material name matching
+            if material_name == "12.5mm Sound Plasterboard":
+                layers = 2  # As per notes: "Two layers of 12.5mm Sound Plasterboard"
                 area_needed = self.area * layers * self.extra_multiplier
                 quantity = math.ceil(area_needed / coverage)
                 print(f"Plasterboard: {layers} layers with 10% extra, Area needed: {area_needed}m²")
             
-            elif matches_material(material_name, 'acoustic sealant'):
+            elif material_name == "Acoustic Sealant":
                 quantity = math.ceil(perimeter / coverage)
                 print(f"Acoustic Sealant: Based on perimeter: {perimeter}m")
             
-            elif matches_material(material_name, 'rockwool rwa45') or matches_material(material_name, 'tecsound'):
+            elif material_name in ["Rockwool RWA45 50mm", "Tecsound 50"]:
                 area_needed = self.area * self.extra_multiplier
                 quantity = math.ceil(area_needed / coverage)
-                print(f"{original_name}: 10% extra, Area needed: {area_needed}m²")
+                print(f"{material_name}: 10% extra, Area needed: {area_needed}m²")
             
-            elif matches_material(material_name, 'metal frame') or matches_material(material_name, 'resilient bar') or matches_material(material_name, 'floor protection'):
+            elif material_name in ["Metal Frame Work", "Resilient bar", "Floor protection"]:
                 quantity = math.ceil(self.area / coverage)
-                print(f"{original_name}: Standard calculation")
+                print(f"{material_name}: Standard calculation")
             
-            elif matches_material(material_name, 'screws'):
-                quantity = 1
-                print(f"Screws: Minimum 1 box required for any size wall")
+            elif material_name == "Screws":
+                quantity = math.ceil(self.area / coverage)
+                print(f"Screws: Based on area")
             
             else:
                 quantity = math.ceil(self.area / coverage)
-                print(f"{original_name}: Default calculation")
+                print(f"{material_name}: Default calculation")
 
             total_cost = quantity * cost
             print(f"Final Quantity: {quantity}, Total Cost: £{total_cost}")
 
             results.append({
-                'name': original_name,
+                'name': material_name,
                 'quantity': quantity,
                 'unit_cost': cost,
                 'total_cost': total_cost,
