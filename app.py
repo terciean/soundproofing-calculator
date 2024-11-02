@@ -232,14 +232,15 @@ def get_solutions(surface_type):
         collection = wallsolutions if surface_type == 'walls' else ceilingsolutions
         logger.info(f"Using collection: {collection.name}")
         
-        # Get all solutions from the collection
-        solutions = list(collection.distinct('solution'))
-        logger.info(f"Found solutions: {solutions}")
+        # Get all solutions for this surface type using distinct
+        solutions = collection.distinct('solution', {'surface_type': surface_type})
+        logger.info(f"Found {len(solutions)} solutions")
+        logger.info(f"Solutions: {solutions}")
         
         return jsonify(solutions)
         
     except Exception as e:
-        logger.error(f"Error getting solutions: {str(e)}")
+        logger.error(f"Error in get_solutions: {str(e)}")
         return jsonify({'error': str(e)}), 500
 @app.route('/health')
 def health_check():
