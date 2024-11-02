@@ -1,4 +1,5 @@
 import math
+from ..utils import matches_material
 
 class IndependentWallStandard:
     """
@@ -16,11 +17,10 @@ def calculate(self, materials):
         print(f"Perimeter = {perimeter}m")
 
         for material in materials:
-            # Convert material name to lowercase for comparison, but keep original for display
+            # Keep original name for display
             original_name = material.get('name', '')
             material_name = original_name.strip().lower()
-            coverage_str = str(material.get('coverage', '0')).strip()
-            coverage = float(coverage_str)
+            coverage = float(str(material.get('coverage', '0')).strip())
             cost = float(material.get('cost', 0))
 
             print(f"\nProcessing Material: {original_name}")
@@ -34,27 +34,27 @@ def calculate(self, materials):
             area_needed = self.area
             layers = 1
 
-            # Special handling for different materials - using lowercase for comparison
-            if '12.5mm sound plasterboard' in material_name:
+            # Special handling for different materials using case-insensitive matching
+            if matches_material(material_name, 'sound plasterboard'):
                 layers = 2
                 area_needed = self.area * layers * self.extra_multiplier
                 quantity = math.ceil(area_needed / coverage)
                 print(f"Plasterboard: {layers} layers with 10% extra, Area needed: {area_needed}m²")
             
-            elif 'acoustic sealant' in material_name:
+            elif matches_material(material_name, 'acoustic sealant'):
                 quantity = math.ceil(perimeter / coverage)
                 print(f"Acoustic Sealant: Based on perimeter: {perimeter}m")
             
-            elif 'rockwool rwa45' in material_name or 'tecsound' in material_name:
+            elif matches_material(material_name, 'rockwool rwa45') or matches_material(material_name, 'tecsound'):
                 area_needed = self.area * self.extra_multiplier
                 quantity = math.ceil(area_needed / coverage)
                 print(f"{original_name}: 10% extra, Area needed: {area_needed}m²")
             
-            elif any(x in material_name for x in ['metal frame', 'resilient bar', 'floor protection']):
+            elif matches_material(material_name, 'metal frame') or matches_material(material_name, 'resilient bar') or matches_material(material_name, 'floor protection'):
                 quantity = math.ceil(self.area / coverage)
                 print(f"{original_name}: Standard calculation")
             
-            elif 'screws' in material_name:
+            elif matches_material(material_name, 'screws'):
                 quantity = 1
                 print(f"Screws: Minimum 1 box required for any size wall")
             
