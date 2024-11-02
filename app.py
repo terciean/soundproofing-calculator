@@ -70,13 +70,14 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 calculator_path = os.path.join(current_dir, 'solutions')
 sys.path.append(calculator_path)
 
-# Import solutions
+# Import solutions# Change these import lines (around line 70-80)
 try:
     # Wall solutions
     from solutions.walls.Independentwall import IndependentWallStandard, IndependentWallSP15
     from solutions.walls.resilientbarwall import ResilientBarWallStandard, ResilientBarWallSP15
     from solutions.walls.GenieClipWall import GenieClipWallStandard, GenieClipWallSP15
     from solutions.walls.M20Wall import M20WallStandard, M20WallSP15
+    
     # Ceiling solutions
     from solutions.ceilings.independentceiling import IndependentCeilingStandard, IndependentCeilingSP15
     from solutions.ceilings.genieclipceiling import GenieClipCeilingStandard, GenieClipCeilingSP15
@@ -86,6 +87,8 @@ try:
     logger.info("Successfully imported wall and ceiling solutions")
 except ImportError as e:
     logger.error(f"Import Error: {e}")
+    logger.error(f"Current directory: {os.getcwd()}")
+    logger.error(f"Python path: {sys.path}")
     raise
 
 # Calculator mapping
@@ -108,7 +111,32 @@ CALCULATORS = {
     'Resilient bar Ceiling (SP15 Soundboard Upgrade)': ResilientBarCeilingSP15
 }
 
-# Routes
+@app.route('/check_db')
+def check_db():
+    try:
+        # Check wall solutions
+        wall_solutions = list(wallsolutions.find({}, {'solution': 1, 'surface_type': 1, '_id': 0}))
+        wall_count = len(wall_solutions)
+        
+        # Check ceiling solutions
+        ceiling_solutions = list(ceilingsolutions.find({}, {'solution': 1, 'surface_type': 1, '_id': 0}))
+        ceiling_count = len(ceiling_solutions)
+        
+        # Get one complete document as example
+        example_doc = wallsolutions.find_one({})
+        if example_doc:
+            example_doc['_id'] = str(example_doc['_id'])  # Convert ObjectId to string
+        
+        return jsonify({
+            'wall_solutions': wall_solutions,
+            'wall_count': wall_count,
+            'ceiling_solutions': ceiling_solutions,
+            'ceiling_count': ceiling_count,
+            'example_document': example_doc,
+            'calculator_keys': list(CALCULATORS.keys())
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)})# Routes
 @app.route('/get_solutions/<surface_type>')
 def get_solutions(surface_type):
     try:
