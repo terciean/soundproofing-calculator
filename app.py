@@ -125,7 +125,14 @@ def index():
             calculator = calculator_class(length, height)
             
             # Get solution details from MongoDB
-            collection = wallsolutions if "wall" in solution_type.lower() else ceilingsolutions
+            solution_lower = solution_type.lower()
+            if any(keyword in solution_lower for keyword in ['wall', 'm20']):  # M20 is a wall solution
+                collection = wallsolutions
+            elif any(keyword in solution_lower for keyword in ['ceiling', 'lb3']):  # LB3 is a ceiling solution
+                collection = ceilingsolutions
+            else:
+                # Default to checking if it contains 'wall' as a fallback
+                collection = wallsolutions if "wall" in solution_lower else ceilingsolutions
             solution = collection.find_one({"solution": solution_type})
             
             if not solution:
