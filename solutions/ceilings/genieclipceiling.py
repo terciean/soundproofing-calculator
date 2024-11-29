@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from base_calculator import BaseCalculator
+from solutions.base_calculator import BaseCalculator
 class GenieClipCeilingStandard(BaseCalculator):
     """
     Calculates materials for the Genie Clip Ceiling solution.

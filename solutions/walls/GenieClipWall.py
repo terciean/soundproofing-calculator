@@ -1,4 +1,5 @@
-from ..base_calculator import BaseCalculator
+from solutions.base_calculator import BaseCalculator
+import math
 
 class GenieClipWallStandard(BaseCalculator):
     """

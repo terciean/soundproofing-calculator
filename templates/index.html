@@ -5,290 +5,132 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soundproofing Calculator</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Initialize global state and dependencies -->
+    <script>
+        // Initialize global state before any scripts load
+        window.FormState = {
+            dimensions: {},
+            surfaces: new Map(),
+            soundproofing: new Map()
+        };
+
+        window.InitializationState = {
+            initialized: new Set(),
+            dependencies: {
+                errorUtils: [],
+                roomManager: [],
+                roomCalculator: ['roomManager'],
+                surfaceManager: ['roomManager', 'roomCalculator'],
+                wallManager: ['roomManager', 'surfaceManager'],
+                soundproofingManager: ['roomManager'],
+                workflowManager: ['roomManager', 'surfaceManager', 'wallManager', 'soundproofingManager'],
+                formHandlers: ['workflowManager']
+            }
+        };
+    </script>
+
+    <!-- Load core utilities first -->
+    <script src="{{ url_for('static', filename='js/error-utils.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/utils.js') }}" defer></script>
+
+    <!-- Load managers in dependency order -->
+    <script src="{{ url_for('static', filename='js/room-manager.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/room-calculator.js') }}" defer onerror="window.errorUtils?.displayError('Failed to load room-calculator.js');"></script>
+    <script src="{{ url_for('static', filename='js/surface-manager.js') }}" defer onerror="window.errorUtils?.displayError('Failed to load surface-manager.js');"></script>
+    <script src="{{ url_for('static', filename='js/wall-manager.js') }}" defer onerror="window.errorUtils?.displayError('Failed to load wall-manager.js');"></script>
+    <script src="{{ url_for('static', filename='js/soundproofing-manager.js') }}" defer onerror="window.errorUtils?.displayError('Failed to load soundproofing-manager.js');"></script>
+    <script src="{{ url_for('static', filename='js/workflow-manager.js') }}" defer onerror="window.errorUtils?.displayError('Failed to load workflow-manager.js');"></script>
+    <script src="{{ url_for('static', filename='js/form-handlers.js') }}" defer onerror="window.errorUtils?.displayError('Failed to load form-handlers.js');"></script>
+
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" class="loading-indicator" style="display: none;">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading...</div>
+    </div>
 </head>
+
 <body>
     <div class="container">
-        <header>
+        <div id="error-container" class="error-container" role="alert" aria-live="polite"></div>
+        
+        <header class="app-header">
             <h1>Soundproofing Calculator</h1>
+            <p class="subtitle">Professional acoustic solutions for your space</p>
+            <button id="toggle-dark-mode" class="btn btn-secondary">Toggle Dark Mode</button>
         </header>
 
-        <main>
-            <!-- Display Errors -->
-            {% if error and message %}
-            <div class="error-container">
-                <h2>{{ error }}</h2>
-                <p class="error-message">{{ message }}</p>
+        <div class="workflow-container">
+            <div class="workflow-content" aria-live="assertive" aria-atomic="true">
+                <!-- Workflow content will be dynamically loaded here -->
             </div>
-            {% endif %}
 
-            <!-- Calculator Form -->
-            <form action="/" method="POST" class="calculator-form">
-                <div class="form-group">
-                    <label for="length">Wall Length (meters):</label>
-                    <input type="number" id="length" name="length" step="0.01" min="0.1" required>
+            <!-- Wall Features Section -->
+            <section class="workflow-section wall-features">
+                <div class="section-header">
+                    <h2>Wall Features</h2>
+                    <p class="section-description">Select features for your walls</p>
                 </div>
+                <div class="panel-header">Wall Features</div>
+                <!-- The container for wall features will be appended here -->
+            </section>
 
-                <div class="form-group">
-                    <label for="height">Wall Height (meters):</label>
-                    <input type="number" id="height" name="height" step="0.01" min="0.1" required>
+            <!-- Surface Features Section -->
+            <section class="workflow-section" id="surface-features-section">
+                <div class="section-header">
+                    <h2>Surface Features</h2>
+                    <p class="section-description">Select features for each surface type</p>
                 </div>
-
-                <!-- Solution Type Select Element -->
-                <!-- Surface Type Select Element -->
-<div class="form-group">
-    <label for="surfaceType">Surface Type:</label>
-    <select id="surfaceType" name="surfaceType" required>
-        <option value="">Select Surface Type</option>
-        <option value="walls">Walls</option>
-        <option value="ceilings">Ceilings</option>
-    </select>
-</div>
-
-<!-- Solution Type Select Element -->
-<div class="form-group">
-    <label for="solutionType">Solution Type:</label>
-    <select id="solutionType" name="solutionType" required disabled>
-        <option value="">Please select a surface type first</option>
-                    </select>
+                <div class="surfaces-container">
+                    <div class="workflow-section-placeholder">Please wait, loading the required content...</div>
                 </div>
-                <!-- Installation Days Select -->
-                <div class="form-group">
-                    <label for="fittingDays">Installation Days (£685 per day inc. VAT):</label>
-                    <select id="fittingDays" name="fittingDays" required>
-                        <option value="0">No Installation Required</option>
-                        <option value="1">1 Day (£685)</option>
-                        <option value="2">2 Days (£1,370)</option>
-                        <option value="3">3 Days (£2,055)</option>
-                        <option value="4">4 Days (£2,740)</option>
-                        <option value="5">5 Days (£3,425)</option>
-                        <option value="6">6 Days (£4,110)</option>
-                        <option value="7">7 Days (£4,795)</option>
-                        <option value="8">8 Days (£5,480)</option>
-                    </select>
+            </section>
+
+            <!-- Soundproofing Section -->
+            <section class="workflow-section" id="soundproofing-section">
+                <div class="section-header">
+                    <h2>Soundproofing Solutions</h2>
+                    <p class="section-description">Choose soundproofing solutions for your room</p>
                 </div>
-
-                <!-- Removal Required Section -->
-                <div class="form-group">
-                    <label for="removalRequired">Removal of Existing Materials Required?</label>
-                    <select id="removalRequired" name="removalRequired" required>
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
-                    </select>
+                <div class="soundproofing-container">
+                    <div class="workflow-section-placeholder">Please wait, loading the required content...</div>
                 </div>
+            </section>
 
-                <!-- Removal Dimensions (initially hidden) -->
-                <div id="removalDimensions" class="form-group" style="display: none;">
-                    <div class="form-group">
-                        <label for="removalLength">Removal Area Length (meters):</label>
-                        <input type="number" id="removalLength" name="removalLength" step="0.01" min="0.1">
-                    </div>
-                    <div class="form-group">
-                        <label for="removalHeight">Removal Area Height (meters):</label>
-                        <input type="number" id="removalHeight" name="removalHeight" step="0.01" min="0.1">
-                    </div>
+            <!-- Review Section -->
+            <section class="workflow-section" id="review-section">
+                <div class="section-header">
+                    <h2>Review</h2>
+                    <p class="section-description">Review your selections and calculations</p>
                 </div>
-
-                <button type="submit" class="calculate-btn">Calculate Materials</button>
-            </form>
-
-            <!-- Display Results -->
-            {% if results and solution_type %}
-            <div class="results-container">
-                <h2>Calculation Results</h2>
-                
-                <!-- Solution Details -->
-                <div class="solution-details">
-                    <h3>{{ solution_type }}</h3>
-                    <p class="area-info">Total Area: {{ "%.2f"|format(area) }} m²</p>
+                <div class="review-container">
+                    <div class="workflow-section-placeholder">Please wait, loading the required content...</div>
                 </div>
-
-                <!-- Materials Table -->
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Material</th>
-                            <th>Coverage per Unit</th>
-                            <th>Required Quantity</th>
-                            <th>Unit Cost</th>
-                            <th>Total Cost</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in results %}
-                        <tr>
-                            <td>{{ item.name|default('') }}</td>
-                            <td>{{ item.coverage|default('') }}</td>
-                            <td>{{ item.quantity|default('') }}</td>
-                            <td>£{{ "%.2f"|format(item.unit_cost|default(0)) }}</td>
-                            <td>£{{ "%.2f"|format(item.total_cost|default(0)) }}</td>
-                        </tr>
-                        {% endfor %}
-
-                        <!-- Total Row -->
-                        {% set materials_cost = namespace(value=0) %}
-                        {% for item in results %}
-                            {% if not item.name.startswith('Installation Fee') and item.name != 'Removal Fee' %}
-                                {% set materials_cost.value = materials_cost.value + item.total_cost %}
-                            {% endif %}
-                        {% endfor %}
-                        {% set total_cost = results|sum(attribute='total_cost') %}
-                        <tr class="total-row">
-                            <td colspan="4"><strong>Total Cost</strong></td>
-                            <td><strong>£{{ "%.2f"|format(total_cost) }}</strong></td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <!-- Cost Breakdown Section -->
-                <div class="cost-breakdown">
-                    <h3>Cost Breakdown:</h3>
-                    <ul>
-                        <li>Materials Cost: £{{ "%.2f"|format(materials_cost.value) }}</li>
-                        {% if request.form.get('fittingDays')|int > 0 %}
-                            {% for item in results %}
-                                {% if item.name.startswith('Installation Fee') %}
-                                    <li>Installation Cost ({{ request.form.get('fittingDays') }} days): £{{ "%.2f"|format(item.total_cost) }}</li>
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                        {% if request.form.get('removalRequired') == 'yes' %}
-                            {% for item in results %}
-                                {% if item.name == 'Removal Fee' %}
-                                    <li>Removal Cost ({{ "%.2f"|format(item.quantity) }} m²): £{{ "%.2f"|format(item.total_cost) }}</li>
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                    </ul>
-                </div>
-
-                <!-- Notes Section -->
-                {% if solution.notes %}
-                <div class="notes">
-                    <h3>Important Notes:</h3>
-                    <ul>
-                        {% for note in solution.notes %}
-                            <li>{{ note }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                {% endif %}
-
-                <div class="notes">
-                    <h3>General Notes:</h3>
-                    <ul>
-                        <li>Coverage values are per unit of material</li>
-                        <li>Installation fee is £685 per day (including VAT)</li>
-                        <li>Removal fee is £25 per m²</li>
-                    </ul>
-                </div>
-
-                <!-- Back Button -->
-                <div class="button-container">
-                    <a href="/" class="back-button">Calculate Another</a>
-                </div>
-            </div>
-            {% endif %}
-        </main>
+            </section>
+        </div>
     </div>
 
-    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/theme-toggle.js') }}" defer></script>
+
+    <!-- Add this right before closing body tag -->
     <script>
-        async function updateSolutionTypes() {
-    try {
-        console.log('Fetching solutions');
-        const wallResponse = await fetch('/get_solutions/walls');
-        const ceilingResponse = await fetch('/get_solutions/ceilings');
-        
-        if (!wallResponse.ok || !ceilingResponse.ok) {
-            throw new Error(`HTTP error! status: ${wallResponse.status} ${ceilingResponse.status}`);
-        }
-        
-        const wallSolutions = await wallResponse.json();
-        const ceilingSolutions = await ceilingResponse.json();
-        const solutions = [...wallSolutions, ...ceilingSolutions];
-        
-        console.log('Solutions received:', solutions);
-
-        // Clear and update options
-        solutionTypeSelect.innerHTML = '';
-        
-        if (solutions.length === 0) {
-            const option = document.createElement('option');
-            option.value = "";
-            option.textContent = "No solutions available";
-            solutionTypeSelect.appendChild(option);
-        } else {
-            // Add a default option
-            const defaultOption = document.createElement('option');
-            defaultOption.value = "";
-            defaultOption.textContent = "Select a solution";
-            solutionTypeSelect.appendChild(defaultOption);
-            
-            // Add the solutions
-            solutions.forEach(solution => {
-                const option = document.createElement('option');
-                option.value = solution;
-                option.textContent = solution;
-                solutionTypeSelect.appendChild(option);
-            });
-        }
-
-        console.log('Solutions updated successfully');
-    } catch (error) {
-        console.error('Error updating solutions:', error);
-        solutionTypeSelect.innerHTML = '<option value="">Error loading solutions</option>';
-    }
-}
-document.addEventListener('DOMContentLoaded', function() {
-    const surfaceTypeSelect = document.getElementById('surfaceType');
-    const solutionTypeSelect = document.getElementById('solutionType');
-
-    surfaceTypeSelect.addEventListener('change', async function() {
-        const selectedSurface = this.value;
-        solutionTypeSelect.disabled = !selectedSurface;
-
-        if (selectedSurface) {
+        document.addEventListener('DOMContentLoaded', async () => {
             try {
-                const response = await fetch(`/get_solutions/${selectedSurface}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                // Show loading indicator
+                document.getElementById('loading-indicator').style.display = 'block';
                 
-                const solutions = await response.json();
-                
-                // Clear and update options
-                solutionTypeSelect.innerHTML = '';
-                
-                if (solutions.length === 0) {
-                    const option = document.createElement('option');
-                    option.value = "";
-                    option.textContent = `No ${selectedSurface} solutions available`;
-                    solutionTypeSelect.appendChild(option);
-                } else {
-                    // Add a default option
-                    const defaultOption = document.createElement('option');
-                    defaultOption.value = "";
-                    defaultOption.textContent = `Select a ${selectedSurface.slice(0, -1)} solution`;
-                    solutionTypeSelect.appendChild(defaultOption);
-                    
-                    // Add the solutions
-                    solutions.forEach(solution => {
-                        const option = document.createElement('option');
-                        option.value = solution;
-                        option.textContent = solution;
-                        solutionTypeSelect.appendChild(option);
-                    });
-                }
+                await initializeApplication();
+                console.log('Application fully initialized');
             } catch (error) {
-                console.error('Error fetching solutions:', error);
-                solutionTypeSelect.innerHTML = '<option value="">Error loading solutions</option>';
+                console.error('Failed to initialize application:', error);
+                window.errorUtils?.displayError('Application initialization failed. Please refresh the page.');
+            } finally {
+                // Hide loading indicator
+                document.getElementById('loading-indicator').style.display = 'none';
             }
-        } else {
-            solutionTypeSelect.innerHTML = '<option value="">Please select a surface type first</option>';
-        }
         });
-    });
-
     </script>
 </body>
 </html>
