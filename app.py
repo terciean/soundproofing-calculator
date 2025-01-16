@@ -14,6 +14,7 @@ import dns.resolver
 import time
 import math
 from solutions.database import get_db
+import re
 
 # Add debug logging for imports
 print("Starting imports...")
@@ -730,35 +731,56 @@ def get_noise_type_reasoning(noise_type):
 @app.route('/api/calculate-costs', methods=['POST'])
 def calculate_costs():
     try:
-        data = request.json
-        dimensions = data.get('dimensions', {})
-        solution_type = data.get('solution', '').strip()  # Normalize by stripping spaces
+        data = request.get_json()
+        solution_type = data.get('solution')
+        dimensions = data.get('dimensions')
 
-        # Log incoming request
+        # Log the request
         logger.info(f"Calculating costs for solution: {solution_type}")
         logger.info(f"Dimensions: {dimensions}")
-
-        # Get database connection
-        db = get_db()
 
         # Validate input
         if not solution_type or not dimensions:
             return jsonify({'error': 'Missing solution type or dimensions'}), 400
 
-        # Normalize the solution type (lowercase) for case-insensitive matching
-        solution_type_normalized = solution_type.lower()
+        # Determine which collection to query based on solution type
+        collection = db.ceilingsolutions if 'ceiling' in solution_type.lower() else db.wallsolutions
+        logger.info(f"Querying collection: {collection.name}")
 
-        # Query the MongoDB collection with case-insensitive matching using regex
-        solution_data = db.wallsolutions.find_one({
-            'name': {'$regex': f'^{solution_type_normalized}$', '$options': 'i'}
-        })
+        # Query the MongoDB collection directly first
+        direct_match = collection.find_one({'solution': solution_type})
+        if direct_match:
+            logger.info(f"Found direct match: {direct_match}")
+            solution_data = direct_match
+        else:
+            # Try case-insensitive search with escaped regex pattern
+            solution_type_normalized = solution_type.lower().strip()
+            logger.info(f"No direct match found, trying case-insensitive search for: {solution_type_normalized}")
+            # Escape regex special characters
+            solution_type_escaped = re.escape(solution_type_normalized)
+            solution_data = collection.find_one({
+                'solution': {'$regex': f'^{solution_type_escaped}$', '$options': 'i'}
+            })
 
         if not solution_data:
-            logger.error(f"Solution type {solution_type} not found in database")
-            return jsonify({'error': f'Solution type {solution_type} not found'}), 400
+            # Try to find similar solutions for better error message
+            # Use the first word of the solution type for fuzzy matching
+            first_word = solution_type_normalized.split()[0]
+            first_word_escaped = re.escape(first_word)
+            similar_solutions = list(collection.find(
+                {'solution': {'$regex': f'.*{first_word_escaped}.*', '$options': 'i'}},
+                {'solution': 1, '_id': 0}
+            ).limit(3))
+            
+            error_msg = f"Solution type '{solution_type}' not found"
+            if similar_solutions:
+                error_msg += ". Did you mean one of these: " + ", ".join([s['solution'] for s in similar_solutions])
+            
+            logger.error(error_msg)
+            return jsonify({'error': error_msg}), 400
 
-        # Get materials for this solution
-        materials = list(db.materials.find({'solution': solution_type}))
+        # Get materials from the solution data
+        materials = solution_data.get('materials', [])
         if not materials:
             logger.error(f"No materials found for solution {solution_type}")
             return jsonify({'error': 'No materials found for solution'}), 400
@@ -771,23 +793,24 @@ def calculate_costs():
         total = 0
         
         for material in materials:
-            quantity = math.ceil(area)
-            cost = quantity * material['cost_per_unit']
+            quantity = math.ceil(area / float(material.get('coverage', 1)))
+            cost = quantity * material['cost']
             costs.append({
                 'name': material['name'],
                 'quantity': quantity,
-                'rate': material['cost_per_unit'],
+                'rate': material['cost'],
                 'total_cost': cost
             })
             total += cost
 
-        # Add labor cost
-        labor_units = math.ceil(area / 10)  # 1 unit per 10m²
-        labor_cost = labor_units * solution_data['labor_rate']
+        # Add labor cost (1 unit per 10m²)
+        labor_units = math.ceil(area / 10)
+        labor_rate = 40  # Default labor rate
+        labor_cost = labor_units * labor_rate
         costs.append({
             'name': 'Installation Labor',
             'quantity': labor_units,
-            'rate': solution_data['labor_rate'],
+            'rate': labor_rate,
             'total_cost': labor_cost
         })
         total += labor_cost

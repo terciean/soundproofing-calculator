@@ -4,12 +4,21 @@ if (!window.SoundproofingManager) {
             this.initialized = false;
             this.solutions = {
                 wall: {
-                    standard: ['M20WallStandard', 'GenieClipWallStandard', 'ResilientBarWallStandard', 'IndependentWallStandard'],
-                    premium: ['M20WallSP15', 'GenieClipWallSP15', 'ResilientBarWallSP15', 'IndependentWallSP15']
+                    standard: ['Genie Clip wall (Standard)', 'Independent Wall (Standard)', 'Resilient bar wall (Standard)', 'M20 Solution (Standard)'],
+                    premium: ['Genie Clip wall (SP15 Soundboard Upgrade)', 'Independent Wall (SP15 Soundboard Upgrade)', 'Resilient bar wall (SP15 Soundboard Upgrade)', 'M20 Solution (SP15 Soundboard upgrade)']
                 },
                 ceiling: {
-                    standard: ['ResilientBarCeilingStandard'],
-                    premium: ['ResilientBarCeilingSP15']
+                    standard: ['Genie Clip ceiling', 'LB3 Genie Clip', 'Independent Ceiling', 'Resilient bar Ceiling'],
+                    premium: ['Genie Clip ceiling (SP15 Soundboard Upgrade)', 'LB3 Genie Clip (SP15 Soundboard Upgrade)', 'Independent Ceiling (SP15 Soundboard Upgrade)', 'Resilient bar Ceiling (SP15 Soundboard Upgrade)']
+                },
+                floor: {
+                    standard: [],
+                    premium: [],
+                    message: 'Floor solutions require custom assessment. Please contact our specialists for a detailed quote.',
+                    contactInfo: {
+                        phone: '+44 (0)1234 567890',
+                        email: 'info@soundproofing.com'
+                    }
                 }
             };
             
@@ -19,86 +28,245 @@ if (!window.SoundproofingManager) {
 
             // Add specifications for all solutions
             this.solutionCharacteristics = {
-                'M20WallStandard': {
-                    soundReduction: 45,
-                    frequencyRange: [125, 4000],
-                    cost: 100,
-                    thickness: 0.10,
-                    installationTime: 1,
-                    maintenanceRequired: 'low',
-                    durability: 0.9,
-                    impactResistance: 0.7
+                'Genie Clip wall (Standard)': {
+                    soundReduction: 52,
+                    frequencyRange: [80, 5000],
+                    materials: [
+                        {name: 'Genie Clip', cost: 3.4, coverage: '4'},
+                        {name: 'Furring Channel', cost: 4.45, coverage: '2'},
+                        {name: 'Rockwool RWA45 50mm', cost: 50.2, coverage: '8.64'},
+                        {name: 'Resilient bars', cost: 4.2, coverage: '1'},
+                        {name: '12.5mm Sound Plasterboard', cost: 18.45, coverage: '2.88'},
+                        {name: 'Screws', cost: 16.21, coverage: '30'},
+                        {name: 'Floor protection', cost: 25, coverage: '30'}
+                    ],
+                    total_cost: 159.55,
+                    notes: ['2 layers of 12.5mm plasterboard for this system.', 'Add 1 box of screws no matter the m².']
                 },
-                'GenieClipWallStandard': {
+                'M20 Solution (SP15 Soundboard upgrade)': {
+                    soundReduction: 56,
+                    frequencyRange: [70, 5500],
+                    materials: [
+                        {name: 'M20 Rubber wall panel', cost: 23.95, coverage: '1'},
+                        {name: 'M20 adhesive', cost: 5.95, coverage: '1'},
+                        {name: 'Acoustic Mastic', cost: 12.35, coverage: '2'},
+                        {name: 'SP15 Soundboard', cost: 26.95, coverage: '0.96'},
+                        {name: '12.5mm Sound plasterboard', cost: 18.45, coverage: '2.88'}
+                    ],
+                    total_cost: 93.65,
+                    notes: ['We only use 1 layer of plasterboard on this system.']
+                },
+                'Genie Clip wall (SP15 Soundboard Upgrade)': {
+                    soundReduction: 58,
+                    frequencyRange: [63, 6000],
+                    materials: [
+                        {name: 'Genie Clip', cost: 3.4, coverage: '0.25'},
+                        {name: 'Furring Channel', cost: 4.45, coverage: '0.5'},
+                        {name: 'Rockwool RWA45 50mm', cost: 50.2, coverage: '8.64'},
+                        {name: 'Resilient bar', cost: 4.2, coverage: '1'},
+                        {name: '12.5mm Sound Plasterboard', cost: 18.45, coverage: '2.88'},
+                        {name: 'Acoustic Sealant', cost: 12.35, coverage: '3'},
+                        {name: 'SP15 Soundboard', cost: 22.95, coverage: '1'},
+                        {name: 'Screws', cost: 16.21, coverage: '30'},
+                        {name: 'Floor protection', cost: 30, coverage: '30'}
+                    ],
+                    total_cost: 199.85,
+                    notes: ['Only 1 layer of 12.5mm plasterboard on this system.']
+                },
+                'Independent Wall (Standard)': {
+                    soundReduction: 50,
+                    frequencyRange: [90, 4500],
+                    materials: [
+                        {name: 'Metal Frame Work', cost: 12.65, coverage: '1'},
+                        {name: 'Rockwool RWA45 50mm', cost: 50.2, coverage: '8.64'},
+                        {name: 'Resilient bar', cost: 4.2, coverage: '1'},
+                        {name: '12.5mm Sound Plasterboard', cost: 18.45, coverage: '2.88'},
+                        {name: 'Acoustic Sealant', cost: 12.35, coverage: '3'},
+                        {name: 'Screws', cost: 16.21, coverage: '30'},
+                        {name: 'Tecsound 50', cost: 59.5, coverage: '7.2'},
+                        {name: 'Floor protection', cost: 30, coverage: '30'}
+                    ],
+                    total_cost: 241.2,
+                    notes: ['Two layers of 12.5mm Sound Plasterboard.']
+                },
+                'Independent Wall (SP15 Soundboard Upgrade)': {
                     soundReduction: 55,
                     frequencyRange: [63, 8000],
-                    cost: 180,
-                    thickness: 0.15,
-                    installationTime: 2,
-                    maintenanceRequired: 'medium',
-                    durability: 0.95,
-                    impactResistance: 0.8
+                    materials: [
+                        {name: 'Metal Frame Work', cost: 12.65, coverage: '1'},
+                        {name: 'Rockwool RWA45 50mm', cost: 50.2, coverage: '8.64'},
+                        {name: 'Resilient bar', cost: 4.2, coverage: '1'},
+                        {name: '12.5mm Sound Plasterboard', cost: 18.45, coverage: '2.88'},
+                        {name: 'Acoustic Sealant', cost: 12.35, coverage: '3'},
+                        {name: 'Tecsound 50', cost: 59.5, coverage: '7.2'},
+                        {name: '1 box screws', cost: 16.21, coverage: '30'},
+                        {name: 'Floor protection', cost: 30, coverage: '30'},
+                        {name: 'SP15 Soundboard', cost: 22.95, coverage: '1'}
+                    ],
+                    total_cost: 264.15,
+                    notes: ['Only one layer of 12.5mm sound plasterboard.']
                 },
-                'ResilientBarWallStandard': {
-                    soundReduction: 50,
-                    frequencyRange: [100, 6000],
-                    cost: 150,
-                    thickness: 0.12,
-                    installationTime: 1.5,
-                    maintenanceRequired: 'low',
-                    durability: 0.85,
-                    impactResistance: 0.75
+                'Resilient bar wall (Standard)': {
+                    soundReduction: 48,
+                    frequencyRange: [100, 4000],
+                    materials: [
+                        {name: 'Rockwool RW3 100mm', cost: 42.95, coverage: '2.88'},
+                        {name: 'Resilient bar', cost: 4.2, coverage: '1'},
+                        {name: '12.5mm Sound plasterboard', cost: 18.45, coverage: '2.88'},
+                        {name: 'Acoustic Sealant', cost: 12.35, coverage: '3'},
+                        {name: 'Floor protection', cost: 30, coverage: '30'},
+                        {name: 'Screws', cost: 16.21, coverage: '30'}
+                    ],
+                    total_cost: 124.16
                 },
-                'IndependentWallStandard': {
-                    soundReduction: 60,
-                    frequencyRange: [50, 10000],
-                    cost: 200,
-                    thickness: 0.20,
-                    installationTime: 3,
-                    maintenanceRequired: 'low',
-                    durability: 0.98,
-                    impactResistance: 0.9
+                'Resilient bar wall (SP15 Soundboard Upgrade)': {
+                    soundReduction: 53,
+                    frequencyRange: [80, 5000],
+                    materials: [
+                        {name: 'Rockwool RW3 100mm', cost: 42.95, coverage: '2.88'},
+                        {name: 'Resilient bar', cost: 4.2, coverage: '1'},
+                        {name: '12.5mm Sound Plasterboard', cost: 18.45, coverage: '2.88'},
+                        {name: 'SP15 Soundboard', cost: 22.95, coverage: '1'},
+                        {name: 'Acoustic Sealant', cost: 12.35, coverage: '3'},
+                        {name: 'Screws', cost: 16.21, coverage: '30'},
+                        {name: 'Floor protection', cost: 30, coverage: '30'}
+                    ],
+                    total_cost: 184.75,
+                    notes: ['Only one layer of 12.5mm sound plasterboard.']
                 },
-                // Add SP15 versions with enhanced specs
-                'M20WallSP15': {
+                'M20 Solution (Standard)': {
+                    soundReduction: 45,
+                    frequencyRange: [125, 4000],
+                    materials: [
+                        {name: 'M20 Rubber wall panel', cost: 23.95, coverage: '1'},
+                        {name: 'M20 adhesive', cost: 5.95, coverage: '1'},
+                        {name: 'Acoustic Mastic', cost: 12.35, coverage: '2'},
+                        {name: '12.5mm Sound plasterboard', cost: 18.45, coverage: '2.88'}
+                    ],
+                    total_cost: 60.7
+                },
+                'Genie Clip ceiling': {
                     soundReduction: 52,
-                    frequencyRange: [100, 5000],
-                    cost: 150,
-                    thickness: 0.12,
-                    installationTime: 1.5,
-                    maintenanceRequired: 'medium',
-                    durability: 0.92,
-                    impactResistance: 0.8
+                    frequencyRange: [80, 5000],
+                    materials: [
+                        {name: 'Genie Clip', cost: 3.4, coverage: '0.25'},
+                        {name: 'Furring Channel', cost: 4.45, coverage: '0.50'},
+                        {name: 'Resilient bar', cost: 4.2, coverage: '1'},
+                        {name: 'Rockwool RWA45 50mm', cost: 50.2, coverage: '8.64'},
+                        {name: '12.5mm Sound Plasterboard', cost: 18.45, coverage: '2.88'},
+                        {name: 'Acoustic Sealant', cost: 12.35, coverage: '3'},
+                        {name: 'Screws', cost: 16.21, coverage: '30'},
+                        {name: 'Floor protection', cost: 30, coverage: '30'}
+                    ],
+                    total_cost: 139.26,
+                    notes: ['2 layers of 12.5mm sound plasterboard.']
                 },
-                'GenieClipWallSP15': {
-                    soundReduction: 62,
-                    frequencyRange: [50, 10000],
-                    cost: 230,
-                    thickness: 0.17,
-                    installationTime: 2.5,
-                    maintenanceRequired: 'medium',
-                    durability: 0.97,
-                    impactResistance: 0.85
+                'Genie Clip ceiling (SP15 Soundboard Upgrade)': {
+                    soundReduction: 56,
+                    frequencyRange: [70, 5500],
+                    materials: [
+                        {name: 'Genie Clip', cost: 3.4, coverage: '0.25'},
+                        {name: 'Furring Channel', cost: 4.45, coverage: '0.50'},
+                        {name: 'Resilient bar', cost: 4.2, coverage: '1'},
+                        {name: 'Rockwool RWA45 50mm', cost: 50.2, coverage: '8.64'},
+                        {name: '12.5mm Sound Plasterboard', cost: 18.45, coverage: '2.88'},
+                        {name: 'SP15 Soundboard', cost: 22.95, coverage: '1'},
+                        {name: 'Acoustic Sealant', cost: 12.35, coverage: '3'},
+                        {name: 'Screws', cost: 16.21, coverage: '30'},
+                        {name: 'Floor protection', cost: 30, coverage: '30'}
+                    ],
+                    total_cost: 162.21,
+                    notes: ['One layer of 12.5mm plasterboard']
                 },
-                'ResilientBarWallSP15': {
-                    soundReduction: 57,
-                    frequencyRange: [80, 8000],
-                    cost: 200,
-                    thickness: 0.14,
-                    installationTime: 2,
-                    maintenanceRequired: 'medium',
-                    durability: 0.88,
-                    impactResistance: 0.8
+                'LB3 Genie Clip': {
+                    soundReduction: 54,
+                    frequencyRange: [75, 5200],
+                    materials: [
+                        {name: 'LB3 Genie Clip', cost: 6.2, coverage: '0.25'},
+                        {name: 'Furring Channel', cost: 4.45, coverage: '0.50'},
+                        {name: 'Resilient bar', cost: 4.2, coverage: '1'},
+                        {name: 'Rockwool RW3 100mm', cost: 42.95, coverage: '2.88'},
+                        {name: '12.5mm Sound Plasterboard', cost: 18.45, coverage: '2.88'},
+                        {name: 'Acoustic Sealant', cost: 12.35, coverage: '3'},
+                        {name: 'Screws', cost: 16.21, coverage: '30'},
+                        {name: 'Floor protection', cost: 30, coverage: '30'}
+                    ],
+                    total_cost: 134.81,
+                    notes: ['2 layers of 12.5mm Sound Plasterboard']
                 },
-                'IndependentWallSP15': {
-                    soundReduction: 67,
-                    frequencyRange: [40, 12000],
-                    cost: 250,
-                    thickness: 0.22,
-                    installationTime: 3.5,
-                    maintenanceRequired: 'medium',
-                    durability: 0.99,
-                    impactResistance: 0.95
+                'LB3 Genie Clip (SP15 Soundboard Upgrade)': {
+                    soundReduction: 58,
+                    frequencyRange: [65, 5800],
+                    materials: [
+                        {name: 'LB3 Genie Clip', cost: 6.2, coverage: '0.25'},
+                        {name: 'Furring Channel', cost: 4.45, coverage: '0.50'},
+                        {name: 'Resilient bar', cost: 4.2, coverage: '1'},
+                        {name: 'Rockwool RW3 100mm', cost: 42.95, coverage: '2.88'},
+                        {name: 'SP15 Soundboard', cost: 22.95, coverage: '1'},
+                        {name: '12.5mm Sound Plasterboard', cost: 18.45, coverage: '2.88'},
+                        {name: 'Acoustic Sealant', cost: 12.35, coverage: '3'},
+                        {name: 'Screws', cost: 16.21, coverage: '30'},
+                        {name: 'Floor protection', cost: 30, coverage: '30'}
+                    ],
+                    total_cost: 157.76,
+                    notes: ['1 layer of 12.5mm Sound Plasterboard']
+                },
+                'Independent Ceiling': {
+                    soundReduction: 50,
+                    frequencyRange: [90, 4500],
+                    materials: [
+                        {name: 'Timber and fixings', cost: 35, coverage: '1'},
+                        {name: 'Rockwool RW3 100mm', cost: 42.95, coverage: '2.88'},
+                        {name: 'Resilient bar', cost: 4.2, coverage: '1'},
+                        {name: '19mm Plank Plasterboard', cost: 15.5, coverage: '1.44'},
+                        {name: '12.5mm Sound Plasterboard', cost: 18.45, coverage: '2.88'},
+                        {name: 'Acoustic Sealant', cost: 12.35, coverage: '3'},
+                        {name: 'Screws', cost: 16.21, coverage: '30'},
+                        {name: 'Floor protection', cost: 30, coverage: '30'}
+                    ],
+                    total_cost: 174.66
+                },
+                'Independent Ceiling (SP15 Soundboard Upgrade)': {
+                    soundReduction: 55,
+                    frequencyRange: [80, 5000],
+                    materials: [
+                        {name: 'Timber and fixings', cost: 35, coverage: '1'},
+                        {name: 'Rockwool RW3 100mm', cost: 42.95, coverage: '2.88'},
+                        {name: 'Resilient bar', cost: 4.2, coverage: '1'},
+                        {name: 'SP15 Soundboard', cost: 22.95, coverage: '1'},
+                        {name: '12.5mm Sound Plasterboard', cost: 18.45, coverage: '2.88'},
+                        {name: 'Acoustic Sealant', cost: 12.35, coverage: '3'},
+                        {name: 'Screws', cost: 16.21, coverage: '30'},
+                        {name: 'Floor protection', cost: 30, coverage: '30'}
+                    ],
+                    total_cost: 182.11
+                },
+                'Resilient bar Ceiling': {
+                    soundReduction: 48,
+                    frequencyRange: [100, 4000],
+                    materials: [
+                        {name: 'Rockwool RW3 100mm', cost: 42.95, coverage: '2.88'},
+                        {name: 'Resilient bar', cost: 4.2, coverage: '1'},
+                        {name: '12.5mm Sound Plasterboard', cost: 18.45, coverage: '2.88'},
+                        {name: 'Acoustic Sealant', cost: 12.35, coverage: '3'},
+                        {name: 'Screws', cost: 16.21, coverage: '30'},
+                        {name: 'Floor protection', cost: 30, coverage: '30'}
+                    ],
+                    total_cost: 124.16
+                },
+                'Resilient bar Ceiling (SP15 Soundboard Upgrade)': {
+                    soundReduction: 53,
+                    frequencyRange: [85, 4500],
+                    materials: [
+                        {name: 'Rockwool RW3 100mm', cost: 42.95, coverage: '2.88'},
+                        {name: 'Resilient bar', cost: 4.2, coverage: '1'},
+                        {name: 'SP15 Soundboard', cost: 22.95, coverage: '1'},
+                        {name: '12.5mm Sound Plasterboard', cost: 18.45, coverage: '2.88'},
+                        {name: 'Acoustic Sealant', cost: 12.35, coverage: '3'},
+                        {name: 'Screws', cost: 16.21, coverage: '30'},
+                        {name: 'Floor protection', cost: 30, coverage: '30'}
+                    ],
+                    total_cost: 147.11
                 }
             };
 
@@ -554,6 +722,29 @@ if (!window.SoundproofingManager) {
                     reasoning
                 };
             }).sort((a, b) => b.score - a.score);
+        }
+
+        getCeilingSolution(tier, noiseData, context) {
+            const solutions = tier === 'premium' ? 
+                this.solutions.ceiling.premium : 
+                this.solutions.ceiling.standard;
+
+            if (!solutions || solutions.length === 0) {
+                return null;
+            }
+
+            return solutions.map(solutionName => {
+                const specs = this.solutionCharacteristics[solutionName];
+                const score = this.calculateSolutionScore(solutionName, noiseData, context);
+                const reasoning = this.generateSolutionReasoning(solutionName, specs, noiseData);
+                
+                return {
+                    name: solutionName,
+                    score,
+                    specs,
+                    reasoning
+                };
+            }).sort((a, b) => b.score - a.score)[0]; // Return the highest scored solution
         }
 
         generateSolutionReasoning(solution, specs, noiseData) {
@@ -1098,12 +1289,13 @@ async function fetchSolutionCosts(solution, dimensions) {
         }
 
         try {
-            const response = await fetch('/api/calculate-costs', {
+            const response = await fetch('http://192.168.1.41:10000/api/calculate-costs', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-Token': csrfToken,
-                    'X-Requested-With': 'XMLHttpRequest'
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify({
                     solution: solution,
@@ -1112,8 +1304,9 @@ async function fetchSolutionCosts(solution, dimensions) {
             });
             
             if (!response.ok) {
-                // If backend fails, return placeholder data
-                console.warn('Backend error, using placeholder data');
+                // Log the error response for debugging
+                const errorText = await response.text();
+                console.warn('Backend error:', response.status, errorText);
                 return generatePlaceholderCosts(solution, validatedDimensions.dimensions);
             }
 
@@ -1143,40 +1336,44 @@ function generatePlaceholderCosts(solution, dimensions) {
     // Calculate area
     const area = dimensions.length * dimensions.width;
     
-    // Basic placeholder data
+    // Basic placeholder data with proper coverage values
     const baseCosts = {
         'standard': {
             materials: [
-                { name: 'Acoustic Panels', rate: 45 },
-                { name: 'Sound Barrier', rate: 35 },
-                { name: 'Installation Materials', rate: 15 }
+                { name: 'Acoustic Panels', rate: 45, coverage: 2.88 },  // Each panel covers 2.88m²
+                { name: 'Sound Barrier', rate: 35, coverage: 2.88 },    // Each barrier covers 2.88m²
+                { name: 'Installation Materials', rate: 15, coverage: 8.64 }  // Each pack covers 8.64m²
             ],
             laborRate: 40
         },
         'premium': {
             materials: [
-                { name: 'Premium Acoustic Panels', rate: 75 },
-                { name: 'High-Mass Barrier', rate: 55 },
-                { name: 'Professional Installation Kit', rate: 25 }
+                { name: 'Premium Acoustic Panels', rate: 75, coverage: 2.88 },
+                { name: 'High-Mass Barrier', rate: 55, coverage: 2.88 },
+                { name: 'Professional Installation Kit', rate: 25, coverage: 8.64 }
             ],
             laborRate: 60
         }
     };
 
     const tier = solution.toLowerCase().includes('premium') ? 'premium' : 'standard';
-    const costs = baseCosts[tier].materials.map(material => ({
-        name: material.name,
-        quantity: Math.ceil(area),
-        rate: material.rate,
-        total_cost: Math.ceil(area * material.rate)
-    }));
+    const costs = baseCosts[tier].materials.map(material => {
+        const unitsNeeded = Math.ceil(area / material.coverage);
+        return {
+            name: material.name,
+            quantity: unitsNeeded,
+            rate: material.rate,
+            total_cost: Math.ceil(unitsNeeded * material.rate)
+        };
+    });
 
-    // Add labor cost
+    // Add labor cost (1 unit per 10m²)
+    const laborUnits = Math.ceil(area / 10);
     costs.push({
         name: 'Installation Labor',
-        quantity: Math.ceil(area / 10), // 1 labor unit per 10m²
+        quantity: laborUnits,
         rate: baseCosts[tier].laborRate,
-        total_cost: Math.ceil((area / 10) * baseCosts[tier].laborRate)
+        total_cost: Math.ceil(laborUnits * baseCosts[tier].laborRate)
     });
 
     const total = costs.reduce((sum, item) => sum + item.total_cost, 0);
@@ -1184,7 +1381,7 @@ function generatePlaceholderCosts(solution, dimensions) {
     return {
         costs,
         total,
-        isPlaceholder: true // Flag to indicate this is placeholder data
+        isPlaceholder: true
     };
 }
 

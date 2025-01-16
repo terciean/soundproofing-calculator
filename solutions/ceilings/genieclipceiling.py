@@ -17,18 +17,6 @@ class GenieClipCeilingStandard(BaseCalculator):
             self.logger.info(f"Ceiling Dimensions: Length={self.length}m, Width={self.height}m, Area={self.area}m²")
 
             for material in materials:
-                name = material.get('name')
-                
-                if name == "12.5mm Sound Plasterboard":
-                    self.logger.info(f"Adjusting coverage for {self.plasterboard_layers} layers of plasterboard")
-                    material['coverage'] = float(material['coverage']) / self.plasterboard_layers
-                
-                elif name == "Genie Clip":
-                    self.logger.info("Calculating Genie Clip requirements")
-                
-                elif name == "Furring Channel":
-                    self.logger.info("Calculating Furring Channel requirements")
-                
                 result = self.calculate_material_quantity(material)
                 results.append(result)
 
@@ -45,3 +33,11 @@ class GenieClipCeilingSP15(GenieClipCeilingStandard):
     def __init__(self, length, height):
         super().__init__(length, height)
         self.plasterboard_layers = 1  # Override to single layer
+
+    def calculate(self, materials):
+        try:
+            self.logger.info("Starting Genie Clip Ceiling (SP15 Soundboard upgrade)")
+            return super().calculate(materials)
+        except Exception as e:
+            self.logger.error(f"Error in Genie Clip Ceiling SP15 calculation: {str(e)}")
+            return None

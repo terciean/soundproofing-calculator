@@ -16,17 +16,6 @@ class LB3GenieClipCeilingStandard(BaseCalculator):
             self.logger.info(f"Ceiling Dimensions: Length={self.length}m, Width={self.height}m, Area={self.area}m²")
 
             for material in materials:
-                name = material.get('name')
-                
-                # Handle double layer of plasterboard
-                if name == "12.5mm Sound Plasterboard":
-                    self.logger.info(f"Adjusting coverage for {self.plasterboard_layers} layers of plasterboard")
-                    material['coverage'] = float(material['coverage']) / self.plasterboard_layers
-                
-                # Special handling for LB3 Genie Clips
-                elif name == "LB3 Genie Clip":
-                    self.logger.info("Calculating LB3 Genie Clip requirements")
-                
                 result = self.calculate_material_quantity(material)
                 results.append(result)
 
