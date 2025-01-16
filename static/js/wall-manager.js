@@ -10,6 +10,7 @@ if (!window.WallManager) {
             this.dependencies = ['roomManager', 'surfaceManager', 'roomCalculator'];
             this.eventsbound = false;
         }
+
         async waitForDOM() {
             return new Promise(resolve => {
                 if (document.readyState === 'complete' || document.readyState === 'interactive') {
@@ -19,6 +20,7 @@ if (!window.WallManager) {
                 }
             });
         }
+
         async waitForDependencies() {
             console.log('WallManager: Checking dependencies...');
             for (const dep of this.dependencies) {
@@ -44,8 +46,6 @@ if (!window.WallManager) {
             container.className = 'wall-features-content';
 
             const parentElement = document.querySelector('.wall-features');
-            console.log('WallManager: Looking for parent element for wall features...');
-            console.log('WallManager: Current DOM:', document.body.innerHTML);
             if (parentElement) {
                 parentElement.appendChild(container);
                 console.log('WallManager: Required containers created');
@@ -54,44 +54,106 @@ if (!window.WallManager) {
                 throw new Error('Parent element for wall features not found');
             }
         }
+
         async initialize() {
+            console.log('WallManager: Starting initialization...');
+            if (this.initialized) return true;
+
             try {
-                console.log('WallManager: Starting initialization');
                 await this.waitForDOM();
                 await this.waitForDependencies();
+                console.log('WallManager: Dependencies are ready');
 
-                // Log the current state of the DOM
-                console.log('WallManager: Current DOM:', document.body.innerHTML);
-
-                // Check if the wall features section is present
-                const parentElement = document.querySelector('.wall-features');
-                if (!parentElement) {
-                    throw new Error('Wall features section not found in the DOM.');
-                }
-
-                // Create required containers first
+                await this.waitForRoomDimensions();
                 await this.createRequiredContainers();
-
-                // Fetch solutions and initialize container
                 await this.fetchSolutions();
-
-                // Bind events after container is initialized
                 await this.bindEvents();
-
+                
                 this.initialized = true;
-                this.initResolver();
                 console.log('WallManager: Initialization complete');
+                window.dispatchEvent(new CustomEvent('wallManagerInitialized'));
                 return true;
             } catch (error) {
                 console.error('WallManager: Initialization failed:', error);
                 window.errorUtils?.displayError('Failed to initialize wall manager');
-                return false;
+                throw error;
             }
         }
 
-        
+        async waitForRoomDimensions() {
+            if (!window.FormState.dimensions?.width || 
+                !window.FormState.dimensions?.length || 
+                !window.FormState.dimensions?.height) {
+                console.log('WallManager: Waiting for room dimensions...');
+                await new Promise(resolve => {
+                    window.addEventListener('dimensionsUpdated', resolve, { once: true });
+                });
+            }
+        }
 
-        
+        async handleFeatureChange(event) {
+            if (!this.initialized) {
+                console.warn('WallManager not initialized');
+                return;
+            }
+
+            const checkbox = event.target;
+            const featureValue = checkbox.value;
+            const featureType = checkbox.dataset.type;
+
+            try {
+                if (checkbox.checked) {
+                    this.selectedFeatures.add(featureValue);
+                } else {
+                    this.selectedFeatures.delete(featureValue);
+                }
+
+                if (window.FormState?.surfaces) {
+                    if (!window.FormState.surfaces.has('wall')) {
+                        window.FormState.surfaces.set('wall', new Set());
+                    }
+                    window.FormState.surfaces.get('wall').clear();
+                    this.selectedFeatures.forEach(feature => {
+                        window.FormState.surfaces.get('wall').add(feature);
+                    });
+                }
+
+                if (window.surfaceManager) {
+                    window.surfaceManager.updateFeatures('wall', Array.from(this.selectedFeatures));
+                }
+
+                window.dispatchEvent(new CustomEvent('wallFeaturesChanged', {
+                    detail: {
+                        features: Array.from(this.selectedFeatures),
+                        type: featureType
+                    }
+                }));
+
+            } catch (error) {
+                console.error('Failed to update wall features:', error);
+                window.errorUtils?.displayError('Failed to update wall features');
+                checkbox.checked = !checkbox.checked;
+            }
+        }
+
+        createFeatureElement(feature) {
+            if (!feature || !feature.id || !feature.name) {
+                console.warn('Invalid feature data:', feature);
+                return '';
+            }
+
+            return `
+                <div class="feature-item">
+                    <input type="checkbox" 
+                           id="wall-feature-${feature.id}" 
+                           value="${feature.id}" 
+                           data-type="${feature.type || 'standard'}"
+                           ${this.selectedFeatures.has(feature.id) ? 'checked' : ''}>
+                    <label for="wall-feature-${feature.id}">${feature.name}</label>
+                    ${feature.description ? `<span class="feature-description">${feature.description}</span>` : ''}
+                </div>
+            `;
+        }
 
         async fetchSolutions() {
             try {
@@ -109,7 +171,6 @@ if (!window.WallManager) {
                 this.features = solutions;
                 console.log('WallManager: Solutions fetched:', solutions);
 
-                // Initialize the container after fetching solutions
                 await this.initializeContainer();
                 return true;
             } catch (error) {
@@ -174,73 +235,13 @@ if (!window.WallManager) {
             this.eventsbound = true;
             console.log('WallManager: Events bound successfully');
         }
-
-        handleFeatureChange(event) {
-            if (!this.initialized) {
-                console.warn('WallManager not initialized');
-                return;
-            }
-
-            const checkbox = event.target;
-            const featureValue = checkbox.value;
-            const featureType = checkbox.dataset.type;
-
-            try {
-                if (checkbox.checked) {
-                    this.selectedFeatures.add(featureValue);
-                } else {
-                    this.selectedFeatures.delete(featureValue);
-                }
-
-                if (window.FormState?.surfaces) {
-                    if (!window.FormState.surfaces.has('wall')) {
-                        window.FormState.surfaces.set('wall', new Set());
-                    }
-                    window.FormState.surfaces.get('wall').clear();
-                    this.selectedFeatures.forEach(feature => {
-                        window.FormState.surfaces.get('wall').add(feature);
-                    });
-                }
-
-                if (window.surfaceManager) {
-                    window.surfaceManager.updateFeatures('wall', Array.from(this.selectedFeatures));
-                }
-
-                window.dispatchEvent(new CustomEvent('wallFeaturesChanged', {
-                    detail: {
-                        features: Array.from(this.selectedFeatures),
-                        type: featureType
-                    }
-                }));
-
-            } catch (error) {
-                console.error('Failed to update wall features:', error);
-                window.errorUtils?.displayError('Failed to update wall features');
-                checkbox.checked = !checkbox.checked;
-            }
-        }
     }
 
+    // Register the class globally
     window.WallManager = WallManager;
 
+    // Create the instance
     if (!window.wallManager) {
         window.wallManager = new WallManager();
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('DOM fully loaded. Checking dependencies...');
-            const checkDependencies = () => {
-                const allDependenciesReady = window.roomManager?.initialized && 
-                                            window.surfaceManager?.initialized;
-                if (allDependenciesReady) {
-                    window.wallManager.initialize().then(() => {
-                        window.dispatchEvent(new CustomEvent('wallManagerInitialized'));
-                    });
-                }
-            };
-
-            ['roomManagerInitialized', 'surfaceManagerInitialized'].forEach(event => {
-                window.addEventListener(event, checkDependencies);
-            });
-            checkDependencies(); // Check immediately in case already initialized
-        });
     }
 }

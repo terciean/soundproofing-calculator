@@ -12,9 +12,28 @@
     <script>
         // Initialize global state before any scripts load
         window.FormState = {
-            dimensions: {},
-            surfaces: new Map(),
-            soundproofing: new Map()
+            currentStep: 0,
+            dimensions: {
+                length: null,
+                width: null,
+                height: null
+            },
+            surfaces: {},
+            blockages: {
+                wall: [],
+                floor: [],
+                ceiling: []
+            },
+            blockageAreas: {
+                wall: 0,
+                floor: 0,
+                ceiling: 0
+            },
+            requirements: {
+                noiseReduction: null,
+                budget: null,
+                timeframe: null
+            }
         };
 
         window.InitializationState = {
@@ -46,70 +65,553 @@
     <script src="{{ url_for('static', filename='js/form-handlers.js') }}" defer onerror="window.errorUtils?.displayError('Failed to load form-handlers.js');"></script>
 
     <!-- Loading Indicator -->
-    <div id="loading-indicator" class="loading-indicator" style="display: none;">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Loading...</div>
-    </div>
+    
 </head>
 
 <body>
     <div class="container">
-        <div id="error-container" class="error-container" role="alert" aria-live="polite"></div>
-        
-        <header class="app-header">
+        <header>
             <h1>Soundproofing Calculator</h1>
-            <p class="subtitle">Professional acoustic solutions for your space</p>
-            <button id="toggle-dark-mode" class="btn btn-secondary">Toggle Dark Mode</button>
         </header>
 
-        <div class="workflow-container">
-            <div class="workflow-content" aria-live="assertive" aria-atomic="true">
-                <!-- Workflow content will be dynamically loaded here -->
+        <main>
+            <div class="workflow-container">
+                <!-- Progress Bar -->
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="step-connector"></div>
+                        <div class="progress-step active" data-step="0">
+                            <div class="step-number">1</div>
+                            <div class="step-label">Room Details</div>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="progress-step" data-step="1">
+                            <div class="step-number">2</div>
+                            <div class="step-label">Noise Details</div>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="progress-step" data-step="2">
+                            <div class="step-number">3</div>
+                            <div class="step-label">Surface Details</div>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="progress-step" data-step="3">
+                            <div class="step-number">4</div>
+                            <div class="step-label">Review</div>
+                        </div>
+                        <div class="step-connector"></div>
+                    </div>
+                </div>
+
+                <!-- Sections Container -->
+                <div class="sections-container">
+                    <!-- Room Details Section -->
+                    <section id="room-details" class="section active">
+                        <div class="section-header">
+                            <h2>Room Details</h2>
+                            <p class="section-description">Enter your room dimensions</p>
+                        </div>
+                        <div class="room-details-container">
+                            <form id="room-dimensions-form">
+                                <!-- Dimensions Section -->
+                                <div class="form-section">
+                                    <h3>Room Dimensions</h3>
+                                    <div class="form-group">
+                                        <label for="length">Length (m)</label>
+                                        <input type="number" id="length" name="length" min="0" step="0.1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="width">Width (m)</label>
+                                        <input type="number" id="width" name="width" min="0" step="0.1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="height">Height (m)</label>
+                                        <input type="number" id="height" name="height" min="0" step="0.1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="room-type">Room Type</label>
+                                        <select id="room-type" name="room-type">
+                                            <option value="">Select Room Type</option>
+                                            <option value="bedroom">Bedroom</option>
+                                            <option value="home-office">Home Office</option>
+                                            <option value="living-room">Living Room</option>
+                                            <option value="media-room">Media Room</option>
+                                            <option value="studio">Recording Studio</option>
+                                            <option value="practice-room">Music Practice Room</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Area Calculations -->
+                                <div class="area-calculations">
+                                    <div class="area-item">
+                                        <div class="area-label">Wall Area</div>
+                                        <div class="area-value"><span id="wall-area">0</span> m²</div>
+                                    </div>
+                                    <div class="area-item">
+                                        <div class="area-label">Floor Area</div>
+                                        <div class="area-value"><span id="floor-area">0</span> m²</div>
+                                    </div>
+                                    <div class="area-item">
+                                        <div class="area-label">Ceiling Area</div>
+                                        <div class="area-value"><span id="ceiling-area">0</span> m²</div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+
+                    <!-- Noise Details Section -->
+                    <section id="noise-details" class="section">
+                        <div class="section-header">
+                            <h2>Noise Details</h2>
+                            <p>Tell us about the noise you want to reduce</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="noise-type">Type of Noise</label>
+                            <select id="noise-type" required>
+                                <option value="speech">Speech/Voices</option>
+                                <option value="music">Music/Bass</option>
+                                <option value="tv">TV/Media</option>
+                                <option value="traffic">Traffic</option>
+                                <option value="aircraft">Aircraft</option>
+                                <option value="footsteps">Footsteps</option>
+                                <option value="furniture">Furniture Moving</option>
+                                <option value="machinery">Machinery</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Noise Intensity</label>
+                            <div class="range-slider">
+                                <input type="range" id="noise-intensity" min="1" max="5" step="1" value="3">
+                                <div class="range-labels">
+                                    <span>Very Low</span>
+                                    <span>Low</span>
+                                    <span>Medium</span>
+                                    <span>High</span>
+                                    <span>Very High</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>When does the noise occur?</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="noise-time" value="morning">
+                                    <span>Morning</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="noise-time" value="afternoon">
+                                    <span>Afternoon</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="noise-time" value="evening">
+                                    <span>Evening</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="noise-time" value="night">
+                                    <span>Night</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Surface Targeted Treatments</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="noise-direction" value="ceiling">
+                                    <span>Ceiling Treatment</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="noise-direction" value="floor">
+                                    <span>Floor Treatment</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="noise-direction" value="north">
+                                    <span>North Wall Treatment</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="noise-direction" value="east">
+                                    <span>East Wall Treatment</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="noise-direction" value="south">
+                                    <span>South Wall Treatment</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="noise-direction" value="west">
+                                    <span>West Wall Treatment</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Add this container for recommendations -->
+                        <div class="recommendations-container">
+                            <h3>Recommended Solutions</h3>
+                            <div id="soundproofing-solutions"></div>
+                        </div>
+                    </section>
+
+                    <!-- Surface Details Section -->
+                    <section id="surface-details" class="section">
+                        <div class="section-header">
+                            <h2>Surface Features</h2>
+                            <p class="section-description">Select features for each surface type</p>
+                        </div>
+                        
+                        <!-- Blockages Section -->
+                        <div class="blockages-section">
+                            <!-- Wall Blockages -->
+                            <div class="blockage-interface">
+                                <h3>Wall Blockages</h3>
+                                <div class="blockage-stats">
+                                    <span>Total Blockages: <strong id="wall-total-blockages">0</strong></span>
+                                    <span>Total Area: <strong id="wall-total-blockage-area">0</strong> m²</span>
+                                </div>
+                                <button type="button" class="btn btn-secondary" id="add-wall-blockage">Add Blockage</button>
+                                <div class="blockages-list" id="wall-blockages">
+                                    <div id="north-wall-blockages"></div>
+                                    <div id="east-wall-blockages"></div>
+                                    <div id="south-wall-blockages"></div>
+                                    <div id="west-wall-blockages"></div>
+                                </div>
+                            </div>
+
+                            <!-- Floor Blockages -->
+                            <div class="blockage-interface">
+                                <h3>Floor Blockages</h3>
+                                <div class="blockage-stats">
+                                    <span>Total Blockages: <strong id="floor-total-blockages">0</strong></span>
+                                    <span>Total Area: <strong id="floor-total-blockage-area">0</strong> m²</span>
+                                </div>
+                                <button type="button" class="btn btn-secondary" id="add-floor-blockage">Add Blockage</button>
+                                <div class="blockages-list" id="floor-blockages"></div>
+                            </div>
+
+                            <!-- Ceiling Blockages -->
+                            <div class="blockage-interface">
+                                <h3>Ceiling Blockages</h3>
+                                <div class="blockage-stats">
+                                    <span>Total Blockages: <strong id="ceiling-total-blockages">0</strong></span>
+                                    <span>Total Area: <strong id="ceiling-total-blockage-area">0</strong> m²</span>
+                                </div>
+                                <button type="button" class="btn btn-secondary" id="add-ceiling-blockage">Add Blockage</button>
+                                <div class="blockages-list" id="ceiling-blockages"></div>
+                            </div>
+                        </div>
+
+                        <!-- Blockage Modals -->
+                        <!-- Wall Blockage Modal -->
+                        <div class="modal" id="wall-blockage-modal">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4>Add Wall Blockage</h4>
+                                    <button type="button" class="close-modal">×</button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="wall-blockage-form">
+                                        <div class="form-group">
+                                            <label for="wall-blockage-wall">Wall Location</label>
+                                            <select id="wall-blockage-wall" name="wall" required>
+                                                <option value="">Select Wall</option>
+                                                <option value="north">North Wall</option>
+                                                <option value="east">East Wall</option>
+                                                <option value="south">South Wall</option>
+                                                <option value="west">West Wall</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="wall-blockage-type">Type</label>
+                                            <select id="wall-blockage-type" name="type" required>
+                                                <option value="">Select Type</option>
+                                                <optgroup label="Windows">
+                                                    <option value="window-standard">Standard Window</option>
+                                                    <option value="window-bay">Bay Window</option>
+                                                    <option value="window-sash">Sash Window</option>
+                                                    <option value="window-dormer">Dormer Window</option>
+                                                </optgroup>
+                                                <optgroup label="Doors">
+                                                    <option value="door-standard">Standard Door</option>
+                                                    <option value="door-french">French Doors</option>
+                                                    <option value="door-sliding">Sliding Door</option>
+                                                    <option value="door-bifold">Bi-fold Door</option>
+                                                </optgroup>
+                                                <optgroup label="Storage">
+                                                    <option value="cupboard-built">Built-in Cupboard</option>
+                                                    <option value="cupboard-fitted">Fitted Wardrobe</option>
+                                                    <option value="shelving">Shelving Unit</option>
+                                                </optgroup>
+                                                <optgroup label="Utilities">
+                                                    <option value="radiator">Radiator</option>
+                                                    <option value="fireplace">Fireplace</option>
+                                                    <option value="boiler">Boiler</option>
+                                                    <option value="electrical-box">Electrical Box</option>
+                                                    <option value="electrical-outlet">Electrical Outlet</option>
+                                                </optgroup>
+                                                <optgroup label="Structural">
+                                                    <option value="pillar">Pillar/Column</option>
+                                                    <option value="beam">Supporting Beam</option>
+                                                    <option value="boxing">Boxing</option>
+                                                    <option value="alcove">Alcove</option>
+                                                    <option value="chimney-breast">Chimney Breast</option>
+                                                </optgroup>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="wall-blockage-width">Width (m)</label>
+                                                <input type="number" id="wall-blockage-width" name="width" step="0.01" min="0" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="wall-blockage-height">Height (m)</label>
+                                                <input type="number" id="wall-blockage-height" name="height" step="0.01" min="0" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="wall-blockage-notes">Notes (optional)</label>
+                                            <textarea id="wall-blockage-notes" name="notes" rows="2"></textarea>
+                                        </div>
+                                        <div class="form-actions">
+                                            <button type="button" class="btn btn-secondary cancel-blockage">Cancel</button>
+                                            <button type="submit" class="btn btn-primary">Add Blockage</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Floor Blockage Modal -->
+                        <div class="modal" id="floor-blockage-modal">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4>Add Floor Blockage</h4>
+                                    <button type="button" class="close-modal">×</button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="floor-blockage-form">
+                                        <div class="form-group">
+                                            <label for="floor-blockage-type">Type</label>
+                                            <select id="floor-blockage-type" name="type" required>
+                                                <option value="">Select Type</option>
+                                                <optgroup label="Furniture">
+                                                    <option value="furniture-cabinet">Cabinet</option>
+                                                    <option value="furniture-desk">Desk</option>
+                                                    <option value="furniture-table">Table</option>
+                                                    <option value="furniture-bed">Bed</option>
+                                                    <option value="furniture-sofa">Sofa</option>
+                                                    <option value="furniture-bookshelf">Bookshelf</option>
+                                                </optgroup>
+                                                <optgroup label="Floor Features">
+                                                    <option value="floor-vent">Floor Vent</option>
+                                                    <option value="floor-drain">Floor Drain</option>
+                                                    <option value="floor-hatch">Access Hatch</option>
+                                                    <option value="floor-trap">Service Trap</option>
+                                                </optgroup>
+                                                <optgroup label="Structural">
+                                                    <option value="structural-pillar">Support Pillar</option>
+                                                    <option value="structural-step">Step/Level Change</option>
+                                                    <option value="structural-post">Support Post</option>
+                                                </optgroup>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="floor-blockage-width">Width (m)</label>
+                                                <input type="number" id="floor-blockage-width" name="width" step="0.01" min="0" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="floor-blockage-length">Length (m)</label>
+                                                <input type="number" id="floor-blockage-length" name="length" step="0.01" min="0" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="floor-blockage-notes">Notes (optional)</label>
+                                            <textarea id="floor-blockage-notes" name="notes" rows="2"></textarea>
+                                        </div>
+                                        <div class="form-actions">
+                                            <button type="button" class="btn btn-secondary cancel-blockage">Cancel</button>
+                                            <button type="submit" class="btn btn-primary">Add Blockage</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ceiling Blockage Modal -->
+                        <div class="modal" id="ceiling-blockage-modal">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4>Add Ceiling Blockage</h4>
+                                    <button type="button" class="close-modal">×</button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="ceiling-blockage-form">
+                                        <div class="form-group">
+                                            <label for="ceiling-blockage-type">Type</label>
+                                            <select id="ceiling-blockage-type" name="type" required>
+                                                <option value="">Select Type</option>
+                                                <optgroup label="Lighting">
+                                                    <option value="light-pendant">Pendant Light</option>
+                                                    <option value="light-chandelier">Chandelier</option>
+                                                    <option value="light-spot">Spotlight</option>
+                                                    <option value="light-track">Track Lighting</option>
+                                                    <option value="light-recessed">Recessed Light</option>
+                                                </optgroup>
+                                                <optgroup label="Ceiling Features">
+                                                    <option value="ceiling-vent">Air Vent</option>
+                                                    <option value="ceiling-fan">Ceiling Fan</option>
+                                                    <option value="ceiling-speaker">Speaker</option>
+                                                    <option value="ceiling-hatch">Access Hatch</option>
+                                                    <option value="ceiling-trap">Service Trap</option>
+                                                </optgroup>
+                                                <optgroup label="Structural">
+                                                    <option value="structural-beam">Support Beam</option>
+                                                    <option value="structural-duct">Duct Work</option>
+                                                    <option value="structural-skylight">Skylight</option>
+                                                    <option value="structural-bulkhead">Bulkhead</option>
+                                                </optgroup>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="ceiling-blockage-width">Width (m)</label>
+                                                <input type="number" id="ceiling-blockage-width" name="width" step="0.01" min="0" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="ceiling-blockage-length">Length (m)</label>
+                                                <input type="number" id="ceiling-blockage-length" name="length" step="0.01" min="0" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="ceiling-blockage-notes">Notes (optional)</label>
+                                            <textarea id="ceiling-blockage-notes" name="notes" rows="2"></textarea>
+                                        </div>
+                                        <div class="form-actions">
+                                            <button type="button" class="btn btn-secondary cancel-blockage">Cancel</button>
+                                            <button type="submit" class="btn btn-primary">Add Blockage</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Surface Panels -->
+                        <div class="surfaces-container">
+                            <!-- ... rest of the surface panels ... -->
+                        </div>
+                    </section>
+
+                    <!-- Review Section -->
+                    <section id="review" class="section">
+                        <div class="section-header">
+                            <h2>Review</h2>
+                            <p class="section-description">Review your selections and get recommendations</p>
+                        </div>
+
+                        <!-- Room Details -->
+                        <div class="review-section">
+                            <h3>Room Details</h3>
+                            <div class="review-grid">
+                                <div class="review-item">
+                                    <label>Dimensions</label>
+                                    <span id="summary-dimensions">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <label>Room Type</label>
+                                    <span id="summary-room-type">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Noise Details -->
+                        <div class="review-section">
+                            <h3>Noise Details</h3>
+                            <div class="review-grid">
+                                <div class="review-item">
+                                    <label>Type</label>
+                                    <span id="summary-noise-type">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <label>Intensity</label>
+                                    <span id="summary-noise-intensity">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <label>Time of Day</label>
+                                    <span id="summary-noise-time">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <label>Direction</label>
+                                    <span id="summary-noise-sources">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recommendations -->
+                        <div class="review-section">
+                            <h3>Recommended Solutions</h3>
+                            <div id="summary-recommendations"></div>
+                        </div>
+
+                        <!-- Cost Breakdown -->
+                        <div class="review-section">
+                            <h3>Cost Breakdown</h3>
+                            <div class="review-grid">
+                                <div class="review-item">
+                                    <label>Wall Treatment</label>
+                                    <span id="summary-wall-cost">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <label>Floor Treatment</label>
+                                    <span id="summary-floor-cost">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <label>Ceiling Treatment</label>
+                                    <span id="summary-ceiling-cost">-</span>
+                                </div>
+                                <div class="review-item total-cost">
+                                    <label>Total Estimated Cost</label>
+                                    <span id="summary-total-cost">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Implementation Details -->
+                        <div class="review-section">
+                            <h3>Implementation Details</h3>
+                            <div class="review-grid">
+                                <div class="review-item">
+                                    <label>Estimated Time</label>
+                                    <span id="summary-install-time">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <label>Skill Level Required</label>
+                                    <span id="summary-skill-level">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <label>Special Requirements</label>
+                                    <span id="summary-special-reqs">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Quote Section -->
+                    <section id="quote" class="section">
+                        <!-- Content will be dynamically populated by JavaScript -->
+                    </section>
+                </div>
+
+                <!-- Single navigation buttons for all sections -->
+                <div class="workflow-navigation">
+                    <button type="button" id="prev-btn" class="btn btn-secondary">Previous</button>
+                    <button type="button" id="next-btn" class="btn btn-primary">
+                        <span class="button-text">Next</span>
+                    </button>
+                </div>
             </div>
-
-            <!-- Wall Features Section -->
-            <section class="workflow-section wall-features">
-                <div class="section-header">
-                    <h2>Wall Features</h2>
-                    <p class="section-description">Select features for your walls</p>
-                </div>
-                <div class="panel-header">Wall Features</div>
-                <!-- The container for wall features will be appended here -->
-            </section>
-
-            <!-- Surface Features Section -->
-            <section class="workflow-section" id="surface-features-section">
-                <div class="section-header">
-                    <h2>Surface Features</h2>
-                    <p class="section-description">Select features for each surface type</p>
-                </div>
-                <div class="surfaces-container">
-                    <div class="workflow-section-placeholder">Please wait, loading the required content...</div>
-                </div>
-            </section>
-
-            <!-- Soundproofing Section -->
-            <section class="workflow-section" id="soundproofing-section">
-                <div class="section-header">
-                    <h2>Soundproofing Solutions</h2>
-                    <p class="section-description">Choose soundproofing solutions for your room</p>
-                </div>
-                <div class="soundproofing-container">
-                    <div class="workflow-section-placeholder">Please wait, loading the required content...</div>
-                </div>
-            </section>
-
-            <!-- Review Section -->
-            <section class="workflow-section" id="review-section">
-                <div class="section-header">
-                    <h2>Review</h2>
-                    <p class="section-description">Review your selections and calculations</p>
-                </div>
-                <div class="review-container">
-                    <div class="workflow-section-placeholder">Please wait, loading the required content...</div>
-                </div>
-            </section>
-        </div>
+        </main>
     </div>
 
     <script src="{{ url_for('static', filename='js/theme-toggle.js') }}" defer></script>
@@ -118,17 +620,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             try {
-                // Show loading indicator
-                document.getElementById('loading-indicator').style.display = 'block';
-                
                 await initializeApplication();
                 console.log('Application fully initialized');
             } catch (error) {
                 console.error('Failed to initialize application:', error);
                 window.errorUtils?.displayError('Application initialization failed. Please refresh the page.');
-            } finally {
-                // Hide loading indicator
-                document.getElementById('loading-indicator').style.display = 'none';
             }
         });
     </script>

@@ -3,249 +3,317 @@ if (!window.SurfaceManager) {
         constructor() {
             this.initialized = false;
             this.surfaces = new Map();
-            this.dependencies = ['roomManager', 'roomCalculator'];
-            this.initPromise = new Promise(resolve => {
-                this.initResolver = resolve;
-            });
-        }
-
-        async waitForDOM() {
-            return new Promise(resolve => {
-                if (document.readyState === 'complete') {
-                    resolve();
-                } else {
-                    window.addEventListener('load', resolve);
-                }
-            });
-        }
-
-        async waitForDependencies() {
-            console.log('SurfaceManager: Checking dependencies...');
-            for (const dep of this.dependencies) {
-                if (!window[dep]?.initialized) {
-                    console.log(`SurfaceManager: Waiting for ${dep}...`);
-                    await new Promise(resolve => 
-                        window.addEventListener(`${dep}Initialized`, resolve, { once: true })
-                    );
-                    console.log(`SurfaceManager: Detected ${dep}Initialized event.`);
-                }
-            }
-            console.log('SurfaceManager: All dependencies are ready.');
-        }
-
-        async initialize() {
-            console.log('SurfaceManager: Starting initialization...');
-            if (this.initialized) {
-                console.log('SurfaceManager: Already initialized');
-                return true;
-            }
-
-            await this.waitForDOM();
-            await this.waitForDependencies();
-            console.log('SurfaceManager: Dependencies are ready');
-
-            await this.initializeSurfaces();
-            await this.createSurfacePanels();
-            await this.bindEvents();
-
-            this.initialized = true;
-            console.log('SurfaceManager: Initialization complete');
-            window.dispatchEvent(new CustomEvent('surfaceManagerInitialized'));
-            return true;
-        }
-
-        async initializeSurfaces() {
-            // Initialize surface types
-            const surfaceTypes = ['walls', 'ceiling', 'floor'];
+            this.blockages = {
+                wall: new Map(),
+                floor: new Map(),
+                ceiling: new Map()
+            };
+            this.blockageCounters = {
+                wall: 1,
+                floor: 1,
+                ceiling: 1
+            };
+            this.modals = {};
             
-            surfaceTypes.forEach(type => {
-                if (!this.surfaces.has(type)) {
-                    this.surfaces.set(type, {
-                        material: null,
-                        features: new Set(),
-                        area: 0
+            // Initialize FormState if needed
+            if (!window.FormState) {
+                window.FormState = {};
+            }
+            if (!window.FormState.blockages) {
+                window.FormState.blockages = {
+                    wall: [],
+                    floor: [],
+                    ceiling: []
+                };
+            }
+            if (!window.FormState.blockageAreas) {
+                window.FormState.blockageAreas = {
+                    wall: 0,
+                    floor: 0,
+                    ceiling: 0
+                };
+            }
+
+            // Bind methods
+            this.initializeAfterDOM = this.initializeAfterDOM.bind(this);
+            this.handleBlockageFormSubmit = this.handleBlockageFormSubmit.bind(this);
+            this.openModal = this.openModal.bind(this);
+            this.closeModal = this.closeModal.bind(this);
+            this.bindEvents = this.bindEvents.bind(this);
+            this.addBlockage = this.addBlockage.bind(this);
+            this.removeBlockage = this.removeBlockage.bind(this);
+            this.setupExistingBlockages = this.setupExistingBlockages.bind(this);
+        }
+
+        initialize() {
+            if (this.initialized) return;
+
+            // Wait for DOM to be ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', this.initializeAfterDOM);
+            } else {
+                this.initializeAfterDOM();
+            }
+        }
+
+        initializeAfterDOM() {
+            console.log('Initializing SurfaceManager...');
+            
+            // Ensure the surface features section exists
+            const surfaceFeaturesSection = document.getElementById('surface-details');
+            if (!surfaceFeaturesSection) {
+                console.error('Surface features section not found');
+                return;
+            }
+
+            this.bindEvents();
+            this.setupExistingBlockages();
+            
+            this.initialized = true;
+            window.dispatchEvent(new CustomEvent('surfaceManagerInitialized'));
+        }
+
+        setupExistingBlockages() {
+            console.log('Setting up existing blockages...');
+            if (window.FormState?.blockages) {
+                Object.entries(window.FormState.blockages).forEach(([surface, blockages]) => {
+                    if (Array.isArray(blockages)) {
+                        blockages.forEach(blockage => {
+                            this.addBlockage(surface, blockage);
+                        });
+                        this.updateBlockageSummary(surface);
+                    }
+                });
+            }
+        }
+
+        bindEvents() {
+            if (this.eventsbound) return;
+            
+            // Blockage buttons for all surfaces
+            ['wall', 'floor', 'ceiling'].forEach(surface => {
+                const addBlockageBtn = document.getElementById(`add-${surface}-blockage`);
+                if (addBlockageBtn) {
+                    addBlockageBtn.addEventListener('click', () => {
+                        const modal = document.getElementById(`${surface}-blockage-modal`);
+                        if (modal) {
+                            modal.style.display = 'block';
+                            modal.classList.add('active');
+                        }
                     });
                 }
             });
 
-            // Initialize FormState surfaces if needed
-            if (!window.FormState.surfaces) {
-                window.FormState.surfaces = new Map();
-            }
+            // Modal event handlers
+            ['wall', 'floor', 'ceiling'].forEach(surface => {
+                const modal = document.getElementById(`${surface}-blockage-modal`);
+                if (modal) {
+                    // Close buttons
+                    const closeButtons = modal.querySelectorAll('.close-modal, .cancel-blockage');
+                    closeButtons.forEach(button => {
+                        button.addEventListener('click', () => {
+                            modal.style.display = 'none';
+                            modal.classList.remove('active');
+                        });
+                    });
 
-            // Update initial areas if dimensions are available
-            if (window.roomManager?.dimensions) {
-                this.updateDimensions(window.roomManager.dimensions);
-            }
-        }
+                    // Close on outside click
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            modal.style.display = 'none';
+                            modal.classList.remove('active');
+                        }
+                    });
 
-        async createSurfacePanels() {
-            const surfacesContainer = document.querySelector('.surfaces-container');
-            if (!surfacesContainer) {
-                throw new Error('Surfaces container not found in DOM');
-            }
-
-            const surfaceTypes = ['walls', 'ceiling', 'floor'];
-            
-            surfacesContainer.innerHTML = surfaceTypes.map(type => `
-                <div class="surface-panel" id="${type}-panel">
-                    <div class="panel-header">
-                        <h3>${type.charAt(0).toUpperCase() + type.slice(1)}</h3>
-                        <span class="surface-area">${this.surfaces.get(type)?.area.toFixed(2) || 'N/A'} m²</span>
-                    </div>
-                    <div class="panel-content">
-                        <select class="feature-select" id="${type}-material">
-                            <option value="">Select Material</option>
-                            <option value="concrete">Concrete</option>
-                            <option value="drywall">Drywall</option>
-                            <option value="brick">Brick</option>
-                        </select>
-                        <div class="feature-list" id="${type}-features">
-                            <!-- Features will be populated dynamically -->
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        async bindEvents() {
-            // Bind material selection events
-            document.querySelectorAll('.feature-select').forEach(select => {
-                select.addEventListener('change', (event) => {
-                    const surfaceType = event.target.id.split('-')[0];
-                    this.updateMaterial(surfaceType, event.target.value);
-                });
-            });
-
-            // Bind feature selection events
-            document.querySelectorAll('.feature-list').forEach(list => {
-                list.addEventListener('change', (event) => {
-                    if (event.target.type === 'checkbox') {
-                        const surfaceType = event.target.closest('.surface-panel').id.split('-')[0];
-                        const feature = event.target.value;
-                        this.updateFeature(surfaceType, feature, event.target.checked);
+                    // Form submission
+                    const form = modal.querySelector(`#${surface}-blockage-form`);
+                    if (form) {
+                        form.addEventListener('submit', (e) => {
+                            e.preventDefault();
+                            this.handleBlockageFormSubmit(surface, e.target);
+                        });
                     }
-                });
-            });
-
-            // Listen for dimension updates
-            window.addEventListener('dimensionsUpdated', (event) => {
-                if (event.detail) {
-                    this.updateDimensions(event.detail);
                 }
             });
-        }
 
-        updateMaterial(surfaceType, material) {
-            const surface = this.surfaces.get(surfaceType);
-            if (surface) {
-                surface.material = material;
-                this.notifyUpdate(surfaceType);
-            }
-        }
-
-        updateFeature(surfaceType, feature, isEnabled) {
-            const surface = this.surfaces.get(surfaceType);
-            if (surface) {
-                if (isEnabled) {
-                    surface.features.add(feature);
-                } else {
-                    surface.features.delete(feature);
+            // Remove blockage buttons
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('remove-blockage')) {
+                    const blockageItem = e.target.closest('.blockage-item');
+                    if (blockageItem) {
+                        const surface = blockageItem.dataset.surface;
+                        const blockageId = blockageItem.dataset.blockageId;
+                        this.removeBlockage(surface, blockageId);
+                    }
                 }
-                this.notifyUpdate(surfaceType);
-            }
-        }
-
-        updateDimensions(dimensions) {
-            const { length, width, height } = dimensions;
+            });
             
-            // Update surface areas
-            const areas = {
-                walls: 2 * height * (length + width),
-                ceiling: length * width,
-                floor: length * width
+            this.eventsbound = true;
+        }
+
+        openModal(surface) {
+            console.log(`Opening ${surface} modal`);
+            const modal = document.getElementById(`${surface}-blockage-modal`);
+            if (modal) {
+                modal.style.display = 'block';
+                modal.classList.add('active');
+                const form = modal.querySelector(`#${surface}-blockage-form`);
+                if (form) {
+                    form.reset();
+                    const firstInput = form.querySelector('select, input');
+                    if (firstInput) firstInput.focus();
+                }
+            }
+        }
+
+        closeModal(surface) {
+            const modal = document.getElementById(`${surface}-blockage-modal`);
+            if (modal) {
+                modal.style.display = 'none';
+                modal.classList.remove('active');
+            }
+        }
+
+        handleBlockageFormSubmit(surface, form) {
+            console.log(`Handling ${surface} blockage form submit`);
+            const formData = new FormData(form);
+            const blockageType = formData.get('type');
+            
+            // Set default dimensions for electrical outlets
+            let width = parseFloat(formData.get('width')) || 0;
+            let height = parseFloat(formData.get('height')) || 0;
+            
+            if (blockageType === 'electrical-outlet') {
+                width = width || 0.1;  // Default 10cm width
+                height = height || 0.1; // Default 10cm height
+            }
+
+            const blockageData = {
+                id: this.blockageCounters[surface]++,
+                surface,
+                type: blockageType,
+                width: width,
+                length: parseFloat(formData.get('length')) || 0,
+                height: height,
+                notes: formData.get('notes') || ''
             };
 
-            // Update each surface's area with validation
-            Object.entries(areas).forEach(([surface, area]) => {
-                const surfaceData = this.surfaces.get(surface);
-                if (!surfaceData) {
-                    console.warn(`Surface ${surface} not found`); // Log a warning if the surface is missing
-                    return; // Exit if the surface is not found
-                }
-                surfaceData.area = area;
-                
-                // Update area display in UI
-                const areaDisplay = document.querySelector(`#${surface}-panel .surface-area`);
-                if (areaDisplay) {
-                    areaDisplay.textContent = `${area.toFixed(2)} m²`;
-                }
-            });
-
-            this.notifyUpdate();
-        }
-
-        notifyUpdate(surfaceType = null) {
-            // Update FormState
-            this.surfaces.forEach((surface, type) => {
-                if (!window.FormState.surfaces.has(type)) {
-                    window.FormState.surfaces.set(type, new Set());
-                }
-                window.FormState.surfaces.get(type).clear();
-                surface.features.forEach(feature => {
-                    window.FormState.surfaces.get(type).add(feature);
-                });
-            });
-
-            // Notify workflow manager to update validation state
-            if (window.workflowManager?.initialized) {
-                window.workflowManager.updateNavigationButtons();
+            if (surface === 'wall') {
+                blockageData.wall = formData.get('wall');
             }
 
-            // Dispatch custom event
-            window.dispatchEvent(new CustomEvent('surfacesUpdated', {
-                detail: {
-                    surfaceType,
-                    surfaces: this.surfaces
+            this.addBlockage(surface, blockageData);
+            this.closeModal(surface);
+            form.reset();
+        }
+
+        addBlockage(surface, blockageData) {
+            console.log(`Adding ${surface} blockage:`, blockageData);
+            
+            // Store in FormState
+            if (!Array.isArray(window.FormState.blockages[surface])) {
+                window.FormState.blockages[surface] = [];
+            }
+            window.FormState.blockages[surface].push(blockageData);
+            
+            // Update UI
+            let blockagesList;
+            if (surface === 'wall') {
+                blockagesList = document.getElementById(`${blockageData.wall}-wall-blockages`);
+            } else {
+                blockagesList = document.getElementById(`${surface}-blockages`);
+            }
+            
+            if (!blockagesList) {
+                console.warn(`Blockages list for ${surface} not found`);
+                return;
+            }
+
+            const typeLabel = this.getTypeLabel(surface, blockageData.type);
+            const dimensions = surface === 'wall'
+                ? `${blockageData.width}m × ${blockageData.height}m (${(blockageData.width * blockageData.height).toFixed(2)}m²)`
+                : `${blockageData.width}m × ${blockageData.length}m (${(blockageData.width * blockageData.length).toFixed(2)}m²)`;
+
+            const wallLabel = surface === 'wall' 
+                ? `<div class="blockage-wall">${blockageData.wall.charAt(0).toUpperCase() + blockageData.wall.slice(1)} Wall</div>`
+                : '';
+
+            const blockageHtml = `
+                <div class="blockage-item" data-blockage-id="${blockageData.id}" data-surface="${surface}" ${surface === 'wall' ? `data-wall="${blockageData.wall}"` : ''}>
+                    <div class="blockage-info">
+                        ${wallLabel}
+                        <div class="blockage-type">${typeLabel}</div>
+                        <div class="blockage-dimensions">${dimensions}</div>
+                        ${blockageData.notes ? `<div class="blockage-notes">${blockageData.notes}</div>` : ''}
+                    </div>
+                    <div class="blockage-actions">
+                        <button type="button" class="remove-blockage" title="Remove blockage">×</button>
+                    </div>
+                </div>
+            `;
+
+            blockagesList.insertAdjacentHTML('beforeend', blockageHtml);
+            this.blockages[surface].set(blockageData.id.toString(), blockageData);
+            this.updateBlockageSummary(surface);
+        }
+
+        removeBlockage(surface, blockageId) {
+            const blockageItem = document.querySelector(`.blockage-item[data-surface="${surface}"][data-blockage-id="${blockageId}"]`);
+            if (blockageItem) {
+                blockageItem.remove();
+                this.blockages[surface].delete(blockageId);
+                
+                // Update FormState
+                if (Array.isArray(window.FormState.blockages[surface])) {
+                    window.FormState.blockages[surface] = window.FormState.blockages[surface].filter(
+                        b => b.id.toString() !== blockageId.toString()
+                    );
                 }
+                
+                this.updateBlockageSummary(surface);
+            }
+        }
+
+        updateBlockageSummary(surface) {
+            let totalArea = 0;
+            let totalCount = 0;
+
+            this.blockages[surface].forEach(blockage => {
+                totalCount++;
+                if (surface === 'wall') {
+                    totalArea += blockage.width * blockage.height;
+                } else {
+                    totalArea += blockage.width * blockage.length;
+                }
+            });
+
+            const totalBlockagesElement = document.getElementById(`${surface}-total-blockages`);
+            const totalAreaElement = document.getElementById(`${surface}-total-blockage-area`);
+
+            if (totalBlockagesElement) totalBlockagesElement.textContent = totalCount;
+            if (totalAreaElement) totalAreaElement.textContent = totalArea.toFixed(2);
+
+            // Update FormState
+            window.FormState.blockageAreas[surface] = totalArea;
+            
+            // Dispatch event for other components
+            window.dispatchEvent(new CustomEvent('blockagesUpdated', {
+                detail: { surface, totalArea, totalCount }
             }));
+        }
+
+        getTypeLabel(surface, type) {
+            return type.split('-').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
         }
     }
 
     window.SurfaceManager = SurfaceManager;
+}
 
-    if (!window.surfaceManager) {
-        window.surfaceManager = new SurfaceManager();
-        window.addEventListener('load', async () => {
-            const initializeSurfaceManager = async () => {
-                try {
-                    if (!window.errorUtils?.initialized) {
-                        console.log('SurfaceManager: Waiting for errorUtils...');
-                        await new Promise(resolve => window.addEventListener('errorUtilsInitialized', resolve, { once: true }));
-                        console.log('SurfaceManager: Detected errorUtilsInitialized event');
-                    }
-
-                    await window.surfaceManager.initialize();
-                    console.log('SurfaceManager: Initialization complete');
-                    window.dispatchEvent(new CustomEvent('surfaceManagerInitialized'));
-                } catch (error) {
-                    console.error('Failed to initialize SurfaceManager:', error);
-                    window.errorUtils?.displayError('Failed to initialize surface manager');
-                }
-            };
-
-            ['roomManagerInitialized', 'roomCalculatorInitialized'].forEach(event => {
-                window.addEventListener(event, () => {
-                    if (window.roomManager?.initialized && window.roomCalculator?.initialized) {
-                        initializeSurfaceManager();
-                    }
-                }, { once: true });
-            });
-
-            // Check immediately in case dependencies are already initialized
-            if (window.roomManager?.initialized && window.roomCalculator?.initialized) {
-                await initializeSurfaceManager();
-            }
-        });
-    }
+// Initialize manager
+if (!window.surfaceManager) {
+    window.surfaceManager = new SurfaceManager();
+    window.surfaceManager.initialize();
 }

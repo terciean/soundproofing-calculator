@@ -12,15 +12,25 @@ import json
 import certifi
 import dns.resolver
 import time
+import math
+from solutions.database import get_db
+
 # Add debug logging for imports
-print("Starting Room import...")
+print("Starting imports...")
 try:
     from solutions.room import Room
-    print("Room import successful")
+    from solutions.walls.M20Wall import M20WallStandard, M20WallSP15
+    from solutions.walls.GenieClipWall import GenieClipWallStandard, GenieClipWallSP15
+    from solutions.walls.resilientbarwall import ResilientBarWallStandard, ResilientBarWallSP15
+    from solutions.walls.Independentwall import IndependentWallStandard, IndependentWallSP15
+    from solutions.ceilings.resilientbarceiling import (
+        ResilientBarCeilingStandard,
+        ResilientBarCeilingSP15
+    )
+    print("All imports successful")
 except Exception as e:
-    print(f"Room import failed: {str(e)}")
+    print(f"Import failed: {str(e)}")
     sys.exit(1)
-
 
 # Initialize logging
 logger = logging.getLogger(__name__)
@@ -38,12 +48,15 @@ load_dotenv()
 
 def setup_mongodb():
     try:
+        # Load the MongoDB URI from the environment
         mongodb_uri = os.getenv('MONGODB_URI')
+        print(f"Loaded MongoDB URI: {mongodb_uri}")  # Debug: Print the loaded URI
+        
         if not mongodb_uri:
             logger.warning("MONGODB_URI not set, using fallback data")
             return setup_fallback_data()
         
-        # Increased timeouts and added retry options
+        # Initialize the MongoDB client with connection settings
         client = MongoClient(
             mongodb_uri,
             tlsCAFile=certifi.where(),
@@ -55,30 +68,28 @@ def setup_mongodb():
             maxPoolSize=50,
             waitQueueTimeoutMS=10000,
             connect=True,  # Force initial connection
-            # Add connection pool settings
             maxIdleTimeMS=45000,
             heartbeatFrequencyMS=10000
         )
         
-        # Test connection with retry logic
-        max_retries = 3
-        for attempt in range(max_retries):
-            try:
-                db = client.guyrazor
-                # Quick test query
-                db.wallsolutions.find_one({})
-                logger.info("Successfully connected to MongoDB!")
-                return client, db, db.wallsolutions, db.ceilingsolutions
-            except Exception as e:
-                if attempt == max_retries - 1:
-                    logger.error(f"Failed to connect after {max_retries} attempts: {str(e)}")
-                    return setup_fallback_data()
-                logger.warning(f"Connection attempt {attempt + 1} failed, retrying...")
-                time.sleep(2)  # Wait before retry
+        # Debug: Test the MongoDB connection
+        print("Testing MongoDB connection...")  # Debug: Connection test start
+        client.server_info()  # Ensures the connection is valid
+        print("MongoDB connection successful!")  # Debug: Connection success
+        
+        # Retrieve the database and collections
+        db = client.guyrazor
+        logger.info("Successfully connected to MongoDB!")
+        return client, db, db.wallsolutions, db.ceilingsolutions
 
     except Exception as e:
+        # Log and print the error
         logger.error(f"MongoDB Connection Error: {str(e)}")
+        print(f"MongoDB Connection Error: {e}")  # Debug: Print error message
+        
+        # Fall back to local data if connection fails
         return setup_fallback_data()
+
 
 def setup_fallback_data():
     """Provide fallback data when MongoDB is unavailable"""
@@ -430,6 +441,366 @@ def get_solutions_from_db(surface_type):
     elif surface_type == 'floors':
         return list(floors.find({}, {'_id': 0}))
     return []
+
+@app.route('/api/generate-quote', methods=['POST'])
+def generate_quote():
+    try:
+        data = request.get_json()
+        
+        # Extract data
+        dimensions = data.get('dimensions', {})
+        noise_data = data.get('noiseData', {})
+        blockages = data.get('blockages', {})
+        room_type = data.get('roomType')
+
+        # Validate required data
+        if not all([dimensions.get(d) for d in ['length', 'width', 'height']]):
+            return jsonify({'error': 'Missing room dimensions'}), 400
+        if not all([noise_data.get(n) for n in ['type', 'intensity', 'direction']]):
+            return jsonify({'error': 'Missing noise data'}), 400
+
+        # Determine solution types based on noise data
+        noise_priority = determine_noise_priority(noise_data)
+        affected_surfaces = get_affected_surfaces(noise_data['direction'])
+        
+        # Generate recommendations
+        recommendations = generate_recommendations(
+            noise_priority=noise_priority,
+            affected_surfaces=affected_surfaces,
+            noise_type=noise_data['type']
+        )
+
+        # Calculate costs for each recommended solution
+        costs = calculate_solution_costs(
+            recommendations=recommendations,
+            dimensions=dimensions,
+            blockages=blockages
+        )
+
+        # Generate implementation details
+        implementation = generate_implementation_details(
+            recommendations=recommendations,
+            dimensions=dimensions,
+            noise_data=noise_data
+        )
+
+        return jsonify({
+            'recommendations': recommendations,
+            'costs': costs,
+            'implementation': implementation
+        })
+
+    except Exception as e:
+        app.logger.error(f"Error generating quote: {str(e)}")
+        return jsonify({'error': 'Failed to generate quote'}), 500
+
+def determine_noise_priority(noise_data):
+    """Determine the priority level of noise treatment needed."""
+    priority = 'medium'
+    
+    # High priority cases
+    if (
+        int(noise_data.get('intensity', 3)) >= 4 or  # High/Very High intensity
+        'night' in noise_data.get('time', []) or     # Night-time noise
+        noise_data.get('type') in ['music', 'machinery']  # Specific noise types
+    ):
+        priority = 'high'
+    # Low priority cases
+    elif (
+        int(noise_data.get('intensity', 3)) <= 2 and  # Low/Very Low intensity
+        'night' not in noise_data.get('time', [])     # Not night-time
+    ):
+        priority = 'low'
+    
+    return priority
+
+def get_affected_surfaces(directions):
+    """Determine which surfaces need treatment based on noise directions."""
+    surfaces = {
+        'walls': [],
+        'floor': False,
+        'ceiling': False
+    }
+    
+    for direction in directions:
+        if direction == 'above':
+            surfaces['ceiling'] = True
+        elif direction == 'below':
+            surfaces['floor'] = True
+        elif direction in ['north', 'east', 'south', 'west']:
+            surfaces['walls'].append(direction)
+    
+    return surfaces
+
+def generate_recommendations(noise_priority, affected_surfaces, noise_type):
+    """Generate recommended solutions based on requirements."""
+    solutions = {
+        'wall': {
+            'standard': ['M20WallStandard', 'GenieClipWallStandard', 'ResilientBarWallStandard', 'IndependentWallStandard'],
+            'premium': ['M20WallSP15', 'GenieClipWallSP15', 'ResilientBarWallSP15', 'IndependentWallSP15']
+        },
+        'ceiling': {
+            'standard': ['ResilientBarCeilingStandard'],
+            'premium': ['ResilientBarCeilingSP15']
+        }
+    }
+
+    recommendations = {
+        'primary': {
+            'walls': [],
+            'ceiling': None,
+            'floor': None,
+            'reasoning': []
+        },
+        'alternatives': []
+    }
+
+    # Select solutions based on priority
+    solution_tier = 'premium' if noise_priority == 'high' else 'standard'
+    
+    # Wall solutions
+    if affected_surfaces['walls']:
+        wall_solution = solutions['wall'][solution_tier][0]  # Primary solution
+        recommendations['primary']['walls'] = [
+            {'wall': wall, 'solution': wall_solution}
+            for wall in affected_surfaces['walls']
+        ]
+        recommendations['primary']['reasoning'].append(
+            f"Selected {wall_solution} for {', '.join(affected_surfaces['walls'])} walls based on {noise_priority} priority noise"
+        )
+        
+        # Add alternative wall solutions
+        for alt_solution in solutions['wall'][solution_tier][1:]:
+            recommendations['alternatives'].append({
+                'type': 'wall',
+                'solution': alt_solution,
+                'description': get_solution_description(alt_solution)
+            })
+
+    # Ceiling solution
+    if affected_surfaces['ceiling']:
+        ceiling_solution = solutions['ceiling'][solution_tier][0]
+        recommendations['primary']['ceiling'] = ceiling_solution
+        recommendations['primary']['reasoning'].append(
+            f"Selected {ceiling_solution} for ceiling due to noise from above"
+        )
+
+    # Add noise-specific reasoning
+    recommendations['primary']['reasoning'].append(
+        get_noise_type_reasoning(noise_type)
+    )
+
+    return recommendations
+
+def calculate_solution_costs(recommendations, dimensions, blockages):
+    """Calculate costs for recommended solutions."""
+    costs = {
+        'wall': 0,
+        'floor': 0,
+        'ceiling': 0,
+        'total': 0
+    }
+
+    # Calculate wall costs
+    for wall_rec in recommendations['primary'].get('walls', []):
+        solution_class = get_solution_class(wall_rec['solution'])
+        if solution_class:
+            calculator = solution_class(
+                length=dimensions['length'],
+                height=dimensions['height']
+            )
+            wall_costs = calculator.calculate(get_solution_materials(wall_rec['solution']))
+            if wall_costs:
+                costs['wall'] += sum(item['total_cost'] for item in wall_costs)
+
+    # Calculate ceiling costs
+    ceiling_solution = recommendations['primary'].get('ceiling')
+    if ceiling_solution:
+        solution_class = get_solution_class(ceiling_solution)
+        if solution_class:
+            calculator = solution_class(
+                length=dimensions['length'],
+                height=dimensions['width']  # For ceiling, height is room width
+            )
+            ceiling_costs = calculator.calculate(get_solution_materials(ceiling_solution))
+            if ceiling_costs:
+                costs['ceiling'] = sum(item['total_cost'] for item in ceiling_costs)
+
+    # Calculate total
+    costs['total'] = costs['wall'] + costs['floor'] + costs['ceiling']
+    
+    return costs
+
+def generate_implementation_details(recommendations, dimensions, noise_data):
+    """Generate implementation details for the recommended solutions."""
+    skill_levels = {
+        'M20WallStandard': 'Intermediate',
+        'GenieClipWallStandard': 'Professional',
+        'ResilientBarWallStandard': 'Professional',
+        'IndependentWallStandard': 'Professional',
+        'ResilientBarCeilingStandard': 'Professional'
+    }
+
+    # Get primary solution for skill level
+    primary_solution = (
+        recommendations['primary']['walls'][0]['solution'] 
+        if recommendations['primary']['walls'] 
+        else recommendations['primary'].get('ceiling')
+    )
+
+    # Calculate total area for time estimate
+    wall_area = sum(
+        dimensions['length'] * dimensions['height'] 
+        for _ in recommendations['primary'].get('walls', [])
+    )
+    ceiling_area = (
+        dimensions['length'] * dimensions['width'] 
+        if recommendations['primary'].get('ceiling') 
+        else 0
+    )
+    total_area = wall_area + ceiling_area
+
+    # Estimate installation time (1 day per 20m² plus setup/cleanup)
+    install_days = math.ceil(total_area / 20) + 1
+
+    # Determine special requirements
+    special_reqs = []
+    if int(noise_data.get('intensity', 3)) >= 4:
+        special_reqs.append('Enhanced ventilation during installation')
+    if noise_data.get('type') in ['music', 'machinery']:
+        special_reqs.append('Vibration testing recommended')
+
+    return {
+        'installTime': f"{install_days} days",
+        'skillLevel': skill_levels.get(primary_solution, 'Professional'),
+        'specialRequirements': special_reqs
+    }
+
+def get_solution_class(solution_name):
+    """Get the calculator class for a solution."""
+    solution_classes = {
+        'M20WallStandard': M20WallStandard,
+        'M20WallSP15': M20WallSP15,
+        'GenieClipWallStandard': GenieClipWallStandard,
+        'GenieClipWallSP15': GenieClipWallSP15,
+        'ResilientBarWallStandard': ResilientBarWallStandard,
+        'ResilientBarWallSP15': ResilientBarWallSP15,
+        'IndependentWallStandard': IndependentWallStandard,
+        'IndependentWallSP15': IndependentWallSP15,
+        'ResilientBarCeilingStandard': ResilientBarCeilingStandard,
+        'ResilientBarCeilingSP15': ResilientBarCeilingSP15
+    }
+    return solution_classes.get(solution_name)
+
+def get_solution_materials(solution_name):
+    """Get the list of materials for a solution."""
+    # This would be replaced with actual material data from your database
+    return []  # Placeholder
+
+def get_solution_description(solution):
+    """Get the description for a solution."""
+    descriptions = {
+        'M20WallStandard': 'Standard double-layer solution with excellent cost-effectiveness',
+        'GenieClipWallStandard': 'Premium isolation using specialized clip system',
+        'ResilientBarWallStandard': 'Effective decoupling using resilient bars',
+        'IndependentWallStandard': 'Maximum isolation with independent wall construction',
+        'M20WallSP15': 'Enhanced performance with SP15 sound board',
+        'GenieClipWallSP15': 'Maximum performance clip system with SP15',
+        'ResilientBarWallSP15': 'Enhanced bar system with SP15 upgrade',
+        'IndependentWallSP15': 'Premium independent wall with SP15 enhancement',
+        'ResilientBarCeilingStandard': 'Standard ceiling isolation system',
+        'ResilientBarCeilingSP15': 'Enhanced ceiling system with SP15'
+    }
+    return descriptions.get(solution, 'Custom solution')
+
+def get_noise_type_reasoning(noise_type):
+    """Get the reasoning for a noise type."""
+    reasonings = {
+        'speech': 'Optimized for voice frequency ranges (100Hz-8kHz)',
+        'music': 'Enhanced low frequency treatment for music and bass',
+        'tv': 'Balanced treatment for mixed media frequencies',
+        'traffic': 'Focus on low-mid frequency road noise reduction',
+        'aircraft': 'Enhanced high frequency and impact noise treatment',
+        'footsteps': 'Specialized impact noise reduction',
+        'furniture': 'Impact noise and structural transmission reduction',
+        'machinery': 'Vibration isolation and broadband noise treatment'
+    }
+    return reasonings.get(noise_type, 'General purpose noise reduction')
+
+@app.route('/api/calculate-costs', methods=['POST'])
+def calculate_costs():
+    try:
+        data = request.json
+        dimensions = data.get('dimensions', {})
+        solution_type = data.get('solution', '').strip()  # Normalize by stripping spaces
+
+        # Log incoming request
+        logger.info(f"Calculating costs for solution: {solution_type}")
+        logger.info(f"Dimensions: {dimensions}")
+
+        # Get database connection
+        db = get_db()
+
+        # Validate input
+        if not solution_type or not dimensions:
+            return jsonify({'error': 'Missing solution type or dimensions'}), 400
+
+        # Normalize the solution type (lowercase) for case-insensitive matching
+        solution_type_normalized = solution_type.lower()
+
+        # Query the MongoDB collection with case-insensitive matching using regex
+        solution_data = db.wallsolutions.find_one({
+            'name': {'$regex': f'^{solution_type_normalized}$', '$options': 'i'}
+        })
+
+        if not solution_data:
+            logger.error(f"Solution type {solution_type} not found in database")
+            return jsonify({'error': f'Solution type {solution_type} not found'}), 400
+
+        # Get materials for this solution
+        materials = list(db.materials.find({'solution': solution_type}))
+        if not materials:
+            logger.error(f"No materials found for solution {solution_type}")
+            return jsonify({'error': 'No materials found for solution'}), 400
+
+        # Calculate area
+        area = float(dimensions.get('length', 0)) * float(dimensions.get('width', 0))
+        
+        # Calculate costs for each material
+        costs = []
+        total = 0
+        
+        for material in materials:
+            quantity = math.ceil(area)
+            cost = quantity * material['cost_per_unit']
+            costs.append({
+                'name': material['name'],
+                'quantity': quantity,
+                'rate': material['cost_per_unit'],
+                'total_cost': cost
+            })
+            total += cost
+
+        # Add labor cost
+        labor_units = math.ceil(area / 10)  # 1 unit per 10m²
+        labor_cost = labor_units * solution_data['labor_rate']
+        costs.append({
+            'name': 'Installation Labor',
+            'quantity': labor_units,
+            'rate': solution_data['labor_rate'],
+            'total_cost': labor_cost
+        })
+        total += labor_cost
+
+        return jsonify({
+            'costs': costs,
+            'total': total
+        })
+
+    except Exception as e:
+        logger.error(f"Error calculating costs: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 10000))

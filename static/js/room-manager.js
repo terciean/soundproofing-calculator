@@ -54,47 +54,11 @@ if (!window.RoomManager) {
             }
         }
 
-        async bindEvents() {
-            if (this.eventsbound) return true;
-
-            try {
-                if (!this.domReady) {
-                    await this.waitForDOM();
-                }
-
-                const dimensionInputs = document.querySelectorAll('.dimension-input');
-                dimensionInputs.forEach(input => {
-                    input.addEventListener('change', (e) => {
-                        this.updateDimensions({
-                            [e.target.name]: parseFloat(e.target.value) || 0
-                        });
-                    });
-                });
-
-                this.eventsbound = true;
-                console.log('RoomManager: Events bound successfully');
-                return true;
-            } catch (error) {
-                console.error('RoomManager: Failed to bind events:', error);
-                throw error;
-            }
-        }
-
         async initialize() {
             console.log('RoomManager: Starting initialization...');
             if (this.initialized) return true;
 
             await this.waitForDOM();
-
-            // Wait for errorUtils to be initialized
-            if (!window.errorUtils?.initialized) {
-                console.log('RoomManager: Waiting for errorUtils...');
-                await new Promise(resolve => 
-                    window.addEventListener('errorUtilsInitialized', resolve, { once: true })
-                );
-                console.log('RoomManager: Detected errorUtilsInitialized event');
-            }
-
             await this.waitForDependencies();
             console.log('RoomManager: Dependencies are ready');
 
@@ -103,6 +67,33 @@ if (!window.RoomManager) {
 
             console.log('RoomManager: Initialization complete');
             window.dispatchEvent(new CustomEvent('roomManagerInitialized'));
+            return true;
+        }
+
+        async bindEvents() {
+            if (this.eventsbound) return;
+            
+            // Listen for dimension updates
+            window.addEventListener('dimensionsInput', (event) => {
+                const dimensions = event.detail;
+                if (this.validateDimensions(dimensions)) {
+                    this.updateDimensions(dimensions);
+                }
+            });
+
+            this.eventsbound = true;
+        }
+
+        validateDimensions(dimensions) {
+            const isValid = dimensions && 
+                           Object.values(dimensions).every(value => 
+                               typeof value === 'number' && value > 0
+                           );
+            
+            if (!isValid) {
+                window.errorUtils?.displayError('Invalid dimensions provided');
+                return false;
+            }
             return true;
         }
 
