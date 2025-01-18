@@ -8766,3 +8766,1011 @@ NameError: name 'solution_types' is not defined
 2025-01-16 13:26:25,921 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
 2025-01-16 13:26:25,930 - __main__ - ERROR - Solution type IndependentWallStandard not found in database
 2025-01-16 13:26:25,931 - werkzeug - INFO - 192.168.42.176 - - [16/Jan/2025 13:26:25] "[31m[1mPOST /api/calculate-costs HTTP/1.1[0m" 400 -
+2025-01-16 17:22:57,809 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:22:57,818 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:22:57,846 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:22:59,296 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:22:59,303 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:22:59,318 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:22:59,328 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:22:59,406 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:22:59,407 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:23:14,147 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:23:14] "GET / HTTP/1.1" 200 -
+2025-01-16 17:23:14,184 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:23:14] "GET /static/css/styles.css HTTP/1.1" 200 -
+2025-01-16 17:23:14,200 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:23:14] "GET /static/js/error-utils.js HTTP/1.1" 200 -
+2025-01-16 17:23:14,208 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:23:14] "GET /static/js/utils.js HTTP/1.1" 200 -
+2025-01-16 17:23:14,216 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:23:14] "GET /static/js/room-manager.js HTTP/1.1" 200 -
+2025-01-16 17:23:14,224 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:23:14] "GET /static/js/room-calculator.js HTTP/1.1" 200 -
+2025-01-16 17:23:14,232 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:23:14] "GET /static/js/surface-manager.js HTTP/1.1" 200 -
+2025-01-16 17:23:14,241 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:23:14] "GET /static/js/wall-manager.js HTTP/1.1" 200 -
+2025-01-16 17:23:14,248 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:23:14] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-16 17:23:14,258 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:23:14] "GET /static/js/workflow-manager.js HTTP/1.1" 200 -
+2025-01-16 17:23:14,265 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:23:14] "GET /static/js/form-handlers.js HTTP/1.1" 200 -
+2025-01-16 17:23:14,279 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:23:14] "GET /static/js/theme-toggle.js HTTP/1.1" 200 -
+2025-01-16 17:23:15,095 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:23:15] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-16 17:23:15,778 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:23:15] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-16 17:23:29,238 - __main__ - INFO - Calculating costs for solution: IndependentWallStandard
+2025-01-16 17:23:29,239 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 17:23:29,249 - __main__ - ERROR - Solution type IndependentWallStandard not found in database
+2025-01-16 17:23:29,250 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:23:29] "[31m[1mPOST /api/calculate-costs HTTP/1.1[0m" 400 -
+2025-01-16 17:26:00,889 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:26:00,902 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:26:00,932 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:26:02,352 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:26:02,360 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:26:02,376 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:26:02,385 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:26:02,457 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:26:02,458 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:26:15,140 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:26:15] "GET / HTTP/1.1" 200 -
+2025-01-16 17:26:15,186 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:26:15] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-16 17:26:15,193 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:26:15] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-16 17:26:15,207 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:26:15] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-16 17:26:15,212 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:26:15] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:26:15,214 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:26:15] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-16 17:26:15,219 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:26:15] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:26:15,227 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:26:15] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:26:15,232 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:26:15] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-16 17:26:15,237 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:26:15] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:26:15,241 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:26:15] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-16 17:26:15,245 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:26:15] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-16 17:26:15,434 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:26:15] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-16 17:26:17,835 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:26:17] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-16 17:26:27,176 - __main__ - INFO - Calculating costs for solution: Independent Wall (Standard)
+2025-01-16 17:26:27,176 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 17:26:27,183 - __main__ - ERROR - Solution type Independent Wall (Standard) not found in database
+2025-01-16 17:26:27,186 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:26:27] "[31m[1mPOST /api/calculate-costs HTTP/1.1[0m" 400 -
+2025-01-16 17:27:56,016 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\app.py', reloading
+2025-01-16 17:27:56,615 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:27:58,781 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:27:58,791 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:27:58,813 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:27:58,823 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:27:58,901 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:27:58,906 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:28:09,842 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\app.py', reloading
+2025-01-16 17:28:10,464 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:28:12,140 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:28:12,146 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:28:12,162 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:28:12,170 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:28:12,249 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:28:12,249 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:28:55,557 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\app.py', reloading
+2025-01-16 17:28:56,121 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:28:58,090 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:28:58,187 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:28:58,235 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:28:58,288 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:28:58,723 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:28:58,808 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:29:05,009 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:29:05] "GET / HTTP/1.1" 200 -
+2025-01-16 17:29:05,049 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:29:05] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-16 17:29:05,176 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:29:05] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-16 17:29:05,195 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:29:05] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-16 17:29:05,199 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:29:05] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:29:05,218 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:29:05] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-16 17:29:05,226 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:29:05] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:29:05,226 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:29:05] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:29:05,233 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:29:05] "[36mGET /static/js/soundproofing-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:29:05,250 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:29:05] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:29:05,252 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:29:05] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-16 17:29:05,254 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:29:05] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-16 17:29:05,431 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:29:05] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-16 17:29:16,973 - __main__ - INFO - Calculating costs for solution: Independent Wall (Standard)
+2025-01-16 17:29:16,974 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 17:29:16,981 - __main__ - INFO - Available solutions in database: ['StandardWallSP10', 'PremiumWallSP15']
+2025-01-16 17:29:16,981 - __main__ - INFO - Normalized solution type: independent wall (standard)
+2025-01-16 17:29:16,988 - __main__ - INFO - Query result: None
+2025-01-16 17:29:16,994 - __main__ - ERROR - Solution type 'Independent Wall (Standard)' not found
+2025-01-16 17:29:16,996 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:29:16] "[31m[1mPOST /api/calculate-costs HTTP/1.1[0m" 400 -
+2025-01-16 17:29:28,038 - __main__ - INFO - Calculating costs for solution: Independent Wall (Standard)
+2025-01-16 17:29:28,039 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 17:29:28,046 - __main__ - INFO - Available solutions in database: ['StandardWallSP10', 'PremiumWallSP15']
+2025-01-16 17:29:28,046 - __main__ - INFO - Normalized solution type: independent wall (standard)
+2025-01-16 17:29:28,053 - __main__ - INFO - Query result: None
+2025-01-16 17:29:28,062 - __main__ - ERROR - Solution type 'Independent Wall (Standard)' not found
+2025-01-16 17:29:28,063 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:29:28] "[31m[1mPOST /api/calculate-costs HTTP/1.1[0m" 400 -
+2025-01-16 17:30:17,419 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\init_db.py', reloading
+2025-01-16 17:30:17,914 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:30:19,814 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:30:19,826 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:30:19,850 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:30:19,865 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:30:19,951 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:30:19,952 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:31:44,179 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\app.py', reloading
+2025-01-16 17:31:44,777 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:31:46,204 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:31:46,213 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:31:46,230 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:31:46,238 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:31:46,314 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:31:46,314 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:31:55,013 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\app.py', reloading
+2025-01-16 17:31:55,482 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:31:57,072 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:31:57,080 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:31:57,105 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:31:57,115 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:31:57,227 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:31:57,230 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:32:06,930 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:32:06] "GET / HTTP/1.1" 200 -
+2025-01-16 17:32:06,956 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:32:06] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-16 17:32:06,969 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:32:06] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-16 17:32:06,992 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:32:06] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-16 17:32:06,999 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:32:06] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:32:07,023 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:32:07] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-16 17:32:07,058 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:32:07] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:32:07,069 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:32:07] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:32:07,094 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:32:07] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-16 17:32:07,097 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:32:07] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:32:07,104 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:32:07] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-16 17:32:07,114 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:32:07] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-16 17:32:07,257 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:32:07] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-16 17:32:16,494 - __main__ - INFO - Calculating costs for solution: Independent Wall (Standard)
+2025-01-16 17:32:16,495 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 17:32:16,495 - __main__ - INFO - === Database Contents ===
+2025-01-16 17:32:16,502 - __main__ - INFO - All solutions in database: [{'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}, {'_id': ObjectId('67850566d54080b166a0c690'), 'name': 'PremiumWallSP15', 'description': 'Premium Wall Treatment SP15', 'sound_reduction': 55, 'materials': ['Premium Acoustic Panels', 'High-Mass Barrier', 'Professional Installation Kit'], 'labor_rate': 60}]
+2025-01-16 17:32:16,528 - __main__ - INFO - === End Database Contents ===
+2025-01-16 17:32:16,536 - __main__ - INFO - No direct match found, trying case-insensitive search for: independent wall (standard)
+2025-01-16 17:32:16,551 - __main__ - ERROR - Solution type 'Independent Wall (Standard)' not found
+2025-01-16 17:32:16,552 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:32:16] "[31m[1mPOST /api/calculate-costs HTTP/1.1[0m" 400 -
+2025-01-16 17:33:14,438 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:33:14] "GET / HTTP/1.1" 200 -
+2025-01-16 17:33:14,492 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:33:14] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-16 17:33:14,568 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:33:14] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-16 17:33:14,621 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:33:14] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-16 17:33:14,649 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:33:14] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:33:14,655 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:33:14] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-16 17:33:14,675 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:33:14] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:33:14,679 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:33:14] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:33:14,687 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:33:14] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-16 17:33:14,701 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:33:14] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:33:14,716 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:33:14] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-16 17:33:14,728 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:33:14] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-16 17:33:14,941 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:33:14] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-16 17:33:25,336 - __main__ - INFO - Calculating costs for solution: StandardWallSP10
+2025-01-16 17:33:25,336 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 17:33:25,336 - __main__ - INFO - === Database Contents ===
+2025-01-16 17:33:25,343 - __main__ - INFO - All solutions in database: [{'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}, {'_id': ObjectId('67850566d54080b166a0c690'), 'name': 'PremiumWallSP15', 'description': 'Premium Wall Treatment SP15', 'sound_reduction': 55, 'materials': ['Premium Acoustic Panels', 'High-Mass Barrier', 'Professional Installation Kit'], 'labor_rate': 60}]
+2025-01-16 17:33:25,344 - __main__ - INFO - === End Database Contents ===
+2025-01-16 17:33:25,351 - __main__ - INFO - Found direct match: {'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}
+2025-01-16 17:33:25,360 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:33:25] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-16 17:44:29,111 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\base_calculator.py', reloading
+2025-01-16 17:44:29,749 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:44:32,166 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:44:32,179 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:44:32,220 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:44:32,235 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:44:32,349 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:44:32,350 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:44:40,054 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\base_calculator.py', reloading
+2025-01-16 17:44:40,632 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:44:42,102 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:44:42,114 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:44:42,141 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:44:42,152 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:44:42,264 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:44:42,266 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:45:46,264 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\base_calculator.py', reloading
+2025-01-16 17:45:46,862 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:45:48,626 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:45:48,632 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:45:48,649 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:45:48,657 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:45:48,728 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:45:48,730 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:46:14,583 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\base_calculator.py', reloading
+2025-01-16 17:46:15,221 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:46:16,819 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:46:16,826 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:46:16,842 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:46:16,849 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:46:16,926 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:46:16,926 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:48:18,013 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\base_calculator.py', reloading
+2025-01-16 17:48:18,506 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:48:20,033 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:48:20,043 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:48:20,066 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:48:20,075 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:48:20,147 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:48:20,149 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:49:00,953 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\base_calculator.py', reloading
+2025-01-16 17:49:01,534 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:49:03,162 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:49:03,168 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:49:03,184 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:49:03,191 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:49:03,263 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:49:03,264 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:50:07,334 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\base_calculator.py', reloading
+2025-01-16 17:50:07,922 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:50:09,695 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:50:09,705 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:50:09,726 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:50:09,738 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:50:09,812 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:50:09,813 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:50:18,515 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\base_calculator.py', reloading
+2025-01-16 17:50:18,950 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:50:20,739 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:50:20,747 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:50:20,768 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:50:20,777 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:50:20,853 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:50:20,854 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:50:55,406 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\base_calculator.py', reloading
+2025-01-16 17:50:55,987 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:50:57,583 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:50:57,591 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:50:57,608 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:50:57,619 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:50:57,697 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:50:57,698 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:51:09,640 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\base_calculator.py', reloading
+2025-01-16 17:51:10,193 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:51:11,828 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:51:11,835 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:51:11,856 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:51:11,867 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:51:11,950 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:51:11,951 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:51:53,216 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\base_calculator.py', reloading
+2025-01-16 17:51:53,755 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:51:55,320 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:51:55,326 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:51:55,341 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:51:55,349 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:51:55,429 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:51:55,430 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:52:24,666 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\base_calculator.py', reloading
+2025-01-16 17:52:25,247 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:52:26,797 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:52:26,804 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:52:26,823 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:52:26,830 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:52:26,903 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:52:26,904 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:52:52,832 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\base_calculator.py', reloading
+2025-01-16 17:52:53,332 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:52:54,976 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:52:54,983 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:52:54,999 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:52:55,007 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:52:55,086 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:52:55,086 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:53:32,754 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\base_calculator.py', reloading
+2025-01-16 17:53:33,367 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:53:35,237 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:53:35,244 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:53:35,261 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:53:35,268 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:53:35,341 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:53:35,343 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:54:37,285 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\walls\\GenieClipWall.py', reloading
+2025-01-16 17:54:37,901 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:54:39,426 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:54:39,434 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:54:39,450 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:54:39,457 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:54:39,530 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:54:39,531 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:55:03,331 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\walls\\GenieClipWall.py', reloading
+2025-01-16 17:55:03,862 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:55:05,515 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:55:05,525 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:55:05,560 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:55:05,585 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:55:05,736 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:55:05,739 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:55:59,886 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\ceilings\\resilientbarceiling.py', reloading
+2025-01-16 17:56:00,455 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:56:02,064 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:56:02,070 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:56:02,087 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:56:02,093 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:56:02,167 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:56:02,167 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:56:10,951 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\ceilings\\genieclipceiling.py', reloading
+2025-01-16 17:56:11,533 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:56:13,002 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:56:13,018 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:56:13,048 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:56:13,060 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:56:13,161 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:56:13,164 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:56:28,412 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\ceilings\\independentceiling.py', reloading
+2025-01-16 17:56:28,997 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:56:30,596 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:56:30,606 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:56:30,623 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:56:30,630 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:56:30,707 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:56:30,707 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:56:44,821 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\ceilings\\lb3genieclipceiling.py', reloading
+2025-01-16 17:56:45,391 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:56:46,850 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:56:46,866 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:56:46,897 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:56:46,909 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:56:47,018 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:56:47,023 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:57:02,215 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\ceilings\\independentceiling.py', reloading
+2025-01-16 17:57:02,818 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:57:04,532 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:57:04,546 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:57:04,565 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:57:04,574 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:57:04,656 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:57:04,657 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:58:13,226 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\solutions\\walls\\GenieClipWall.py', reloading
+2025-01-16 17:58:13,796 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 17:58:16,204 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 17:58:16,210 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 17:58:16,225 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 17:58:16,232 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 17:58:16,303 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 17:58:16,304 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 17:58:16,654 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:58:16] "GET / HTTP/1.1" 200 -
+2025-01-16 17:58:16,695 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:58:16] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-16 17:58:16,720 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:58:16] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-16 17:58:16,732 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:58:16] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-16 17:58:16,772 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:58:16] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:58:16,773 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:58:16] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-16 17:58:16,790 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:58:16] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:58:16,811 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:58:16] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:58:16,813 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:58:16] "[36mGET /static/js/soundproofing-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:58:16,818 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:58:16] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:58:16,822 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:58:16] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-16 17:58:16,824 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:58:16] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-16 17:58:16,988 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:58:16] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-16 17:58:37,142 - __main__ - INFO - Calculating costs for solution: StandardWallSP10
+2025-01-16 17:58:37,142 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 17:58:37,142 - __main__ - INFO - === Database Contents ===
+2025-01-16 17:58:37,150 - __main__ - INFO - All solutions in database: [{'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}, {'_id': ObjectId('67850566d54080b166a0c690'), 'name': 'PremiumWallSP15', 'description': 'Premium Wall Treatment SP15', 'sound_reduction': 55, 'materials': ['Premium Acoustic Panels', 'High-Mass Barrier', 'Professional Installation Kit'], 'labor_rate': 60}]
+2025-01-16 17:58:37,150 - __main__ - INFO - === End Database Contents ===
+2025-01-16 17:58:37,157 - __main__ - INFO - Found direct match: {'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}
+2025-01-16 17:58:37,165 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:58:37] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-16 17:58:40,502 - __main__ - INFO - Calculating costs for solution: StandardWallSP10
+2025-01-16 17:58:40,502 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 17:58:40,503 - __main__ - INFO - === Database Contents ===
+2025-01-16 17:58:40,510 - __main__ - INFO - All solutions in database: [{'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}, {'_id': ObjectId('67850566d54080b166a0c690'), 'name': 'PremiumWallSP15', 'description': 'Premium Wall Treatment SP15', 'sound_reduction': 55, 'materials': ['Premium Acoustic Panels', 'High-Mass Barrier', 'Professional Installation Kit'], 'labor_rate': 60}]
+2025-01-16 17:58:40,510 - __main__ - INFO - === End Database Contents ===
+2025-01-16 17:58:40,517 - __main__ - INFO - Found direct match: {'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}
+2025-01-16 17:58:40,525 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:58:40] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-16 17:58:43,821 - __main__ - INFO - Calculating costs for solution: StandardWallSP10
+2025-01-16 17:58:43,821 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 17:58:43,821 - __main__ - INFO - === Database Contents ===
+2025-01-16 17:58:43,828 - __main__ - INFO - All solutions in database: [{'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}, {'_id': ObjectId('67850566d54080b166a0c690'), 'name': 'PremiumWallSP15', 'description': 'Premium Wall Treatment SP15', 'sound_reduction': 55, 'materials': ['Premium Acoustic Panels', 'High-Mass Barrier', 'Professional Installation Kit'], 'labor_rate': 60}]
+2025-01-16 17:58:43,828 - __main__ - INFO - === End Database Contents ===
+2025-01-16 17:58:43,835 - __main__ - INFO - Found direct match: {'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}
+2025-01-16 17:58:43,842 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:58:43] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-16 17:59:41,587 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:59:41] "GET / HTTP/1.1" 200 -
+2025-01-16 17:59:41,685 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:59:41] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-16 17:59:41,733 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:59:41] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-16 17:59:41,791 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:59:41] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-16 17:59:41,801 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:59:41] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:59:41,814 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:59:41] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-16 17:59:41,823 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:59:41] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:59:41,830 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:59:41] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:59:41,850 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:59:41] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-16 17:59:41,862 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:59:41] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 17:59:41,871 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:59:41] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-16 17:59:41,901 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:59:41] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-16 17:59:42,072 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:59:42] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-16 17:59:52,287 - __main__ - INFO - Calculating costs for solution: StandardWallSP10
+2025-01-16 17:59:52,287 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 17:59:52,287 - __main__ - INFO - === Database Contents ===
+2025-01-16 17:59:52,294 - __main__ - INFO - All solutions in database: [{'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}, {'_id': ObjectId('67850566d54080b166a0c690'), 'name': 'PremiumWallSP15', 'description': 'Premium Wall Treatment SP15', 'sound_reduction': 55, 'materials': ['Premium Acoustic Panels', 'High-Mass Barrier', 'Professional Installation Kit'], 'labor_rate': 60}]
+2025-01-16 17:59:52,295 - __main__ - INFO - === End Database Contents ===
+2025-01-16 17:59:52,301 - __main__ - INFO - Found direct match: {'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}
+2025-01-16 17:59:52,308 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 17:59:52] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-16 18:00:03,523 - __main__ - INFO - Calculating costs for solution: StandardWallSP10
+2025-01-16 18:00:03,524 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 18:00:03,524 - __main__ - INFO - === Database Contents ===
+2025-01-16 18:00:03,531 - __main__ - INFO - All solutions in database: [{'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}, {'_id': ObjectId('67850566d54080b166a0c690'), 'name': 'PremiumWallSP15', 'description': 'Premium Wall Treatment SP15', 'sound_reduction': 55, 'materials': ['Premium Acoustic Panels', 'High-Mass Barrier', 'Professional Installation Kit'], 'labor_rate': 60}]
+2025-01-16 18:00:03,532 - __main__ - INFO - === End Database Contents ===
+2025-01-16 18:00:03,539 - __main__ - INFO - Found direct match: {'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}
+2025-01-16 18:00:03,549 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:00:03] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-16 18:01:10,035 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:01:10] "GET / HTTP/1.1" 200 -
+2025-01-16 18:01:10,067 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:01:10] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-16 18:01:10,071 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:01:10] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-16 18:01:10,110 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:01:10] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-16 18:01:10,116 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:01:10] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:01:10,138 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:01:10] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-16 18:01:10,145 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:01:10] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:01:10,159 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:01:10] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:01:10,167 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:01:10] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-16 18:01:10,182 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:01:10] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:01:10,190 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:01:10] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-16 18:01:10,193 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:01:10] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-16 18:01:10,333 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:01:10] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-16 18:01:21,684 - __main__ - INFO - Calculating costs for solution: GenieClipCeilingStandard
+2025-01-16 18:01:21,684 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 18:01:21,684 - __main__ - INFO - === Database Contents ===
+2025-01-16 18:01:21,691 - __main__ - INFO - All solutions in database: [{'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}, {'_id': ObjectId('67850566d54080b166a0c690'), 'name': 'PremiumWallSP15', 'description': 'Premium Wall Treatment SP15', 'sound_reduction': 55, 'materials': ['Premium Acoustic Panels', 'High-Mass Barrier', 'Professional Installation Kit'], 'labor_rate': 60}]
+2025-01-16 18:01:21,691 - __main__ - INFO - === End Database Contents ===
+2025-01-16 18:01:21,699 - __main__ - INFO - No direct match found, trying case-insensitive search for: genieclipceilingstandard
+2025-01-16 18:01:21,712 - __main__ - ERROR - Solution type 'GenieClipCeilingStandard' not found
+2025-01-16 18:01:21,712 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:01:21] "[31m[1mPOST /api/calculate-costs HTTP/1.1[0m" 400 -
+2025-01-16 18:02:21,989 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:02:21] "GET / HTTP/1.1" 200 -
+2025-01-16 18:02:22,036 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:02:22] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-16 18:02:22,049 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:02:22] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-16 18:02:22,103 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:02:22] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-16 18:02:22,120 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:02:22] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:02:22,129 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:02:22] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-16 18:02:22,139 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:02:22] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:02:22,148 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:02:22] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:02:22,154 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:02:22] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-16 18:02:22,157 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:02:22] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:02:22,161 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:02:22] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-16 18:02:22,165 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:02:22] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-16 18:02:22,310 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:02:22] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-16 18:02:31,533 - __main__ - INFO - Calculating costs for solution: Genie Clip wall (Standard)
+2025-01-16 18:02:31,534 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 18:02:31,534 - __main__ - INFO - === Database Contents ===
+2025-01-16 18:02:31,541 - __main__ - INFO - All solutions in database: [{'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}, {'_id': ObjectId('67850566d54080b166a0c690'), 'name': 'PremiumWallSP15', 'description': 'Premium Wall Treatment SP15', 'sound_reduction': 55, 'materials': ['Premium Acoustic Panels', 'High-Mass Barrier', 'Professional Installation Kit'], 'labor_rate': 60}]
+2025-01-16 18:02:31,541 - __main__ - INFO - === End Database Contents ===
+2025-01-16 18:02:31,548 - __main__ - INFO - No direct match found, trying case-insensitive search for: genie clip wall (standard)
+2025-01-16 18:02:31,561 - __main__ - ERROR - Solution type 'Genie Clip wall (Standard)' not found
+2025-01-16 18:02:31,562 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:02:31] "[31m[1mPOST /api/calculate-costs HTTP/1.1[0m" 400 -
+2025-01-16 18:03:35,545 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:03:35] "GET / HTTP/1.1" 200 -
+2025-01-16 18:03:35,630 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:03:35] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-16 18:03:35,757 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:03:35] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-16 18:03:35,764 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:03:35] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-16 18:03:35,838 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:03:35] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:03:35,891 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:03:35] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-16 18:03:35,932 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:03:35] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:03:35,960 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:03:35] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:03:35,976 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:03:35] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-16 18:03:35,994 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:03:35] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:03:36,008 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:03:36] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-16 18:03:36,044 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:03:36] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-16 18:03:36,373 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:03:36] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-16 18:03:46,428 - __main__ - INFO - Calculating costs for solution: Genie Clip wall (Standard)
+2025-01-16 18:03:46,428 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 18:03:46,429 - __main__ - INFO - === Database Contents ===
+2025-01-16 18:03:46,436 - __main__ - INFO - All solutions in database: [{'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}, {'_id': ObjectId('67850566d54080b166a0c690'), 'name': 'PremiumWallSP15', 'description': 'Premium Wall Treatment SP15', 'sound_reduction': 55, 'materials': ['Premium Acoustic Panels', 'High-Mass Barrier', 'Professional Installation Kit'], 'labor_rate': 60}]
+2025-01-16 18:03:46,436 - __main__ - INFO - === End Database Contents ===
+2025-01-16 18:03:46,443 - __main__ - INFO - No direct match found, trying case-insensitive search for: genie clip wall (standard)
+2025-01-16 18:03:46,460 - __main__ - ERROR - Solution type 'Genie Clip wall (Standard)' not found
+2025-01-16 18:03:46,461 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:03:46] "[31m[1mPOST /api/calculate-costs HTTP/1.1[0m" 400 -
+2025-01-16 18:30:54,810 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 18:30:54,822 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 18:30:54,854 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 18:30:56,370 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 18:30:56,377 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 18:30:56,393 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 18:30:56,403 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 18:30:56,481 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 18:30:56,481 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 18:31:12,617 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 18:31:12,625 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 18:31:12,652 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 18:31:14,171 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 18:31:14,179 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 18:31:14,201 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 18:31:14,215 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 18:31:14,313 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 18:31:14,314 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 18:31:37,150 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:31:37] "GET / HTTP/1.1" 200 -
+2025-01-16 18:31:37,503 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:31:37] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-16 18:31:41,340 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:31:41] "GET / HTTP/1.1" 200 -
+2025-01-16 18:31:41,346 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:31:41] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-16 18:32:02,861 - __main__ - INFO - Calculating costs for solution: Genie Clip wall (Standard)
+2025-01-16 18:32:02,861 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 18:32:02,861 - __main__ - INFO - === Database Contents ===
+2025-01-16 18:32:02,868 - __main__ - INFO - All solutions in database: [{'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}, {'_id': ObjectId('67850566d54080b166a0c690'), 'name': 'PremiumWallSP15', 'description': 'Premium Wall Treatment SP15', 'sound_reduction': 55, 'materials': ['Premium Acoustic Panels', 'High-Mass Barrier', 'Professional Installation Kit'], 'labor_rate': 60}]
+2025-01-16 18:32:02,869 - __main__ - INFO - === End Database Contents ===
+2025-01-16 18:32:02,876 - __main__ - INFO - No direct match found, trying case-insensitive search for: genie clip wall (standard)
+2025-01-16 18:32:02,890 - __main__ - ERROR - Solution type 'Genie Clip wall (Standard)' not found
+2025-01-16 18:32:02,891 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:32:02] "[31m[1mPOST /api/calculate-costs HTTP/1.1[0m" 400 -
+2025-01-16 18:34:48,333 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:34:48] "GET / HTTP/1.1" 200 -
+2025-01-16 18:34:48,373 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:34:48] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-16 18:34:48,375 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:34:48] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-16 18:34:48,436 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:34:48] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-16 18:34:48,443 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:34:48] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:34:48,444 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:34:48] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-16 18:34:48,461 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:34:48] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:34:48,464 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:34:48] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:34:48,480 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:34:48] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-16 18:34:48,503 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:34:48] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:34:48,511 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:34:48] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-16 18:34:48,514 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:34:48] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-16 18:34:48,657 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:34:48] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-16 18:35:03,190 - __main__ - INFO - Calculating costs for solution: Genie Clip wall (Standard)
+2025-01-16 18:35:03,190 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 18:35:03,191 - __main__ - INFO - === Database Contents ===
+2025-01-16 18:35:03,197 - __main__ - INFO - All solutions in database: [{'_id': ObjectId('67850566d54080b166a0c68f'), 'name': 'StandardWallSP10', 'description': 'Standard Wall Treatment SP10', 'sound_reduction': 45, 'materials': ['Acoustic Panels', 'Sound Barrier', 'Installation Materials'], 'labor_rate': 40}, {'_id': ObjectId('67850566d54080b166a0c690'), 'name': 'PremiumWallSP15', 'description': 'Premium Wall Treatment SP15', 'sound_reduction': 55, 'materials': ['Premium Acoustic Panels', 'High-Mass Barrier', 'Professional Installation Kit'], 'labor_rate': 60}]
+2025-01-16 18:35:03,198 - __main__ - INFO - === End Database Contents ===
+2025-01-16 18:35:03,205 - __main__ - INFO - No direct match found, trying case-insensitive search for: genie clip wall (standard)
+2025-01-16 18:35:03,220 - __main__ - ERROR - Solution type 'Genie Clip wall (Standard)' not found
+2025-01-16 18:35:03,220 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:35:03] "[31m[1mPOST /api/calculate-costs HTTP/1.1[0m" 400 -
+2025-01-16 18:37:13,356 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\app.py', reloading
+2025-01-16 18:37:13,936 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 18:37:15,627 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 18:37:15,640 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 18:37:15,673 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 18:37:15,684 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 18:37:15,781 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 18:37:15,784 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 18:37:31,292 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\app.py', reloading
+2025-01-16 18:37:31,790 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 18:37:33,580 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 18:37:33,587 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 18:37:33,608 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 18:37:33,617 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 18:37:33,694 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 18:37:33,694 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 18:38:22,503 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\app.py', reloading
+2025-01-16 18:38:23,006 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 18:38:24,572 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 18:38:24,580 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 18:38:24,602 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 18:38:24,613 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 18:38:24,718 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 18:38:24,719 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 18:40:39,336 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\app.py', reloading
+2025-01-16 18:40:39,909 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 18:40:41,886 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 18:40:41,896 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 18:40:41,921 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 18:40:41,934 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 18:40:42,032 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 18:40:42,033 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 18:40:48,938 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:40:48] "GET / HTTP/1.1" 200 -
+2025-01-16 18:40:48,979 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:40:48] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-16 18:40:49,040 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:40:49] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-16 18:40:49,043 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:40:49] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-16 18:40:49,053 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:40:49] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-16 18:40:49,055 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:40:49] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:40:49,064 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:40:49] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:40:49,089 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:40:49] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:40:49,091 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:40:49] "[36mGET /static/js/soundproofing-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:40:49,097 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:40:49] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:40:49,101 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:40:49] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-16 18:40:49,117 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:40:49] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-16 18:40:49,253 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:40:49] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-16 18:40:58,630 - __main__ - INFO - Calculating costs for solution: Genie Clip wall (Standard)
+2025-01-16 18:40:58,631 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 18:40:58,639 - __main__ - INFO - Found direct match: {'_id': ObjectId('671bae0fc10b2e4a14c90e31'), 'solution': 'Genie Clip wall (Standard)', 'surface_type': 'walls', 'materials': [{'name': 'Genie Clip', 'cost': 3.4, 'coverage': '4 '}, {'name': 'Furring Channel', 'cost': 4.45, 'coverage': '2 '}, {'name': 'Rockwool RWA45 50mm', 'cost': 50.2, 'coverage': '8.64'}, {'name': 'Resilient bars', 'cost': 4.2, 'coverage': '1 '}, {'name': '12.5mm Sound Plasterboard', 'cost': 18.45, 'coverage': '2.88'}, {'name': 'Screws', 'cost': 16.21, 'coverage': '30'}, {'name': 'Floor protection', 'cost': 25, 'coverage': '30'}], 'total_cost': 159.55, 'notes': ['2 layers of 12.5mm plasterboard for this system.', 'Add 1 box of screws no matter the m².']}
+2025-01-16 18:40:58,660 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:40:58] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-16 18:45:07,174 - __main__ - INFO - Calculating costs for solution: Genie Clip wall (Standard)
+2025-01-16 18:45:07,174 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 18:45:07,283 - __main__ - INFO - Found direct match: {'_id': ObjectId('671bae0fc10b2e4a14c90e31'), 'solution': 'Genie Clip wall (Standard)', 'surface_type': 'walls', 'materials': [{'name': 'Genie Clip', 'cost': 3.4, 'coverage': '4 '}, {'name': 'Furring Channel', 'cost': 4.45, 'coverage': '2 '}, {'name': 'Rockwool RWA45 50mm', 'cost': 50.2, 'coverage': '8.64'}, {'name': 'Resilient bars', 'cost': 4.2, 'coverage': '1 '}, {'name': '12.5mm Sound Plasterboard', 'cost': 18.45, 'coverage': '2.88'}, {'name': 'Screws', 'cost': 16.21, 'coverage': '30'}, {'name': 'Floor protection', 'cost': 25, 'coverage': '30'}], 'total_cost': 159.55, 'notes': ['2 layers of 12.5mm plasterboard for this system.', 'Add 1 box of screws no matter the m².']}
+2025-01-16 18:45:07,284 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:45:07] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-16 18:45:12,589 - __main__ - INFO - Calculating costs for solution: Genie Clip wall (Standard)
+2025-01-16 18:45:12,589 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 18:45:12,596 - __main__ - INFO - Found direct match: {'_id': ObjectId('671bae0fc10b2e4a14c90e31'), 'solution': 'Genie Clip wall (Standard)', 'surface_type': 'walls', 'materials': [{'name': 'Genie Clip', 'cost': 3.4, 'coverage': '4 '}, {'name': 'Furring Channel', 'cost': 4.45, 'coverage': '2 '}, {'name': 'Rockwool RWA45 50mm', 'cost': 50.2, 'coverage': '8.64'}, {'name': 'Resilient bars', 'cost': 4.2, 'coverage': '1 '}, {'name': '12.5mm Sound Plasterboard', 'cost': 18.45, 'coverage': '2.88'}, {'name': 'Screws', 'cost': 16.21, 'coverage': '30'}, {'name': 'Floor protection', 'cost': 25, 'coverage': '30'}], 'total_cost': 159.55, 'notes': ['2 layers of 12.5mm plasterboard for this system.', 'Add 1 box of screws no matter the m².']}
+2025-01-16 18:45:12,598 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:45:12] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-16 18:49:52,797 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:49:52] "GET / HTTP/1.1" 200 -
+2025-01-16 18:49:52,832 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:49:52] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-16 18:49:52,855 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:49:52] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-16 18:49:52,913 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:49:52] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-16 18:49:52,937 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:49:52] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:49:52,940 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:49:52] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-16 18:49:52,948 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:49:52] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:49:52,952 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:49:52] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:49:52,965 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:49:52] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-16 18:49:52,973 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:49:52] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:49:52,981 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:49:52] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-16 18:49:52,983 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:49:52] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-16 18:49:53,118 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:49:53] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-16 18:50:04,300 - __main__ - INFO - Calculating costs for solution: Genie Clip ceiling
+2025-01-16 18:50:04,301 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 18:50:04,392 - __main__ - INFO - No direct match found, trying case-insensitive search for: genie clip ceiling
+2025-01-16 18:50:04,406 - __main__ - ERROR - Solution type 'Genie Clip ceiling' not found. Did you mean one of these: Genie Clip wall (Standard), Genie Clip wall (SP15 Soundboard Upgrade)
+2025-01-16 18:50:04,407 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:50:04] "[31m[1mPOST /api/calculate-costs HTTP/1.1[0m" 400 -
+2025-01-16 18:51:58,086 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\app.py', reloading
+2025-01-16 18:51:58,645 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 18:52:00,264 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 18:52:00,272 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 18:52:00,291 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 18:52:00,299 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 18:52:00,378 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 18:52:00,378 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 18:52:10,175 - werkzeug - INFO -  * Detected change in 'C:\\Users\\user\\soundproof\\soundproofing-calculator\\app.py', reloading
+2025-01-16 18:52:10,701 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 18:52:12,287 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-16 18:52:12,296 - __main__ - INFO - Successfully imported solution classes
+2025-01-16 18:52:12,322 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 18:52:12,334 - werkzeug - INFO -  * Debugger PIN: 131-758-506
+2025-01-16 18:52:12,457 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-16 18:52:12,465 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-16 18:52:15,935 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:52:15] "GET / HTTP/1.1" 200 -
+2025-01-16 18:52:15,976 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:52:15] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-16 18:52:15,977 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:52:15] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-16 18:52:16,026 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:52:16] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:52:16,038 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:52:16] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-16 18:52:16,047 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:52:16] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-16 18:52:16,058 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:52:16] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:52:16,066 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:52:16] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:52:16,075 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:52:16] "[36mGET /static/js/soundproofing-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:52:16,089 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:52:16] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-16 18:52:16,097 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:52:16] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-16 18:52:16,110 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:52:16] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-16 18:52:16,273 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:52:16] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-16 18:52:27,154 - __main__ - INFO - Calculating costs for solution: Genie Clip wall (Standard)
+2025-01-16 18:52:27,155 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 18:52:27,155 - __main__ - INFO - Querying collection: wallsolutions
+2025-01-16 18:52:27,162 - __main__ - INFO - Found direct match: {'_id': ObjectId('671bae0fc10b2e4a14c90e31'), 'solution': 'Genie Clip wall (Standard)', 'surface_type': 'walls', 'materials': [{'name': 'Genie Clip', 'cost': 3.4, 'coverage': '4 '}, {'name': 'Furring Channel', 'cost': 4.45, 'coverage': '2 '}, {'name': 'Rockwool RWA45 50mm', 'cost': 50.2, 'coverage': '8.64'}, {'name': 'Resilient bars', 'cost': 4.2, 'coverage': '1 '}, {'name': '12.5mm Sound Plasterboard', 'cost': 18.45, 'coverage': '2.88'}, {'name': 'Screws', 'cost': 16.21, 'coverage': '30'}, {'name': 'Floor protection', 'cost': 25, 'coverage': '30'}], 'total_cost': 159.55, 'notes': ['2 layers of 12.5mm plasterboard for this system.', 'Add 1 box of screws no matter the m².']}
+2025-01-16 18:52:27,164 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:52:27] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-16 18:52:29,421 - __main__ - INFO - Calculating costs for solution: Genie Clip ceiling
+2025-01-16 18:52:29,421 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-16 18:52:29,421 - __main__ - INFO - Querying collection: ceilingsolutions
+2025-01-16 18:52:29,430 - __main__ - INFO - Found direct match: {'_id': '671baf8ec10b2e4a14c90e43', 'solution': 'Genie Clip ceiling', 'surface_type': 'ceilings', 'materials': [{'name': 'Genie Clip', 'cost': 3.4, 'coverage': '0.25'}, {'name': 'Furring Channel', 'cost': 4.45, 'coverage': '0.50'}, {'name': 'Resilient bar', 'cost': 4.2, 'coverage': '1'}, {'name': 'Rockwool RWA45 50mm', 'cost': 50.2, 'coverage': '8.64'}, {'name': '12.5mm Sound Plasterboard', 'cost': 18.45, 'coverage': '2.88'}, {'name': 'Acoustic Sealant', 'cost': 12.35, 'coverage': '3'}, {'name': 'Screws', 'cost': 16.21, 'coverage': '30'}, {'name': 'Floor protection', 'cost': 30, 'coverage': '30'}], 'total_cost': 139.26, 'notes': ['2 layers of 12.5mm sound plasterboard.']}
+2025-01-16 18:52:29,432 - werkzeug - INFO - 192.168.1.41 - - [16/Jan/2025 18:52:29] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-18 18:28:57,535 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-18 18:28:57,566 - __main__ - INFO - Successfully imported solution classes
+2025-01-18 18:28:57,604 - werkzeug - INFO -  * Restarting with stat
+2025-01-18 18:28:59,651 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-18 18:28:59,658 - __main__ - INFO - Successfully imported solution classes
+2025-01-18 18:28:59,677 - werkzeug - WARNING -  * Debugger is active!
+2025-01-18 18:28:59,686 - werkzeug - INFO -  * Debugger PIN: 134-409-233
+2025-01-18 18:28:59,776 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-18 18:28:59,777 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-18 18:29:17,201 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:29:17] "GET / HTTP/1.1" 200 -
+2025-01-18 18:29:17,273 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:29:17] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 18:29:17,285 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:29:17] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 18:29:17,300 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:29:17] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 18:29:17,312 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:29:17] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 18:29:17,319 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:29:17] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 18:29:17,330 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:29:17] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 18:29:17,341 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:29:17] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 18:29:17,371 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:29:17] "[36mGET /static/js/soundproofing-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 18:29:17,382 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:29:17] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 18:29:17,387 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:29:17] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 18:29:17,400 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:29:17] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 18:29:17,576 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:29:17] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-18 18:29:20,017 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:29:20] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 18:29:59,926 - __main__ - INFO - Calculating costs for solution: Genie Clip wall (Standard)
+2025-01-18 18:29:59,926 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-18 18:29:59,926 - __main__ - INFO - Querying collection: wallsolutions
+2025-01-18 18:30:06,864 - __main__ - INFO - Calculating costs for solution: Genie Clip wall (Standard)
+2025-01-18 18:30:06,864 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-18 18:30:06,864 - __main__ - INFO - Querying collection: wallsolutions
+2025-01-18 18:30:09,725 - __main__ - INFO - Calculating costs for solution: Genie Clip wall (Standard)
+2025-01-18 18:30:09,726 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-18 18:30:09,726 - __main__ - INFO - Querying collection: wallsolutions
+2025-01-18 18:30:11,137 - __main__ - INFO - Calculating costs for solution: Genie Clip wall (Standard)
+2025-01-18 18:30:11,139 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-18 18:30:11,139 - __main__ - INFO - Querying collection: wallsolutions
+2025-01-18 18:30:11,488 - __main__ - INFO - Found direct match: {'_id': ObjectId('671bae0fc10b2e4a14c90e31'), 'solution': 'Genie Clip wall (Standard)', 'surface_type': 'walls', 'materials': [{'name': 'Genie Clip', 'cost': 3.4, 'coverage': '4 '}, {'name': 'Furring Channel', 'cost': 4.45, 'coverage': '2 '}, {'name': 'Rockwool RWA45 50mm', 'cost': 50.2, 'coverage': '8.64'}, {'name': 'Resilient bars', 'cost': 4.2, 'coverage': '1 '}, {'name': '12.5mm Sound Plasterboard', 'cost': 18.45, 'coverage': '2.88'}, {'name': 'Screws', 'cost': 16.21, 'coverage': '30'}, {'name': 'Floor protection', 'cost': 25, 'coverage': '30'}], 'total_cost': 159.55, 'notes': ['2 layers of 12.5mm plasterboard for this system.', 'Add 1 box of screws no matter the m².']}
+2025-01-18 18:30:11,501 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:30:11] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-18 18:30:11,535 - __main__ - INFO - Found direct match: {'_id': ObjectId('671bae0fc10b2e4a14c90e31'), 'solution': 'Genie Clip wall (Standard)', 'surface_type': 'walls', 'materials': [{'name': 'Genie Clip', 'cost': 3.4, 'coverage': '4 '}, {'name': 'Furring Channel', 'cost': 4.45, 'coverage': '2 '}, {'name': 'Rockwool RWA45 50mm', 'cost': 50.2, 'coverage': '8.64'}, {'name': 'Resilient bars', 'cost': 4.2, 'coverage': '1 '}, {'name': '12.5mm Sound Plasterboard', 'cost': 18.45, 'coverage': '2.88'}, {'name': 'Screws', 'cost': 16.21, 'coverage': '30'}, {'name': 'Floor protection', 'cost': 25, 'coverage': '30'}], 'total_cost': 159.55, 'notes': ['2 layers of 12.5mm plasterboard for this system.', 'Add 1 box of screws no matter the m².']}
+2025-01-18 18:30:11,538 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:30:11] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-18 18:30:11,703 - __main__ - INFO - Found direct match: {'_id': ObjectId('671bae0fc10b2e4a14c90e31'), 'solution': 'Genie Clip wall (Standard)', 'surface_type': 'walls', 'materials': [{'name': 'Genie Clip', 'cost': 3.4, 'coverage': '4 '}, {'name': 'Furring Channel', 'cost': 4.45, 'coverage': '2 '}, {'name': 'Rockwool RWA45 50mm', 'cost': 50.2, 'coverage': '8.64'}, {'name': 'Resilient bars', 'cost': 4.2, 'coverage': '1 '}, {'name': '12.5mm Sound Plasterboard', 'cost': 18.45, 'coverage': '2.88'}, {'name': 'Screws', 'cost': 16.21, 'coverage': '30'}, {'name': 'Floor protection', 'cost': 25, 'coverage': '30'}], 'total_cost': 159.55, 'notes': ['2 layers of 12.5mm plasterboard for this system.', 'Add 1 box of screws no matter the m².']}
+2025-01-18 18:30:11,704 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:30:11] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-18 18:30:11,709 - __main__ - INFO - Found direct match: {'_id': ObjectId('671bae0fc10b2e4a14c90e31'), 'solution': 'Genie Clip wall (Standard)', 'surface_type': 'walls', 'materials': [{'name': 'Genie Clip', 'cost': 3.4, 'coverage': '4 '}, {'name': 'Furring Channel', 'cost': 4.45, 'coverage': '2 '}, {'name': 'Rockwool RWA45 50mm', 'cost': 50.2, 'coverage': '8.64'}, {'name': 'Resilient bars', 'cost': 4.2, 'coverage': '1 '}, {'name': '12.5mm Sound Plasterboard', 'cost': 18.45, 'coverage': '2.88'}, {'name': 'Screws', 'cost': 16.21, 'coverage': '30'}, {'name': 'Floor protection', 'cost': 25, 'coverage': '30'}], 'total_cost': 159.55, 'notes': ['2 layers of 12.5mm plasterboard for this system.', 'Add 1 box of screws no matter the m².']}
+2025-01-18 18:30:11,710 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:30:11] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-18 18:30:21,729 - __main__ - INFO - Calculating costs for solution: Genie Clip ceiling
+2025-01-18 18:30:21,729 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-18 18:30:21,730 - __main__ - INFO - Querying collection: ceilingsolutions
+2025-01-18 18:30:24,432 - __main__ - INFO - Calculating costs for solution: Genie Clip wall (Standard)
+2025-01-18 18:30:24,432 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-18 18:30:24,432 - __main__ - INFO - Querying collection: wallsolutions
+2025-01-18 18:30:28,807 - __main__ - INFO - Calculating costs for solution: Genie Clip wall (Standard)
+2025-01-18 18:30:28,807 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-18 18:30:28,807 - __main__ - INFO - Querying collection: wallsolutions
+2025-01-18 18:30:29,919 - __main__ - INFO - Calculating costs for solution: Genie Clip wall (Standard)
+2025-01-18 18:30:29,919 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-18 18:30:29,919 - __main__ - INFO - Querying collection: wallsolutions
+2025-01-18 18:30:30,390 - __main__ - INFO - Found direct match: {'_id': ObjectId('671bae0fc10b2e4a14c90e31'), 'solution': 'Genie Clip wall (Standard)', 'surface_type': 'walls', 'materials': [{'name': 'Genie Clip', 'cost': 3.4, 'coverage': '4 '}, {'name': 'Furring Channel', 'cost': 4.45, 'coverage': '2 '}, {'name': 'Rockwool RWA45 50mm', 'cost': 50.2, 'coverage': '8.64'}, {'name': 'Resilient bars', 'cost': 4.2, 'coverage': '1 '}, {'name': '12.5mm Sound Plasterboard', 'cost': 18.45, 'coverage': '2.88'}, {'name': 'Screws', 'cost': 16.21, 'coverage': '30'}, {'name': 'Floor protection', 'cost': 25, 'coverage': '30'}], 'total_cost': 159.55, 'notes': ['2 layers of 12.5mm plasterboard for this system.', 'Add 1 box of screws no matter the m².']}
+2025-01-18 18:30:30,391 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:30:30] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-18 18:30:31,168 - __main__ - INFO - Found direct match: {'_id': ObjectId('671bae0fc10b2e4a14c90e31'), 'solution': 'Genie Clip wall (Standard)', 'surface_type': 'walls', 'materials': [{'name': 'Genie Clip', 'cost': 3.4, 'coverage': '4 '}, {'name': 'Furring Channel', 'cost': 4.45, 'coverage': '2 '}, {'name': 'Rockwool RWA45 50mm', 'cost': 50.2, 'coverage': '8.64'}, {'name': 'Resilient bars', 'cost': 4.2, 'coverage': '1 '}, {'name': '12.5mm Sound Plasterboard', 'cost': 18.45, 'coverage': '2.88'}, {'name': 'Screws', 'cost': 16.21, 'coverage': '30'}, {'name': 'Floor protection', 'cost': 25, 'coverage': '30'}], 'total_cost': 159.55, 'notes': ['2 layers of 12.5mm plasterboard for this system.', 'Add 1 box of screws no matter the m².']}
+2025-01-18 18:30:31,170 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:30:31] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-18 18:30:31,296 - __main__ - INFO - Found direct match: {'_id': '671baf8ec10b2e4a14c90e43', 'solution': 'Genie Clip ceiling', 'surface_type': 'ceilings', 'materials': [{'name': 'Genie Clip', 'cost': 3.4, 'coverage': '0.25'}, {'name': 'Furring Channel', 'cost': 4.45, 'coverage': '0.50'}, {'name': 'Resilient bar', 'cost': 4.2, 'coverage': '1'}, {'name': 'Rockwool RWA45 50mm', 'cost': 50.2, 'coverage': '8.64'}, {'name': '12.5mm Sound Plasterboard', 'cost': 18.45, 'coverage': '2.88'}, {'name': 'Acoustic Sealant', 'cost': 12.35, 'coverage': '3'}, {'name': 'Screws', 'cost': 16.21, 'coverage': '30'}, {'name': 'Floor protection', 'cost': 30, 'coverage': '30'}], 'total_cost': 139.26, 'notes': ['2 layers of 12.5mm sound plasterboard.']}
+2025-01-18 18:30:31,297 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:30:31] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-18 18:30:34,000 - __main__ - INFO - Found direct match: {'_id': ObjectId('671bae0fc10b2e4a14c90e31'), 'solution': 'Genie Clip wall (Standard)', 'surface_type': 'walls', 'materials': [{'name': 'Genie Clip', 'cost': 3.4, 'coverage': '4 '}, {'name': 'Furring Channel', 'cost': 4.45, 'coverage': '2 '}, {'name': 'Rockwool RWA45 50mm', 'cost': 50.2, 'coverage': '8.64'}, {'name': 'Resilient bars', 'cost': 4.2, 'coverage': '1 '}, {'name': '12.5mm Sound Plasterboard', 'cost': 18.45, 'coverage': '2.88'}, {'name': 'Screws', 'cost': 16.21, 'coverage': '30'}, {'name': 'Floor protection', 'cost': 25, 'coverage': '30'}], 'total_cost': 159.55, 'notes': ['2 layers of 12.5mm plasterboard for this system.', 'Add 1 box of screws no matter the m².']}
+2025-01-18 18:30:34,002 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:30:34] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-18 18:42:36,214 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:42:36] "GET / HTTP/1.1" 200 -
+2025-01-18 18:42:36,248 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:42:36] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 18:42:36,266 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:42:36] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 18:42:36,273 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:42:36] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 18:42:36,304 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:42:36] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 18:42:36,306 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:42:36] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 18:42:36,312 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:42:36] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 18:42:36,338 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:42:36] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 18:42:36,344 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:42:36] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-18 18:42:36,351 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:42:36] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 18:42:36,367 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:42:36] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 18:42:36,372 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:42:36] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 18:42:36,542 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:42:36] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-18 18:42:49,856 - __main__ - INFO - Calculating costs for solution: Genie Clip wall (Standard)
+2025-01-18 18:42:49,857 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-18 18:42:49,857 - __main__ - INFO - Querying collection: wallsolutions
+2025-01-18 18:42:50,122 - __main__ - INFO - Found direct match: {'_id': ObjectId('671bae0fc10b2e4a14c90e31'), 'solution': 'Genie Clip wall (Standard)', 'surface_type': 'walls', 'materials': [{'name': 'Genie Clip', 'cost': 3.4, 'coverage': '4 '}, {'name': 'Furring Channel', 'cost': 4.45, 'coverage': '2 '}, {'name': 'Rockwool RWA45 50mm', 'cost': 50.2, 'coverage': '8.64'}, {'name': 'Resilient bars', 'cost': 4.2, 'coverage': '1 '}, {'name': '12.5mm Sound Plasterboard', 'cost': 18.45, 'coverage': '2.88'}, {'name': 'Screws', 'cost': 16.21, 'coverage': '30'}, {'name': 'Floor protection', 'cost': 25, 'coverage': '30'}], 'total_cost': 159.55, 'notes': ['2 layers of 12.5mm plasterboard for this system.', 'Add 1 box of screws no matter the m².']}
+2025-01-18 18:42:50,123 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:42:50] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-18 18:54:23,219 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:54:23] "GET / HTTP/1.1" 200 -
+2025-01-18 18:54:23,253 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:54:23] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 18:54:23,302 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:54:23] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 18:54:23,315 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:54:23] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 18:54:23,346 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:54:23] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 18:54:23,358 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:54:23] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 18:54:23,373 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:54:23] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 18:54:23,377 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:54:23] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 18:54:23,389 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:54:23] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-18 18:54:23,394 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:54:23] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 18:54:23,417 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:54:23] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 18:54:23,421 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:54:23] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 18:54:23,565 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:54:23] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-18 18:54:37,120 - __main__ - INFO - Calculating costs for solution: Genie Clip wall (Standard)
+2025-01-18 18:54:37,121 - __main__ - INFO - Dimensions: {'length': 11, 'width': 11, 'height': 11}
+2025-01-18 18:54:37,121 - __main__ - INFO - Querying collection: wallsolutions
+2025-01-18 18:54:37,183 - __main__ - INFO - Found direct match: {'_id': ObjectId('671bae0fc10b2e4a14c90e31'), 'solution': 'Genie Clip wall (Standard)', 'surface_type': 'walls', 'materials': [{'name': 'Genie Clip', 'cost': 3.4, 'coverage': '4 '}, {'name': 'Furring Channel', 'cost': 4.45, 'coverage': '2 '}, {'name': 'Rockwool RWA45 50mm', 'cost': 50.2, 'coverage': '8.64'}, {'name': 'Resilient bars', 'cost': 4.2, 'coverage': '1 '}, {'name': '12.5mm Sound Plasterboard', 'cost': 18.45, 'coverage': '2.88'}, {'name': 'Screws', 'cost': 16.21, 'coverage': '30'}, {'name': 'Floor protection', 'cost': 25, 'coverage': '30'}], 'total_cost': 159.55, 'notes': ['2 layers of 12.5mm plasterboard for this system.', 'Add 1 box of screws no matter the m².']}
+2025-01-18 18:54:37,184 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 18:54:37] "POST /api/calculate-costs HTTP/1.1" 200 -
+2025-01-18 19:02:17,774 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-18 19:02:17,782 - __main__ - INFO - Successfully imported solution classes
+2025-01-18 19:02:17,808 - werkzeug - INFO -  * Restarting with stat
+2025-01-18 19:02:19,422 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-18 19:02:19,428 - __main__ - INFO - Successfully imported solution classes
+2025-01-18 19:02:19,444 - werkzeug - WARNING -  * Debugger is active!
+2025-01-18 19:02:19,455 - werkzeug - INFO -  * Debugger PIN: 134-409-233
+2025-01-18 19:02:19,535 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-18 19:02:19,535 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-18 19:02:19,800 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:02:19] "GET / HTTP/1.1" 200 -
+2025-01-18 19:02:19,836 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:02:19] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 19:02:19,869 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:02:19] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 19:02:19,873 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:02:19] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 19:02:19,876 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:02:19] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:02:19,882 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:02:19] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 19:02:19,893 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:02:19] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:02:19,895 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:02:19] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:02:19,898 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:02:19] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-18 19:02:19,902 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:02:19] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 19:02:19,914 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:02:19] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:02:20,020 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:02:20] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 19:02:20,167 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:02:20] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-18 19:30:49,451 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-18 19:30:49,462 - __main__ - INFO - Successfully imported solution classes
+2025-01-18 19:30:49,490 - werkzeug - INFO -  * Restarting with stat
+2025-01-18 19:30:51,486 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-18 19:30:51,494 - __main__ - INFO - Successfully imported solution classes
+2025-01-18 19:30:51,513 - werkzeug - WARNING -  * Debugger is active!
+2025-01-18 19:30:51,522 - werkzeug - INFO -  * Debugger PIN: 134-409-233
+2025-01-18 19:30:51,605 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-18 19:30:51,605 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-18 19:30:53,565 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:30:53] "GET / HTTP/1.1" 200 -
+2025-01-18 19:30:53,596 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:30:53] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 19:30:53,650 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:30:53] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 19:30:53,656 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:30:53] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 19:30:53,666 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:30:53] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:30:53,701 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:30:53] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 19:30:53,715 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:30:53] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:30:53,724 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:30:53] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:30:53,739 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:30:53] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-18 19:30:53,744 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:30:53] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:30:53,753 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:30:53] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 19:30:53,766 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:30:53] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 19:30:53,932 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:30:53] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-18 19:36:21,016 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:36:21] "GET / HTTP/1.1" 200 -
+2025-01-18 19:36:21,048 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:36:21] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 19:36:21,077 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:36:21] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 19:36:21,113 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:36:21] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 19:36:21,116 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:36:21] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:36:21,119 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:36:21] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 19:36:21,139 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:36:21] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:36:21,146 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:36:21] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:36:21,164 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:36:21] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-18 19:36:21,167 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:36:21] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:36:21,170 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:36:21] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 19:36:21,172 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:36:21] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 19:36:21,325 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:36:21] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-18 19:37:46,224 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:37:46] "GET / HTTP/1.1" 200 -
+2025-01-18 19:37:46,261 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:37:46] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 19:37:46,266 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:37:46] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 19:37:46,311 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:37:46] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 19:37:46,327 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:37:46] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:37:46,331 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:37:46] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 19:37:46,339 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:37:46] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:37:46,341 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:37:46] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:37:46,347 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:37:46] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-18 19:37:46,359 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:37:46] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:37:46,368 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:37:46] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 19:37:46,375 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:37:46] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 19:37:46,555 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:37:46] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-18 19:48:04,102 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:48:04] "GET / HTTP/1.1" 200 -
+2025-01-18 19:48:04,137 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:48:04] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 19:48:04,182 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:48:04] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 19:48:04,194 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:48:04] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 19:48:04,219 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:48:04] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:48:04,228 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:48:04] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:48:04,239 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:48:04] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 19:48:04,248 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:48:04] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-18 19:48:04,249 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:48:04] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:48:04,259 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:48:04] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:48:04,269 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:48:04] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 19:48:04,276 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:48:04] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 19:48:04,436 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:48:04] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-18 19:50:59,477 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:50:59] "GET / HTTP/1.1" 200 -
+2025-01-18 19:50:59,507 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:50:59] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 19:50:59,568 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:50:59] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 19:50:59,575 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:50:59] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 19:50:59,592 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:50:59] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:50:59,609 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:50:59] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 19:50:59,614 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:50:59] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:50:59,620 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:50:59] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:50:59,625 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:50:59] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-18 19:50:59,638 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:50:59] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 19:50:59,644 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:50:59] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 19:50:59,654 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:50:59] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 19:50:59,797 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 19:50:59] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-18 20:02:51,826 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:02:51] "GET / HTTP/1.1" 200 -
+2025-01-18 20:02:51,863 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:02:51] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 20:02:51,863 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:02:51] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 20:02:51,915 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:02:51] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 20:02:51,927 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:02:51] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:02:51,936 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:02:51] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 20:02:51,961 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:02:51] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:02:51,975 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:02:51] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:02:51,985 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:02:51] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-18 20:02:51,991 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:02:51] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:02:52,000 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:02:52] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 20:02:52,011 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:02:52] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 20:02:52,147 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:02:52] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-18 20:07:49,072 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:07:49] "GET / HTTP/1.1" 200 -
+2025-01-18 20:07:49,103 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:07:49] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 20:07:49,108 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:07:49] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 20:07:49,145 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:07:49] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 20:07:49,155 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:07:49] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:07:49,164 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:07:49] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 20:07:49,184 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:07:49] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:07:49,197 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:07:49] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:07:49,214 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:07:49] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 20:07:49,215 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:07:49] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-18 20:07:49,216 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:07:49] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:07:49,221 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:07:49] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 20:07:49,389 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:07:49] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-18 20:24:07,587 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:24:07] "GET / HTTP/1.1" 200 -
+2025-01-18 20:24:07,621 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:24:07] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 20:24:07,623 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:24:07] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 20:24:07,665 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:24:07] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 20:24:07,690 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:24:07] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:24:07,707 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:24:07] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 20:24:07,731 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:24:07] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:24:07,744 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:24:07] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:24:07,748 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:24:07] "[36mGET /static/js/soundproofing-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:24:07,758 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:24:07] "GET /static/js/workflow-manager.js HTTP/1.1" 200 -
+2025-01-18 20:24:07,768 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:24:07] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 20:24:07,786 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:24:07] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 20:24:07,957 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:24:07] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-18 20:26:15,898 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:26:15] "GET / HTTP/1.1" 200 -
+2025-01-18 20:26:15,944 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:26:15] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 20:26:16,030 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:26:16] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 20:26:16,051 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:26:16] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 20:26:16,060 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:26:16] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:26:16,068 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:26:16] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 20:26:16,094 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:26:16] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:26:16,102 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:26:16] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:26:16,112 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:26:16] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-18 20:26:16,117 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:26:16] "GET /static/js/workflow-manager.js HTTP/1.1" 200 -
+2025-01-18 20:26:16,124 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:26:16] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 20:26:16,173 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:26:16] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 20:26:16,362 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:26:16] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-18 20:30:11,664 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:30:11] "GET / HTTP/1.1" 200 -
+2025-01-18 20:30:11,695 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:30:11] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 20:30:11,729 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:30:11] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 20:30:11,766 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:30:11] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 20:30:11,770 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:30:11] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:30:11,780 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:30:11] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 20:30:11,793 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:30:11] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:30:11,806 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:30:11] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:30:11,808 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:30:11] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-18 20:30:11,809 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:30:11] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:30:11,815 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:30:11] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 20:30:11,819 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:30:11] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 20:30:11,959 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:30:11] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-18 20:32:50,932 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:32:50] "GET / HTTP/1.1" 200 -
+2025-01-18 20:32:50,968 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:32:50] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 20:32:50,975 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:32:50] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 20:32:51,012 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:32:51] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 20:32:51,015 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:32:51] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:32:51,030 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:32:51] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 20:32:51,031 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:32:51] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:32:51,041 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:32:51] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:32:51,051 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:32:51] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-18 20:32:51,058 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:32:51] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 20:32:51,060 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:32:51] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:32:51,062 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:32:51] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 20:32:51,229 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:32:51] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-18 20:38:11,328 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:38:11] "GET / HTTP/1.1" 200 -
+2025-01-18 20:38:11,364 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:38:11] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 20:38:11,366 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:38:11] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 20:38:11,392 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:38:11] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 20:38:11,401 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:38:11] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:38:11,434 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:38:11] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 20:38:11,444 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:38:11] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:38:11,469 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:38:11] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:38:11,473 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:38:11] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-18 20:38:11,486 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:38:11] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:38:11,500 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:38:11] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 20:38:11,501 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:38:11] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 20:38:11,641 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:38:11] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-18 20:54:31,725 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-18 20:54:31,781 - __main__ - INFO - Successfully imported solution classes
+2025-01-18 20:54:31,822 - werkzeug - INFO -  * Restarting with stat
+2025-01-18 20:54:33,927 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-18 20:54:33,935 - __main__ - INFO - Successfully imported solution classes
+2025-01-18 20:54:33,955 - werkzeug - WARNING -  * Debugger is active!
+2025-01-18 20:54:33,964 - werkzeug - INFO -  * Debugger PIN: 134-409-233
+2025-01-18 20:54:34,042 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-18 20:54:34,043 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-18 20:54:34,274 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:54:34] "GET / HTTP/1.1" 200 -
+2025-01-18 20:54:34,310 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:54:34] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-01-18 20:54:34,346 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:54:34] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 20:54:34,351 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:54:34] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 20:54:34,355 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:54:34] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:54:34,366 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:54:34] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 20:54:34,367 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:54:34] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:54:34,372 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:54:34] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:54:34,380 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:54:34] "[36mGET /static/js/workflow-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 20:54:34,383 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:54:34] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-18 20:54:34,426 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:54:34] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 20:54:34,502 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:54:34] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 20:54:34,650 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 20:54:34] "GET /favicon.ico HTTP/1.1" 200 -
+2025-01-18 21:13:03,690 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-18 21:13:03,701 - __main__ - INFO - Successfully imported solution classes
+2025-01-18 21:13:03,733 - werkzeug - INFO -  * Restarting with stat
+2025-01-18 21:13:24,553 - __main__ - INFO - Successfully connected to MongoDB!
+2025-01-18 21:13:24,561 - __main__ - INFO - Successfully imported solution classes
+2025-01-18 21:13:24,580 - werkzeug - WARNING -  * Debugger is active!
+2025-01-18 21:13:24,589 - werkzeug - INFO -  * Debugger PIN: 134-409-233
+2025-01-18 21:13:24,672 - werkzeug - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-01-18 21:13:24,672 - werkzeug - INFO -  * Running on http://192.168.1.41:10000/ (Press CTRL+C to quit)
+2025-01-18 21:13:25,556 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 21:13:25] "GET / HTTP/1.1" 200 -
+2025-01-18 21:13:25,625 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 21:13:25] "GET /static/css/styles.css HTTP/1.1" 200 -
+2025-01-18 21:13:25,644 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 21:13:25] "[36mGET /static/js/error-utils.js HTTP/1.1[0m" 304 -
+2025-01-18 21:13:25,661 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 21:13:25] "[36mGET /static/js/utils.js HTTP/1.1[0m" 304 -
+2025-01-18 21:13:25,672 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 21:13:25] "[36mGET /static/js/room-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 21:13:25,673 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 21:13:25] "[36mGET /static/js/room-calculator.js HTTP/1.1[0m" 304 -
+2025-01-18 21:13:25,677 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 21:13:25] "[36mGET /static/js/surface-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 21:13:25,682 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 21:13:25] "[36mGET /static/js/wall-manager.js HTTP/1.1[0m" 304 -
+2025-01-18 21:13:25,689 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 21:13:25] "GET /static/js/soundproofing-manager.js HTTP/1.1" 200 -
+2025-01-18 21:13:25,692 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 21:13:25] "GET /static/js/workflow-manager.js HTTP/1.1" 200 -
+2025-01-18 21:13:25,716 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 21:13:25] "[36mGET /static/js/theme-toggle.js HTTP/1.1[0m" 304 -
+2025-01-18 21:13:25,720 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 21:13:25] "[36mGET /static/js/form-handlers.js HTTP/1.1[0m" 304 -
+2025-01-18 21:13:25,995 - werkzeug - INFO - 192.168.1.41 - - [18/Jan/2025 21:13:25] "GET /favicon.ico HTTP/1.1" 200 -

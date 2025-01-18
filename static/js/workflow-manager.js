@@ -84,92 +84,145 @@ if (!window.WorkflowManager) {
         }
 
         populateSummary() {
-            console.log('Populating summary...');
-            
-            // Get current data
-            const { dimensions, surfaces, noiseData } = window.FormState;
-            console.log('Current FormState:', { dimensions, surfaces, noiseData });
-            
-            // Calculate areas
-            const areas = this.calculateAreas(dimensions);
-            
-            // Room dimensions and type
-            const dimensionsText = Object.values(dimensions).some(v => v) ? 
-                `Length: ${dimensions.length || 0}m, Width: ${dimensions.width || 0}m, Height: ${dimensions.height || 0}m` : '-';
-            this.safeSetText('summary-dimensions', dimensionsText);
-            
-            // Display areas
-            this.safeSetText('summary-wall-area', `${areas.walls.toFixed(2)} m²`);
-            this.safeSetText('summary-floor-area', `${areas.floor.toFixed(2)} m²`);
-            this.safeSetText('summary-ceiling-area', `${areas.ceiling.toFixed(2)} m²`);
-            
-            const roomType = document.getElementById('room-type')?.value || '-';
-            this.safeSetText('summary-room-type', roomType);
-            
-            console.log('Updated room details:', { dimensionsText, roomType, areas });
-
-            // Noise Details
-            if (noiseData) {
-                this.safeSetText('summary-noise-type', noiseData.type || '-');
-                this.safeSetText('summary-noise-intensity', noiseData.intensity ? `Level ${noiseData.intensity}` : '-');
-                this.safeSetText('summary-noise-time', noiseData.time?.join(', ') || '-');
-                this.safeSetText('summary-noise-sources', noiseData.direction?.join(', ') || '-');
-                console.log('Updated noise details:', noiseData);
-            }
-
-            // Get recommendations from SoundproofingManager
-            if (window.soundproofingManager) {
-                const noiseSurfaces = window.soundproofingManager.getNoiseSourceSurfaces();
-                const noisePriority = window.soundproofingManager.getNoisePriority();
-                const recommendations = window.soundproofingManager.getPrimarySolution(noiseData, noiseSurfaces, noisePriority);
-                console.log('Got recommendations:', recommendations);
-
-                // Update recommendations section
-                const recsContainer = document.getElementById('summary-recommendations');
-                if (recsContainer) {
-                    let recsHtml = '<div class="recommendations-summary">';
-                    
-                    if (recommendations.walls.length > 0) {
-                        recsHtml += '<div class="recommendation-item"><h4>Wall Solutions:</h4>';
-                        recommendations.walls.forEach(wall => {
-                            recsHtml += `<p>${wall.wall} Wall: ${wall.solution}</p>`;
-                        });
-                        recsHtml += '</div>';
-                    }
-
-                    if (recommendations.ceiling) {
-                        recsHtml += `<div class="recommendation-item">
-                            <h4>Ceiling Solution:</h4>
-                            <p>${recommendations.ceiling}</p>
-                        </div>`;
-                    }
-
-                    if (recommendations.reasoning.length > 0) {
-                        recsHtml += '<div class="recommendation-reasoning">';
-                        recommendations.reasoning.forEach(reason => {
-                            recsHtml += `<p>• ${reason}</p>`;
-                        });
-                        recsHtml += '</div>';
-                    }
-
-                    recsHtml += '</div>';
-                    recsContainer.innerHTML = recsHtml;
-                    console.log('Updated recommendations display');
+            try {
+                const summaryContainer = document.getElementById(this.steps[this.steps.length - 1].id);
+                if (!summaryContainer) {
+                    console.warn(`Summary container '${this.steps[this.steps.length - 1].id}' not found`);
+                    return;
                 }
 
-                // Calculate and display costs
-                const costs = this.calculateCosts(recommendations);
-                this.safeSetText('summary-wall-cost', costs.wall ? `$${costs.wall.toFixed(2)}` : '-');
-                this.safeSetText('summary-floor-cost', costs.floor ? `$${costs.floor.toFixed(2)}` : '-');
-                this.safeSetText('summary-ceiling-cost', costs.ceiling ? `$${costs.ceiling.toFixed(2)}` : '-');
-                this.safeSetText('summary-total-cost', `$${costs.total.toFixed(2)}`);
-                console.log('Updated costs:', costs);
+                // Get current form state with safe defaults
+                const formState = window.FormState || {};
+                const noiseData = formState.noiseData || {};
+                const dimensions = formState.dimensions || {};
+                const blockages = formState.blockages || {};
 
-                // Update implementation details
-                this.safeSetText('summary-install-time', this.getInstallationTime(recommendations));
-                this.safeSetText('summary-skill-level', this.getSkillLevel(recommendations));
-                this.safeSetText('summary-special-reqs', this.getSpecialRequirements(recommendations).join(', ') || 'None');
-                console.log('Updated implementation details');
+                // Safely get soundproofingManager instance
+                const soundproofingManager = window.soundproofingManager;
+                if (!soundproofingManager) {
+                    throw new Error('SoundproofingManager not initialized');
+                }
+
+                // Get noise surfaces with safe defaults
+                const noiseSurfaces = soundproofingManager.getNoiseSourceSurfaces() || {
+                    walls: [],
+                    ceiling: false,
+                    floor: false
+                };
+
+                // Generate recommendations with safe error handling
+                let recommendations;
+                try {
+                    recommendations = soundproofingManager.getPrimarySolution(
+                        noiseData,
+                        noiseSurfaces,
+                        soundproofingManager.getNoisePriority(),
+                        {
+                            dimensions,
+                            blockages,
+                            roomType: formState.roomType
+                        }
+                    );
+                } catch (recError) {
+                    console.error('Error generating recommendations:', recError);
+                    recommendations = null;
+                }
+
+                // Generate summary HTML with safe error handling
+                let summaryHtml = '';
+                try {
+                    summaryHtml = soundproofingManager.generateSummaryHtml() || '';
+                } catch (summaryError) {
+                    console.error('Error generating summary HTML:', summaryError);
+                    summaryHtml = '<div class="error-message">Error generating summary</div>';
+                }
+
+                // Update the summary container
+                summaryContainer.innerHTML = summaryHtml;
+
+                // Add recommendations section if available
+                if (recommendations) {
+                    const recommendationsHtml = this.generateRecommendationsHtml(recommendations);
+                    if (recommendationsHtml) {
+                        summaryContainer.innerHTML += recommendationsHtml;
+                    }
+                }
+
+            } catch (error) {
+                console.error('Error populating summary:', error);
+                const summaryContainer = document.getElementById(this.steps[this.steps.length - 1].id);
+                if (summaryContainer) {
+                    summaryContainer.innerHTML = `
+                        <div class="error-message">
+                            <h3>Error Generating Summary</h3>
+                            <p>There was an error generating your summary. Please try the following:</p>
+                            <ul>
+                                <li>Check that all required information is filled out</li>
+                                <li>Ensure room dimensions are valid numbers</li>
+                                <li>Verify noise source information is complete</li>
+                            </ul>
+                            <p>If the problem persists, please try refreshing the page.</p>
+                        </div>`;
+                }
+            }
+        }
+
+        generateRecommendationsHtml(recommendations) {
+            try {
+                if (!recommendations) {
+                    console.warn('No recommendations provided');
+                    return '';
+                }
+
+                let html = '<div class="recommendations-summary">';
+                html += '<h3>Recommended Solutions</h3>';
+
+                // Wall solutions
+                if (recommendations.walls && Array.isArray(recommendations.walls) && recommendations.walls.length > 0) {
+                    html += '<div class="wall-solutions">';
+                    html += '<h4>Wall Treatments</h4>';
+                    recommendations.walls.forEach(wall => {
+                        if (wall && wall.wall && wall.solution) {
+                            html += `
+                                <div class="solution">
+                                    <p><strong>${wall.wall} Wall:</strong> ${wall.solution}</p>
+                                    <p>Effectiveness: ${(wall.score || 0 * 100).toFixed(1)}%</p>
+                                </div>`;
+                        }
+                    });
+                    html += '</div>';
+                }
+
+                // Ceiling solution
+                if (recommendations.ceiling && recommendations.ceiling.solution) {
+                    html += '<div class="ceiling-solution">';
+                    html += '<h4>Ceiling Treatment</h4>';
+                    html += `
+                        <div class="solution">
+                            <p><strong>Solution:</strong> ${recommendations.ceiling.solution}</p>
+                            <p>Effectiveness: ${((recommendations.ceiling.score || 0) * 100).toFixed(1)}%</p>
+                        </div>`;
+                    html += '</div>';
+                }
+
+                // Floor message
+                if (recommendations.floor && recommendations.floor.message) {
+                    html += '<div class="floor-solution">';
+                    html += '<h4>Floor Treatment</h4>';
+                    html += `
+                        <div class="solution">
+                            <p>${recommendations.floor.message}</p>
+                            ${recommendations.floor.contactInfo ? 
+                                `<p>Contact: ${recommendations.floor.contactInfo.phone || ''}</p>` : ''}
+                        </div>`;
+                    html += '</div>';
+                }
+
+                html += '</div>';
+                return html;
+            } catch (error) {
+                console.error('Error generating recommendations HTML:', error);
+                return '<div class="error-message">Error displaying recommendations</div>';
             }
         }
 
@@ -299,8 +352,145 @@ if (!window.WorkflowManager) {
         }
 
         generateQuote() {
-            // TODO: Implement quote generation
-            console.log('Generating quote with form state:', window.FormState);
+            try {
+                const formState = window.FormState || {};
+                const noiseData = formState.noiseData || {};
+                const dimensions = formState.dimensions || {};
+                const blockages = formState.blockages || {};
+
+                // Create quote content
+                let quoteContent = `Soundproofing Solution Quote\n`;
+                quoteContent += `Generated: ${new Date().toLocaleString()}\n\n`;
+
+                // Project Details
+                quoteContent += `PROJECT DETAILS\n`;
+                quoteContent += `-------------\n`;
+                quoteContent += `Noise Type: ${noiseData.type || 'Not specified'}\n`;
+                quoteContent += `Intensity: ${noiseData.intensity || 'Not specified'}\n`;
+                quoteContent += `Time: ${Array.isArray(noiseData.time) ? noiseData.time.join(', ') : 'Not specified'}\n`;
+                quoteContent += `Direction: ${Array.isArray(noiseData.direction) ? noiseData.direction.join(', ') : 'Not specified'}\n\n`;
+
+                // Room Dimensions
+                quoteContent += `ROOM DIMENSIONS\n`;
+                quoteContent += `---------------\n`;
+                quoteContent += `Length: ${dimensions.length ? dimensions.length.toFixed(2) + ' m' : '0 m'}\n`;
+                quoteContent += `Width: ${dimensions.width ? dimensions.width.toFixed(2) + ' m' : '0 m'}\n`;
+                quoteContent += `Height: ${dimensions.height ? dimensions.height.toFixed(2) + ' m' : '0 m'}\n\n`;
+
+                // Surface Features
+                quoteContent += `SURFACE FEATURES\n`;
+                quoteContent += `----------------\n`;
+                if (this.hasAnyBlockages(blockages)) {
+                    if (blockages.wall?.length > 0) {
+                        blockages.wall.forEach(blockage => {
+                            if (blockage?.type && blockage?.wall) {
+                                quoteContent += `${blockage.wall} Wall: ${blockage.type} (${blockage.width}m × ${blockage.height}m)\n`;
+                            }
+                        });
+                    }
+                    if (blockages.ceiling?.length > 0) {
+                        blockages.ceiling.forEach(blockage => {
+                            if (blockage?.type) {
+                                quoteContent += `Ceiling: ${blockage.type} (${blockage.width}m × ${blockage.length}m)\n`;
+                            }
+                        });
+                    }
+                    if (blockages.floor?.length > 0) {
+                        blockages.floor.forEach(blockage => {
+                            if (blockage?.type) {
+                                quoteContent += `Floor: ${blockage.type} (${blockage.width}m × ${blockage.length}m)\n`;
+                            }
+                        });
+                    }
+                } else {
+                    quoteContent += `No surface features reported\n`;
+                }
+                quoteContent += '\n';
+
+                // Cost Breakdown
+                quoteContent += `COST BREAKDOWN\n`;
+                quoteContent += `--------------\n`;
+                
+                const noiseSurfaces = window.soundproofingManager.getNoiseSourceSurfaces();
+                let totalCost = 0;
+
+                // Calculate costs for each surface
+                if (noiseSurfaces.walls?.length > 0) {
+                    noiseSurfaces.walls.forEach(wall => {
+                        const solution = window.soundproofingManager.findBestSolutionForWall(wall, noiseData);
+                        if (solution) {
+                            const costs = window.soundproofingManager.calculateLocalCosts(solution, dimensions, 'wall', wall.toLowerCase());
+                            if (!costs.error) {
+                                totalCost += costs.total;
+                                quoteContent += `${wall} Wall (${costs.area} m²): £${costs.total.toFixed(2)}\n`;
+                                quoteContent += `Solution: ${solution}\n`;
+                                quoteContent += `Materials:\n`;
+                                costs.materials.forEach(material => {
+                                    quoteContent += `  - ${material.name}: ${material.amount} ${material.unit} (£${material.cost.toFixed(2)})\n`;
+                                });
+                                quoteContent += '\n';
+                            }
+                        }
+                    });
+                }
+
+                if (noiseSurfaces.ceiling) {
+                    const solution = window.soundproofingManager.findBestCeilingSolution(noiseData);
+                    if (solution) {
+                        const costs = window.soundproofingManager.calculateLocalCosts(solution, dimensions, 'ceiling');
+                        if (!costs.error) {
+                            totalCost += costs.total;
+                            quoteContent += `Ceiling (${costs.area} m²): £${costs.total.toFixed(2)}\n`;
+                            quoteContent += `Solution: ${solution}\n`;
+                            quoteContent += `Materials:\n`;
+                            costs.materials.forEach(material => {
+                                quoteContent += `  - ${material.name}: ${material.amount} ${material.unit} (£${material.cost.toFixed(2)})\n`;
+                            });
+                            quoteContent += '\n';
+                        }
+                    }
+                }
+
+                // Blockage adjustment
+                const blockageAdjustment = window.soundproofingManager.calculateBlockageAdjustment(blockages);
+                if (blockageAdjustment > 0) {
+                    const adjustmentAmount = totalCost * blockageAdjustment;
+                    quoteContent += `Blockage Adjustment (+${(blockageAdjustment * 100).toFixed(0)}%): £${adjustmentAmount.toFixed(2)}\n`;
+                    totalCost += adjustmentAmount;
+                }
+
+                quoteContent += `\nTOTAL COST: £${totalCost.toFixed(2)}\n\n`;
+
+                // Additional Notes
+                quoteContent += `NOTES\n`;
+                quoteContent += `-----\n`;
+                quoteContent += `1. All prices include materials only\n`;
+                quoteContent += `2. Installation costs may vary based on complexity\n`;
+                quoteContent += `3. Quote valid for 30 days\n`;
+                quoteContent += `4. Professional installation recommended\n`;
+                quoteContent += `5. Contact us for detailed installation guidance\n\n`;
+
+                // Contact Information
+                quoteContent += `CONTACT INFORMATION\n`;
+                quoteContent += `-------------------\n`;
+                quoteContent += `Phone: +44 (0)1234 567890\n`;
+                quoteContent += `Email: info@soundproofing.com\n`;
+
+                // Create and download the file
+                const blob = new Blob([quoteContent], { type: 'text/plain' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `soundproofing-quote-${new Date().toISOString().split('T')[0]}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+
+            } catch (error) {
+                console.error('Error generating quote:', error);
+                alert('Error generating quote. Please try again.');
+            }
         }
 
         saveCurrentSectionState() {

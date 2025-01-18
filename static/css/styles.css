@@ -2238,3 +2238,367 @@ input[type="range"]::-webkit-slider-thumb {
     margin: 0.25rem 0;
     color: var(--text-secondary);
 }
+
+/* Review Section Styles */
+.calculator-section.review-section {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin: 1rem 0;
+}
+
+.summary-group {
+    margin-bottom: 2rem;
+}
+
+.section-header {
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.summary-content {
+    padding: 1rem 0;
+}
+
+.info-grid, .dimensions-grid, .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.info-item, .dimension-item, .feature-item {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info-item label, .dimension-item label, .feature-item label {
+    font-weight: 500;
+    color: #666;
+}
+
+.info-item .value, .dimension-item .value, .feature-item .value {
+    color: #333;
+}
+
+.feature-category {
+    margin-bottom: 1.5rem;
+}
+
+.feature-category h4 {
+    color: #555;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.costs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.cost-section {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.cost-header {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.cost-header .surface {
+    font-weight: 600;
+    color: #333;
+}
+
+.cost-header .area {
+    color: #666;
+}
+
+.cost-header .solution {
+    color: #0066cc;
+}
+
+.materials-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.material-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1rem;
+    padding: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.material-item:last-child {
+    border-bottom: none;
+}
+
+.material-item .name {
+    color: #333;
+}
+
+.material-item .amount {
+    color: #666;
+    text-align: right;
+}
+
+.material-item .cost {
+    color: #333;
+    text-align: right;
+    font-weight: 500;
+}
+
+.surface-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+.surface-total label {
+    font-weight: 600;
+    color: #333;
+}
+
+.surface-total .cost {
+    font-weight: 600;
+    color: #0066cc;
+}
+
+.adjustment-section {
+    background: #fff3e0;
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.adjustment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.adjustment-item label {
+    color: #e65100;
+    font-weight: 500;
+}
+
+.adjustment-item .cost {
+    color: #e65100;
+    font-weight: 600;
+}
+
+.total-section {
+    background: #e3f2fd;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+.total-cost {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total-cost label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #0d47a1;
+}
+
+.total-cost .cost {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0d47a1;
+}
+
+.quote-section {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.quote-button {
+    background: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.quote-button:hover {
+    background: #1976d2;
+}
+
+.error-message {
+    background: #ffebee;
+    border: 1px solid #ffcdd2;
+    border-radius: 4px;
+    padding: 1rem;
+    color: #c62828;
+    margin: 1rem 0;
+}
+
+.no-features {
+    text-align: center;
+    color: #666;
+    padding: 2rem;
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+    .info-grid, .dimensions-grid, .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cost-header {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    .material-item {
+        grid-template-columns: 1fr;
+        text-align: left;
+    }
+
+    .material-item .amount,
+    .material-item .cost {
+        text-align: left;
+    }
+}
+
+[data-theme="dark"] {
+    .calculator-section.review-section {
+        background: #1e1e1e;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .section-header {
+        color: #e0e0e0;
+        border-bottom-color: #333;
+    }
+
+    .info-item, .dimension-item, .feature-item {
+        background: #2d2d2d;
+    }
+
+    .info-item label, .dimension-item label, .feature-item label {
+        color: #999;
+    }
+
+    .info-item .value, .dimension-item .value, .feature-item .value {
+        color: #e0e0e0;
+    }
+
+    .cost-section {
+        background: #2d2d2d;
+    }
+
+    .cost-header {
+        border-bottom-color: #444;
+    }
+
+    .cost-header .surface {
+        color: #e0e0e0;
+    }
+
+    .cost-header .area {
+        color: #999;
+    }
+
+    .cost-header .solution {
+        color: #64b5f6;
+    }
+
+    .material-item {
+        border-bottom-color: #444;
+    }
+
+    .material-item .name {
+        color: #e0e0e0;
+    }
+
+    .material-item .amount {
+        color: #999;
+    }
+
+    .material-item .cost {
+        color: #e0e0e0;
+    }
+
+    .surface-total {
+        border-top-color: #444;
+    }
+
+    .surface-total label {
+        color: #e0e0e0;
+    }
+
+    .surface-total .cost {
+        color: #64b5f6;
+    }
+
+    .adjustment-section {
+        background: #332211;
+    }
+
+    .adjustment-item label,
+    .adjustment-item .cost {
+        color: #ffb74d;
+    }
+
+    .total-section {
+        background: #1a237e;
+    }
+
+    .total-cost label,
+    .total-cost .cost {
+        color: #e3f2fd;
+    }
+
+    .quote-button {
+        background: #1976d2;
+    }
+
+    .quote-button:hover {
+        background: #1565c0;
+    }
+
+    .error-message {
+        background: #311b1b;
+        border-color: #c62828;
+        color: #ef5350;
+    }
+
+    .no-features {
+        background: #2d2d2d;
+        color: #999;
+    }
+}
