@@ -4,12 +4,12 @@ if (!window.SoundproofingManager) {
             this.initialized = false;
             this.solutions = {
                 wall: {
-                    standard: ['Genie Clip wall (Standard)', 'Independent Wall (Standard)', 'Resilient bar wall (Standard)', 'M20 Solution (Standard)'],
-                    premium: ['Genie Clip wall (SP15 Soundboard Upgrade)', 'Independent Wall (SP15 Soundboard Upgrade)', 'Resilient bar wall (SP15 Soundboard Upgrade)', 'M20 Solution (SP15 Soundboard upgrade)']
+                    standard: ['StandardWallSP10', 'StandardWallSP20', 'StandardWallSP30'],
+                    premium: ['PremiumWallSP10', 'PremiumWallSP15', 'PremiumWallSP20', 'PremiumWallSP25', 'PremiumWallSP30']
                 },
                 ceiling: {
-                    standard: ['Genie Clip ceiling', 'LB3 Genie Clip', 'Independent Ceiling', 'Resilient bar Ceiling'],
-                    premium: ['Genie Clip ceiling (SP15 Soundboard Upgrade)', 'LB3 Genie Clip (SP15 Soundboard Upgrade)', 'Independent Ceiling (SP15 Soundboard Upgrade)', 'Resilient bar Ceiling (SP15 Soundboard Upgrade)']
+                    standard: ['StandardCeilingSP10', 'StandardCeilingSP20', 'StandardCeilingSP30', 'StandardCeilingSP40'],
+                    premium: ['PremiumCeilingSP10', 'PremiumCeilingSP20', 'PremiumCeilingSP30', 'PremiumCeilingSP40']
                 },
                 floor: {
                     standard: [],
@@ -28,7 +28,7 @@ if (!window.SoundproofingManager) {
 
             // Add specifications for all solutions
             this.solutionCharacteristics = {
-                'M20 Solution (Standard)': {
+                'StandardWallSP10': {  // Was 'M20 Solution (Standard)'
                     soundReduction: 45,
                     frequencyRange: [125, 4000],
                     materials: [
@@ -44,9 +44,10 @@ if (!window.SoundproofingManager) {
                     durability: 0.9,
                     impactResistance: 0.7,
                     stc_rating: 45,
+                    displayName: 'Standard Wall SP10',
                     notes: ['Single layer system with excellent cost-effectiveness']
                 },
-                'Independent Wall (Standard)': {
+                'StandardWallSP20': {  // Was 'Independent Wall (Standard)'
                     soundReduction: 50,
                     frequencyRange: [90, 4500],
                     materials: [
@@ -66,9 +67,10 @@ if (!window.SoundproofingManager) {
                     durability: 0.95,
                     impactResistance: 0.85,
                     stc_rating: 50,
+                    displayName: 'Standard Wall SP20',
                     notes: ['Two layers of 12.5mm Sound Plasterboard.']
                 },
-                'Resilient bar wall (Standard)': {
+                'StandardWallSP30': {  // Was 'Resilient bar wall (Standard)'
                     soundReduction: 48,
                     frequencyRange: [100, 4000],
                     materials: [
@@ -86,9 +88,10 @@ if (!window.SoundproofingManager) {
                     durability: 0.88,
                     impactResistance: 0.75,
                     stc_rating: 48,
+                    displayName: 'Standard Wall SP30',
                     notes: ['Single layer system with resilient bars for decoupling']
                 },
-                'Genie Clip wall (Standard)': {
+                'PremiumWallSP10': {  // Was 'Genie Clip wall (Standard)'
                     soundReduction: 52,
                     frequencyRange: [80, 5000],
                     materials: [
@@ -107,9 +110,10 @@ if (!window.SoundproofingManager) {
                     durability: 0.92,
                     impactResistance: 0.8,
                     stc_rating: 52,
+                    displayName: 'Premium Wall SP10',
                     notes: ['2 layers of 12.5mm plasterboard for this system.', 'Add 1 box of screws no matter the m².']
                 },
-                'M20 Solution (SP15 Soundboard upgrade)': {
+                'PremiumWallSP15': {  // Was 'M20 Solution (SP15 Soundboard upgrade)'
                     soundReduction: 56,
                     frequencyRange: [70, 5500],
                     materials: [
@@ -126,9 +130,10 @@ if (!window.SoundproofingManager) {
                     durability: 0.92,
                     impactResistance: 0.75,
                     stc_rating: 56,
+                    displayName: 'Premium Wall SP15',
                     notes: ['We only use 1 layer of plasterboard on this system.']
                 },
-                'Independent Wall (SP15 Soundboard Upgrade)': {
+                'PremiumWallSP20': {  // Was 'Independent Wall (SP15 Soundboard Upgrade)'
                     soundReduction: 55,
                     frequencyRange: [63, 8000],
                     materials: [
@@ -149,9 +154,10 @@ if (!window.SoundproofingManager) {
                     durability: 0.96,
                     impactResistance: 0.9,
                     stc_rating: 55,
+                    displayName: 'Premium Wall SP20',
                     notes: ['Only one layer of 12.5mm sound plasterboard.']
                 },
-                'Resilient bar wall (SP15 Soundboard Upgrade)': {
+                'PremiumWallSP25': {  // Was 'Resilient bar wall (SP15 Soundboard Upgrade)'
                     soundReduction: 53,
                     frequencyRange: [85, 4500],
                     materials: [
@@ -170,9 +176,10 @@ if (!window.SoundproofingManager) {
                     durability: 0.9,
                     impactResistance: 0.8,
                     stc_rating: 53,
+                    displayName: 'Premium Wall SP25',
                     notes: ['1 layer of 12.5mm Sound Plasterboard']
                 },
-                'Genie Clip wall (SP15 Soundboard Upgrade)': {
+                'PremiumWallSP30': {  // Was 'Genie Clip wall (SP15 Soundboard Upgrade)'
                     soundReduction: 58,
                     frequencyRange: [63, 6000],
                     materials: [
@@ -193,9 +200,10 @@ if (!window.SoundproofingManager) {
                     durability: 0.94,
                     impactResistance: 0.85,
                     stc_rating: 58,
+                    displayName: 'Premium Wall SP30',
                     notes: ['Only 1 layer of 12.5mm plasterboard on this system.']
                 },
-                'Genie Clip ceiling': {
+                'StandardCeilingSP10': {  // Was 'Genie Clip ceiling'
                     soundReduction: 52,
                     frequencyRange: [80, 5000],
                     materials: [
@@ -215,9 +223,10 @@ if (!window.SoundproofingManager) {
                     durability: 0.9,
                     impactResistance: 0.85,
                     stc_rating: 52,
+                    displayName: 'Standard Ceiling SP10',
                     notes: ['2 layers of 12.5mm sound plasterboard.']
                 },
-                'LB3 Genie Clip': {
+                'StandardCeilingSP20': {  // Was 'LB3 Genie Clip'
                     soundReduction: 54,
                     frequencyRange: [75, 5200],
                     materials: [
@@ -237,9 +246,10 @@ if (!window.SoundproofingManager) {
                     durability: 0.92,
                     impactResistance: 0.88,
                     stc_rating: 54,
+                    displayName: 'Standard Ceiling SP20',
                     notes: ['2 layers of 12.5mm Sound Plasterboard']
                 },
-                'Independent Ceiling': {
+                'PremiumCeilingSP10': {  // Was 'Independent Ceiling'
                     soundReduction: 50,
                     frequencyRange: [90, 4500],
                     materials: [
@@ -259,9 +269,10 @@ if (!window.SoundproofingManager) {
                     durability: 0.95,
                     impactResistance: 0.9,
                     stc_rating: 50,
+                    displayName: 'Premium Ceiling SP10',
                     notes: ['Uses both 19mm plank and 12.5mm sound plasterboard']
                 },
-                'Resilient bar Ceiling': {
+                'PremiumCeilingSP20': {  // Was 'Resilient bar Ceiling'
                     soundReduction: 48,
                     frequencyRange: [100, 4000],
                     materials: [
@@ -279,9 +290,10 @@ if (!window.SoundproofingManager) {
                     durability: 0.88,
                     impactResistance: 0.8,
                     stc_rating: 48,
+                    displayName: 'Premium Ceiling SP20',
                     notes: ['Basic but effective ceiling solution']
                 },
-                'Genie Clip ceiling (SP15 Soundboard Upgrade)': {
+                'StandardCeilingSP30': {  // Was 'Genie Clip ceiling (SP15 Soundboard Upgrade)'
                     soundReduction: 56,
                     frequencyRange: [70, 5500],
                     materials: [
@@ -302,9 +314,10 @@ if (!window.SoundproofingManager) {
                     durability: 0.92,
                     impactResistance: 0.87,
                     stc_rating: 56,
+                    displayName: 'Standard Ceiling SP30',
                     notes: ['One layer of 12.5mm plasterboard with SP15 upgrade']
                 },
-                'LB3 Genie Clip (SP15 Soundboard Upgrade)': {
+                'StandardCeilingSP40': {  // Was 'LB3 Genie Clip (SP15 Soundboard Upgrade)'
                     soundReduction: 58,
                     frequencyRange: [65, 5800],
                     materials: [
@@ -325,9 +338,10 @@ if (!window.SoundproofingManager) {
                     durability: 0.94,
                     impactResistance: 0.9,
                     stc_rating: 58,
+                    displayName: 'Standard Ceiling SP40',
                     notes: ['1 layer of 12.5mm Sound Plasterboard with enhanced LB3 system']
                 },
-                'Independent Ceiling (SP15 Soundboard Upgrade)': {
+                'PremiumCeilingSP30': {  // Was 'Independent Ceiling (SP15 Soundboard Upgrade)'
                     soundReduction: 55,
                     frequencyRange: [80, 5000],
                     materials: [
@@ -347,9 +361,10 @@ if (!window.SoundproofingManager) {
                     durability: 0.96,
                     impactResistance: 0.92,
                     stc_rating: 55,
+                    displayName: 'Premium Ceiling SP30',
                     notes: ['Enhanced independent system with SP15 upgrade']
                 },
-                'Resilient bar Ceiling (SP15 Soundboard Upgrade)': {
+                'PremiumCeilingSP40': {  // Was 'Resilient bar Ceiling (SP15 Soundboard Upgrade)'
                     soundReduction: 53,
                     frequencyRange: [85, 4500],
                     materials: [
@@ -368,6 +383,7 @@ if (!window.SoundproofingManager) {
                     durability: 0.9,
                     impactResistance: 0.85,
                     stc_rating: 53,
+                    displayName: 'Premium Ceiling SP40',
                     notes: ['Enhanced resilient bar system with SP15 upgrade']
                 }
             };
@@ -480,13 +496,174 @@ if (!window.SoundproofingManager) {
 
             // Add event listeners for dynamic updates
             this.bindDynamicUpdates();
+
+            // Add cache for recommendations
+            this.recommendationsCache = new Map();
+            this.cacheTimeout = 5 * 60 * 1000; // 5 minutes
+            
+            // Add debounce settings
+            this.updateDebounceTime = 300; // ms
+            this.updateTimeout = null;
+            this.lastUpdate = null;
+
+            // Add memoization cache
+            this.evaluationCache = new Map();
+            this.frequencyMatchCache = new Map();
+            
+            // Refined weights for different noise types
+            this.noiseTypeWeights = {
+                'music': {
+                    lowFrequency: 0.4,
+                    midFrequency: 0.3,
+                    highFrequency: 0.3,
+                    impact: 0.6,
+                    airborne: 0.4
+                },
+                'speech': {
+                    lowFrequency: 0.2,
+                    midFrequency: 0.5,
+                    highFrequency: 0.3,
+                    impact: 0.3,
+                    airborne: 0.7
+                },
+                'traffic': {
+                    lowFrequency: 0.5,
+                    midFrequency: 0.3,
+                    highFrequency: 0.2,
+                    impact: 0.2,
+                    airborne: 0.8
+                },
+                'footsteps': {
+                    lowFrequency: 0.3,
+                    midFrequency: 0.4,
+                    highFrequency: 0.3,
+                    impact: 0.8,
+                    airborne: 0.2
+                },
+                'machinery': {
+                    lowFrequency: 0.4,
+                    midFrequency: 0.4,
+                    highFrequency: 0.2,
+                    impact: 0.5,
+                    airborne: 0.5
+                }
+            };
         }
 
-        initialize() {
-            if (this.initialized) return;
-            this.bindEvents();
-            this.initialized = true;
-            window.dispatchEvent(new CustomEvent('soundproofingManagerInitialized'));
+        async initialize() {
+            try {
+                // Load solution characteristics
+                try {
+                    const response = await fetch('/api/solutions');
+                    if (!response.ok) {
+                        throw new Error('Failed to load solution characteristics');
+                    }
+                    this.solutionCharacteristics = await response.json();
+                } catch (error) {
+                    console.warn('Failed to load from API, using fallback data:', error);
+                    // Fallback solution characteristics
+                    this.solutionCharacteristics = {
+                        'SP10': {
+                            displayName: 'Standard Wall SP10',
+                            soundReduction: 45,
+                            frequencyRange: [125, 4000],
+                            installationTime: 2,
+                            maintenanceRequired: 'Low',
+                            durability: 0.8,
+                            materials: [
+                                {
+                                    name: 'Acoustic Panel',
+                                    coverage: 1,
+                                    cost: 45,
+                                    unit: 'm²'
+                                },
+                                {
+                                    name: 'Mounting Hardware',
+                                    coverage: 1,
+                                    cost: 10,
+                                    unit: 'm²'
+                                },
+                                {
+                                    name: 'Acoustic Sealant',
+                                    coverage: 3,
+                                    cost: 12,
+                                    unit: 'm²'
+                                }
+                            ],
+                            total_cost: 67,
+                            stc_rating: 45,
+                            notes: [
+                                'Single layer system with excellent cost-effectiveness',
+                                'Easy installation process',
+                                'Minimal space requirements'
+                            ]
+                        },
+                        'SP20': {
+                            displayName: 'Premium Wall SP20',
+                            soundReduction: 55,
+                            frequencyRange: [63, 8000],
+                            installationTime: 3,
+                            maintenanceRequired: 'Medium',
+                            durability: 0.9,
+                            materials: [
+                                {
+                                    name: 'Premium Acoustic Panel',
+                                    coverage: 1,
+                                    cost: 75,
+                                    unit: 'm²'
+                                },
+                                {
+                                    name: 'Isolation Mounts',
+                                    coverage: 1,
+                                    cost: 25,
+                                    unit: 'm²'
+                                },
+                                {
+                                    name: 'Dampening Material',
+                                    coverage: 1,
+                                    cost: 20,
+                                    unit: 'm²'
+                                },
+                                {
+                                    name: 'Acoustic Sealant',
+                                    coverage: 3,
+                                    cost: 15,
+                                    unit: 'm²'
+                                }
+                            ],
+                            total_cost: 135,
+                            stc_rating: 55,
+                            notes: [
+                                'Double layer system for maximum sound isolation',
+                                'Professional grade materials',
+                                'Enhanced low frequency performance'
+                            ]
+                        }
+                    };
+                }
+
+                // Initialize solution categories
+                this.solutions = {
+                    wall: {
+                        standard: ['SP10'],
+                        premium: ['SP20']
+                    },
+                    ceiling: {
+                        standard: ['SP10'],
+                        premium: ['SP20']
+                    },
+                    floor: {
+                        standard: ['SP10'],
+                        premium: ['SP20']
+                    }
+                };
+
+                console.log('Loaded solution characteristics:', this.solutionCharacteristics);
+                this.bindDynamicUpdates();
+                
+            } catch (error) {
+                console.error('Error initializing SoundproofingManager:', error);
+            }
         }
 
         bindEvents() {
@@ -502,7 +679,6 @@ if (!window.SoundproofingManager) {
             if (noiseTypeSelect) {
                 noiseTypeSelect.addEventListener('change', (e) => {
                     this.noiseAssessment.sourceDetails.noiseType = e.target.value;
-                    this.updateNoiseCharacteristics(e.target.value);
                     this.handleFormUpdate('noise-type');
                 });
             }
@@ -587,54 +763,203 @@ if (!window.SoundproofingManager) {
 
             this.lastUpdate = now;
             this.updateTimeout = setTimeout(() => {
-                console.log(`Updating recommendations due to ${type} change`);
+                // Only update recommendations if we have noise data
+                if (type === 'dimensions') {
+                    // Just update area displays for dimension changes
+                    const dimensions = {
+                        length: parseFloat(document.getElementById('length')?.value || 0),
+                        width: parseFloat(document.getElementById('width')?.value || 0),
+                        height: parseFloat(document.getElementById('height')?.value || 0)
+                    };
+                    this.updateAreaDisplays(dimensions);
+                    
+                    // Only proceed with recommendation update if we have noise data
+                    if (window.FormState?.noiseData?.type && 
+                        window.FormState.noiseData.direction?.length > 0) {
                 this.updateRecommendations(type);
+                    }
+                } else {
+                    this.updateRecommendations(type);
+                }
             }, this.updateDebounceTime);
         }
 
         async updateRecommendations(triggerType) {
             try {
-                // Get current form state
-                const formState = window.FormState || {};
-                const noiseData = formState.noiseData || {};
-                const dimensions = formState.dimensions || {};
-
-                // Validate required inputs
-                if (!this.validateInputs(noiseData)) {
-                    console.log('Insufficient data for recommendations');
+                console.log('Generating new recommendations');
+                console.log('Current Form State:', window.FormState);
+                
+                // Get noise surfaces
+                const noiseSurfaces = this.getNoiseSourceSurfaces();
+                if (!noiseSurfaces || !noiseSurfaces.walls) {
+                    console.warn('No noise surfaces found');
                     return;
                 }
 
-                // Get noise source surfaces
-                const noiseSurfaces = this.getNoiseSourceSurfaces();
-                
-                // Calculate priority based on multiple factors
-                const priority = this.calculateOverallPriority(noiseData);
-
-                // Get recommendations based on comprehensive analysis
-                const recommendations = {
-                    primary: await this.getPrimarySolutions(noiseData, noiseSurfaces, priority),
-                    alternatives: this.getAlternativeSolutions(noiseData, noiseSurfaces, priority),
-                    effectiveness: this.calculateOverallEffectiveness(noiseData)
+                // Get current form state
+                const currentState = {
+                    noiseData: window.FormState?.noiseData || {},
+                    dimensions: window.FormState?.dimensions || {},
+                    blockages: window.FormState?.blockages || {},
+                    roomType: window.FormState?.roomType || 'standard',
+                    surfaceFeatures: window.FormState?.surfaces || {}
                 };
 
-                // Display updated recommendations
-                await this.displayRecommendations(recommendations, triggerType);
+                console.log('Processing state:', currentState);
+
+                // Generate primary solutions
+                const primarySolutions = await this.getPrimarySolutions(
+                    currentState.noiseData,
+                    noiseSurfaces,
+                    this.calculateOverallPriority(currentState.noiseData)
+                );
+
+                if (!primarySolutions) {
+                    throw new Error('Failed to generate primary solutions');
+                }
+
+                // Calculate effectiveness
+                const effectiveness = this.calculateEffectiveness([primarySolutions]);
+
+                // Generate recommendations object
+                const recommendations = {
+                    primary: primarySolutions,
+                    alternatives: [],  // You can add alternative solutions here if needed
+                    effectiveness: effectiveness
+                };
+
+                console.log('Generated recommendations:', recommendations);
+
+                // Display the recommendations
+                await this.displayRecommendations(recommendations);
 
             } catch (error) {
                 console.error('Error updating recommendations:', error);
+                this.handleRecommendationError(error, triggerType);
             }
         }
 
+        calculateEffectiveness(solutions) {
+            if (!Array.isArray(solutions) || solutions.length === 0) {
+                console.warn('No solutions provided or solutions is not an array');
+                return [];
+            }
+
+            return solutions.map(solution => {
+                try {
+                    const weights = {
+                        acousticPerformance: 0.35,
+                        frequencyMatch: 0.25,
+                        costEfficiency: 0.20,
+                        installationFeasibility: 0.20
+                    };
+
+                    let scores = {
+                        acousticPerformance: 0,
+                        frequencyMatch: 0,
+                        costEfficiency: 0,
+                        installationFeasibility: 0
+                    };
+
+                    // Ensure solution.walls exists and is an array
+                    if (!solution.walls || !Array.isArray(solution.walls)) {
+                        console.warn('Invalid solution structure:', solution);
+                        return {
+                            overall: 0,
+                            breakdown: scores
+                        };
+                    }
+
+                    // Calculate scores for each wall solution
+                    solution.walls.forEach(wall => {
+                        if (!wall.solution) return;
+                        
+                        const specs = this.solutionCharacteristics[wall.solution];
+                        if (!specs) return;
+
+                        scores.acousticPerformance += specs.soundReduction / 70;
+                        scores.costEfficiency += 1 - (specs.total_cost / 250);
+                        scores.installationFeasibility += specs.durability;
+                    });
+
+                    // Average the scores
+                    Object.keys(scores).forEach(key => {
+                        scores[key] = scores[key] / solution.walls.length;
+                    });
+
+                    // Calculate weighted total
+                    const effectiveness = Object.entries(weights).reduce((total, [key, weight]) => {
+                        return total + (scores[key] * weight);
+                    }, 0);
+
+                    return {
+                        overall: effectiveness,
+                        breakdown: scores
+                    };
+                } catch (error) {
+                    console.error('Error calculating individual solution effectiveness:', error);
+                    return {
+                        overall: 0,
+                        breakdown: scores
+                    };
+                }
+            });
+        }
+
         validateInputs(noiseData) {
-            return noiseData.type && 
-                   noiseData.direction && 
-                   noiseData.direction.length > 0 && 
-                   noiseData.intensity;
+            const errors = [];
+            
+            if (!noiseData) {
+                errors.push('Noise data is required');
+            } else {
+                if (!noiseData.type) errors.push('Noise type is required');
+                if (!noiseData.intensity) errors.push('Noise intensity is required');
+                if (!Array.isArray(noiseData.direction) || noiseData.direction.length === 0) {
+                    errors.push('At least one noise direction is required');
+                }
+            }
+            
+            if (errors.length > 0) {
+                throw new Error('Validation failed: ' + errors.join(', '));
+            }
+        }
+
+        getErrorMessage(error) {
+            // Convert technical errors to user-friendly messages
+            const errorMessages = {
+                'Validation failed': 'Please fill in all required noise information.',
+                'Failed to generate primary solutions': 'Unable to generate recommendations. Please try again.',
+                'Network error': 'Connection problem. Please check your internet connection.'
+            };
+
+            for (const [technical, friendly] of Object.entries(errorMessages)) {
+                if (error.message.includes(technical)) return friendly;
+            }
+
+            return 'An unexpected error occurred. Please try again.';
+        }
+
+        async retryUpdate(triggerType) {
+            // Clear cache for this update
+            const currentState = {
+                noiseData: window.FormState.noiseData,
+                dimensions: window.FormState.dimensions,
+                blockages: window.FormState.blockages,
+                roomType: window.FormState.roomType,
+                surfaceFeatures: window.FormState.surfaces
+            };
+            const cacheKey = JSON.stringify(currentState);
+            this.recommendationsCache.delete(cacheKey);
+
+            // Retry update
+            await this.updateRecommendations(triggerType);
         }
 
         calculateOverallPriority(noiseData) {
             let priorityScore = 0;
+
+            // Ensure noiseSurfaces is defined
+            const noiseSurfaces = this.getNoiseSourceSurfaces(); // Add this line to initialize noiseSurfaces
 
             // Noise type priority
             const noiseTypePriorities = {
@@ -646,98 +971,15 @@ if (!window.SoundproofingManager) {
                 'tv': 3,
                 'footsteps': 4
             };
-            priorityScore += noiseTypePriorities[noiseData.type] || 3;
 
-            // Time of day priority
-            if (noiseData.time) {
-                if (noiseData.time.includes('night')) priorityScore += 3;
-                if (noiseData.time.includes('evening')) priorityScore += 2;
-                if (noiseData.time.length > 1) priorityScore += 1; // Multiple time periods
+            // Calculate priority based on noise data
+            if (noiseData.type && noiseTypePriorities[noiseData.type]) {
+                priorityScore += noiseTypePriorities[noiseData.type];
             }
 
-            // Intensity priority
-            priorityScore += parseInt(noiseData.intensity) || 0;
+            // Additional calculations based on noiseSurfaces can be added here
 
-            // Bass content
-            if (this.noiseAssessment.sourceDetails.characteristics.bass_content) {
-                priorityScore += 2;
-            }
-
-            // Vibration
-            if (this.noiseAssessment.sourceDetails.characteristics.vibration) {
-                priorityScore += 2;
-            }
-
-            // Impact levels
-            const impactLevels = this.noiseAssessment.problemAssessment.impact_level;
-            priorityScore += (impactLevels.conversation_privacy +
-                            impactLevels.sleep_disturbance +
-                            impactLevels.concentration_impact) / 3;
-
-            // Room usage priority
-            const roomUsagePriorities = {
-                'bedroom': 5,
-                'studio': 5,
-                'office': 4,
-                'living_room': 3
-            };
-            priorityScore += roomUsagePriorities[this.noiseAssessment.roomDetails.usage] || 3;
-
-            // Convert score to priority level
-            if (priorityScore >= 12) return 'high';
-            if (priorityScore >= 8) return 'medium';
-            return 'low';
-        }
-
-        async getPrimarySolutions(noiseData, noiseSurfaces, priority) {
-            const solutions = {
-                walls: [],
-                ceiling: null,
-                floor: null
-            };
-
-            // Get available solutions based on priority
-            const wallSolutions = priority === 'high' ? 
-                this.solutions.wall.premium : 
-                this.solutions.wall.standard;
-
-            const ceilingSolutions = priority === 'high' ? 
-                this.solutions.ceiling.premium : 
-                this.solutions.ceiling.standard;
-
-            // Process wall solutions if needed
-            if (noiseSurfaces.walls.length > 0) {
-                for (const wall of noiseSurfaces.walls) {
-                    const bestWallSolution = await this.findBestSolution(
-                        wallSolutions,
-                        noiseData,
-                        'wall',
-                        wall
-                    );
-                    if (bestWallSolution) {
-                        solutions.walls.push(bestWallSolution);
-                    }
-                }
-            }
-
-            // Process ceiling solution if needed
-            if (noiseSurfaces.ceiling) {
-                solutions.ceiling = await this.findBestSolution(
-                    ceilingSolutions,
-                    noiseData,
-                    'ceiling'
-                );
-            }
-
-            // Process floor solution if needed
-            if (noiseSurfaces.floor) {
-                solutions.floor = {
-                    message: this.solutions.floor.message,
-                    contactInfo: this.solutions.floor.contactInfo
-                };
-            }
-
-            return solutions;
+            return priorityScore; // Return the calculated priority score
         }
 
         async findBestSolution(availableSolutions, noiseData, type, wall = null) {
@@ -767,45 +1009,128 @@ if (!window.SoundproofingManager) {
         }
 
         async evaluateSolution(solution, noiseData, type) {
-            const solutionSpecs = this.solutionCharacteristics[solution];
-            if (!solutionSpecs) return 0;
+            try {
+                // Create cache key
+                const cacheKey = JSON.stringify({ solution, noiseData, type });
+                
+                // Check cache
+                const cachedResult = this.evaluationCache.get(cacheKey);
+                if (cachedResult) {
+                    return cachedResult;
+                }
 
-            let score = 0;
-            const weights = this.calculateDetailedWeights(noiseData, type);
+                // Get solution specifications
+                const specs = this.solutionCharacteristics[solution];
+                const noiseSpecs = this.noiseCharacteristics[noiseData.type];
+                
+                if (!specs || !noiseSpecs) {
+                    throw new Error('Invalid solution or noise type');
+                }
 
-            // Sound reduction effectiveness
-            score += (solutionSpecs.soundReduction / 60) * weights.soundReduction;
+                // Get weights for this noise type
+                const weights = this.noiseTypeWeights[noiseData.type] || this.noiseTypeWeights['speech'];
 
-            // Frequency range match
-            const freqMatchScore = this.calculateFrequencyMatch(
-                solutionSpecs.frequencyRange,
-                this.noiseCharacteristics[noiseData.type]?.frequencyRange || [125, 4000]
+                // Calculate detailed scores
+                const scores = {
+                    frequencyMatch: this.calculateFrequencyMatch(specs.frequencyRange, noiseSpecs.frequencyRange, weights),
+                    soundReduction: this.calculateSoundReduction(specs.soundReduction, noiseSpecs.typicalIntensity, noiseData.intensity),
+                    impactResistance: noiseSpecs.impactComponent ? specs.impactResistance * weights.impact : 1,
+                    airborneReduction: noiseSpecs.airborneComponent ? (specs.soundReduction / 70) * weights.airborne : 1
+                };
+
+                // Calculate overall score with weighted average
+                const overallScore = (
+                    scores.frequencyMatch * 0.35 +
+                    scores.soundReduction * 0.35 +
+                    scores.impactResistance * 0.15 +
+                    scores.airborneReduction * 0.15
+                );
+
+                const result = {
+                    score: overallScore,
+                    details: scores,
+                    reasoning: this.generateSolutionReasoning(solution, specs, noiseData)
+                };
+
+                // Cache the result
+                this.evaluationCache.set(cacheKey, result);
+
+                return result;
+
+            } catch (error) {
+                console.error('Error evaluating solution:', error);
+                return {
+                    score: 0,
+                    details: {},
+                    reasoning: ['Error evaluating solution']
+                };
+            }
+        }
+
+        calculateFrequencyMatch(solutionRange, noiseRange, weights) {
+            try {
+                // Create cache key
+                const cacheKey = JSON.stringify({ solutionRange, noiseRange });
+                
+                // Check cache
+                const cachedResult = this.frequencyMatchCache.get(cacheKey);
+                if (cachedResult) {
+                    return cachedResult;
+                }
+
+                // Define frequency bands
+                const bands = {
+                    low: { min: 20, max: 250 },
+                    mid: { min: 250, max: 2000 },
+                    high: { min: 2000, max: 20000 }
+                };
+
+                // Calculate coverage for each band
+                const coverage = {
+                    low: this.calculateBandCoverage(solutionRange, noiseRange, bands.low),
+                    mid: this.calculateBandCoverage(solutionRange, noiseRange, bands.mid),
+                    high: this.calculateBandCoverage(solutionRange, noiseRange, bands.high)
+                };
+
+                // Calculate weighted score
+                const score = 
+                    coverage.low * weights.lowFrequency +
+                    coverage.mid * weights.midFrequency +
+                    coverage.high * weights.highFrequency;
+
+                // Cache the result
+                this.frequencyMatchCache.set(cacheKey, score);
+
+                return score;
+
+            } catch (error) {
+                console.error('Error calculating frequency match:', error);
+                return 0;
+            }
+        }
+
+        calculateBandCoverage(solutionRange, noiseRange, band) {
+            const bandWidth = band.max - band.min;
+            
+            // Calculate overlap within this band
+            const overlapStart = Math.max(
+                band.min,
+                Math.max(solutionRange[0], noiseRange[0])
             );
-            score += freqMatchScore * weights.frequencyMatch;
+            const overlapEnd = Math.min(
+                band.max,
+                Math.min(solutionRange[1], noiseRange[1])
+            );
+            
+            if (overlapEnd <= overlapStart) return 0;
+            
+            const overlap = overlapEnd - overlapStart;
+            return Math.min(overlap / bandWidth, 1);
+        }
 
-            // STC rating consideration
-            score += (solutionSpecs.stc_rating / 60) * weights.stcRating;
-
-            // Installation and maintenance
-            score += (1 - solutionSpecs.installationTime / 3) * weights.installation;
-            score += (solutionSpecs.maintenanceRequired === 'low' ? 1 : 0.5) * weights.maintenance;
-
-            // Cost effectiveness (inverse relationship)
-            const costScore = 1 - (solutionSpecs.total_cost / 300); // Normalize to max cost
-            score += costScore * weights.cost;
-
-            // Special considerations
-            if (this.noiseAssessment.sourceDetails.characteristics.bass_content && 
-                solutionSpecs.frequencyRange[0] < 100) {
-                score += 0.1; // Bonus for good bass handling
-            }
-
-            if (this.noiseAssessment.sourceDetails.characteristics.impact_noise && 
-                solutionSpecs.impactResistance > 0.8) {
-                score += 0.1; // Bonus for impact resistance
-            }
-
-            return Math.min(score, 1);
+        calculateSoundReduction(solutionReduction, typicalIntensity, reportedIntensity) {
+            const requiredReduction = (typicalIntensity * (reportedIntensity / 3)) - 35; // Target 35dB ambient
+            return Math.min(solutionReduction / requiredReduction, 1);
         }
 
         calculateDetailedWeights(noiseData, type) {
@@ -884,61 +1209,6 @@ if (!window.SoundproofingManager) {
             reasons.push(`Cost-effective solution at £${specs.total_cost.toFixed(2)} per m²`);
 
             return reasons;
-        }
-
-        calculateEffectiveness(solution, state) {
-            try {
-                const weights = {
-                    acousticPerformance: 0.35,
-                    frequencyMatch: 0.25,
-                    costEfficiency: 0.20,
-                    installationFeasibility: 0.20
-                };
-
-                let scores = {
-                    acousticPerformance: 0,
-                    frequencyMatch: 0,
-                    costEfficiency: 0,
-                    installationFeasibility: 0
-                };
-
-                // Calculate scores for each wall solution
-                solution.walls.forEach(wall => {
-                    const specs = this.solutionCharacteristics[wall.solution];
-                    const noiseSpecs = this.noiseCharacteristics[state.noiseData.type];
-
-                    scores.acousticPerformance += specs.soundReduction / 70; // Normalize to max 70dB
-                    scores.frequencyMatch += this.calculateFrequencyMatch(specs.frequencyRange, noiseSpecs.frequencyRange);
-                    scores.costEfficiency += 1 - (specs.cost / 250); // Normalize to max cost
-                    scores.installationFeasibility += this.calculateInstallationFeasibility(specs, state);
-                });
-
-                // Average the scores
-                Object.keys(scores).forEach(key => {
-                    scores[key] = scores[key] / solution.walls.length;
-                });
-
-                // Calculate weighted total
-                const effectiveness = Object.entries(weights).reduce((total, [key, weight]) => {
-                    return total + (scores[key] * weight);
-                }, 0);
-
-                return {
-                    overall: effectiveness,
-                    breakdown: scores
-                };
-            } catch (error) {
-                console.error('Error calculating effectiveness:', error);
-                return {
-                    overall: 0,
-                    breakdown: {
-                        acousticPerformance: 0,
-                        frequencyMatch: 0,
-                        costEfficiency: 0,
-                        installationFeasibility: 0
-                    }
-                };
-            }
         }
 
         calculateCoverageScore(solution, state) {
@@ -1033,63 +1303,6 @@ if (!window.SoundproofingManager) {
             return 'basic';
         }
 
-        getPrimarySolution(noiseData, noiseSurfaces, priority, state) {
-            try {
-                const solutions = {
-                walls: [],
-                ceiling: null,
-                    floor: null
-                };
-
-                // Determine solution tier
-                const tier = this.determineSolutionTier(noiseData, state?.roomType);
-
-                // Process walls if needed
-                if (noiseSurfaces.walls && noiseSurfaces.walls.length > 0) {
-                    const availableWallSolutions = tier === 'premium' ? 
-                        this.solutions.wall.premium : 
-                        this.solutions.wall.standard;
-
-                    for (const wall of noiseSurfaces.walls) {
-                        const wallSolution = this.findBestSolution(availableWallSolutions, noiseData, 'wall', wall);
-                        if (wallSolution) {
-                            solutions.walls.push(wallSolution);
-                        }
-                    }
-                }
-
-                // Process ceiling if needed
-            if (noiseSurfaces.ceiling) {
-                    const availableCeilingSolutions = tier === 'premium' ? 
-                        this.solutions.ceiling.premium : 
-                        this.solutions.ceiling.standard;
-
-                    const ceilingSolution = this.findBestSolution(availableCeilingSolutions, noiseData, 'ceiling');
-                if (ceilingSolution) {
-                        solutions.ceiling = ceilingSolution;
-                    }
-                }
-
-                // Process floor if needed
-            if (noiseSurfaces.floor) {
-                    solutions.floor = {
-                        message: this.solutions.floor.message,
-                        contactInfo: this.solutions.floor.contactInfo
-                    };
-                }
-
-                return solutions;
-
-            } catch (error) {
-                console.error('Error in getPrimarySolution:', error);
-                return {
-                    walls: [],
-                    ceiling: null,
-                    floor: null
-                };
-            }
-        }
-
         generateWallReasoning(solution, wall, noiseData, state) {
             const reasons = [];
             const specs = solution.specs;
@@ -1163,48 +1376,6 @@ if (!window.SoundproofingManager) {
             }
 
             return reasons;
-        }
-
-        getWallSolutions(tier, noiseData, context) {
-            const solutions = tier === 'premium' ? 
-                this.solutions.wall.premium : 
-                this.solutions.wall.standard;
-
-            return solutions.map(solutionName => {
-                const specs = this.solutionCharacteristics[solutionName];
-                const score = this.calculateSolutionScore(solutionName, noiseData, context);
-                const reasoning = this.generateSolutionReasoning(solutionName, specs, noiseData);
-                
-                return {
-                    name: solutionName,
-                    score,
-                    specs,
-                    reasoning
-                };
-            }).sort((a, b) => b.score - a.score);
-        }
-
-        getCeilingSolution(tier, noiseData, context) {
-            const solutions = tier === 'premium' ? 
-                this.solutions.ceiling.premium : 
-                this.solutions.ceiling.standard;
-
-            if (!solutions || solutions.length === 0) {
-                return null;
-            }
-
-            return solutions.map(solutionName => {
-                const specs = this.solutionCharacteristics[solutionName];
-                const score = this.calculateSolutionScore(solutionName, noiseData, context);
-                const reasoning = this.generateSolutionReasoning(solutionName, specs, noiseData);
-                
-                return {
-                    name: solutionName,
-                    score,
-                    specs,
-                    reasoning
-                };
-            }).sort((a, b) => b.score - a.score)[0]; // Return the highest scored solution
         }
 
         generateSolutionReasoning(solution, specs, noiseData) {
@@ -1287,54 +1458,57 @@ if (!window.SoundproofingManager) {
             return descriptions[solution] || 'Custom solution';
         }
 
-        async displayRecommendations(recommendations, triggerType) {
-            let container;
+        async displayRecommendations(recommendations) {
             try {
                 console.log('Displaying recommendations:', recommendations);
-                container = document.getElementById('soundproofing-solutions');
-                if (!container) {
-                    container = this.createSolutionsContainer();
-                }
-
-                let html = '<div class="recommendations">';
                 
-                if (!recommendations.primary) {
-                    html += '<div class="error-message">No recommendations available</div>';
-                } else {
-                    // Wall Solutions
-                    if (recommendations.primary.walls?.length > 0) {
-                        html += await this.generateWallSolutionsHtml(recommendations.primary.walls);
-                    }
-
-                    // Ceiling Solution
-                    if (recommendations.primary.ceiling) {
-                        html += await this.generateCeilingSolutionHtml(recommendations.primary.ceiling);
-                    }
-
-                    // Floor Solution
-                    if (recommendations.primary.floor) {
-                        html += this.generateFloorPlaceholderHtml(recommendations.primary.floor);
-                    }
-
-                    // Add effectiveness rating
-                    if (recommendations.effectiveness) {
-                        html += this.generateEffectivenessHtml(recommendations.effectiveness);
-                    }
+                // Get the container for solutions
+                const solutionsContainer = document.getElementById('soundproofing-solutions');
+                if (!solutionsContainer) {
+                    console.error('Solutions container not found');
+                    return;
                 }
 
-                html += `<div class="update-indicator" data-trigger="${triggerType}">
-                    Last updated: ${new Date().toLocaleTimeString()}
-                </div>`;
+                // Generate HTML for primary solutions
+                let html = '<div class="recommendations-container">';
 
-                container.innerHTML = html;
+                // Add wall solutions
+                if (recommendations.primary && recommendations.primary.walls) {
+                    const wallHtml = await this.generateWallSolutionsHtml(recommendations.primary);
+                    html += wallHtml;
+                }
+
+                // Add ceiling solution if present
+                if (recommendations.primary && recommendations.primary.ceiling) {
+                    const ceilingHtml = await this.generateCeilingSolutionHtml(recommendations.primary.ceiling);
+                    html += ceilingHtml;
+                }
+
+                // Add floor solution message if present
+                if (recommendations.primary && recommendations.primary.floor) {
+                    html += `
+                        <div class="floor-solution">
+                            <h4>Floor Treatment</h4>
+                            <p>${recommendations.primary.floor.message}</p>
+                            <div class="contact-info">
+                                <p>Contact us:</p>
+                                <p>Phone: ${recommendations.primary.floor.contactInfo.phone}</p>
+                                <p>Email: ${recommendations.primary.floor.contactInfo.email}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                html += '</div>';
+                
+                // Update the container
+                solutionsContainer.innerHTML = html;
 
             } catch (error) {
                 console.error('Error displaying recommendations:', error);
-                if (container) {
-                    container.innerHTML = `
-                        <div class="error-message">
-                            Error displaying recommendations. Please try again.
-                        </div>`;
+                const solutionsContainer = document.getElementById('soundproofing-solutions');
+                if (solutionsContainer) {
+                    solutionsContainer.innerHTML = '<div class="error-message">Error displaying recommendations</div>';
                 }
             }
         }
@@ -1709,43 +1883,6 @@ if (!window.SoundproofingManager) {
             return score;
         }
 
-        // Helper method to generate solution HTML with detailed breakdown
-        generateSolutionHtml(wall, costs) {
-            let html = `
-                <div class="solution-item">
-                    <div class="solution-header">
-                        <span class="solution-location">${wall.wall} Wall</span>
-                        <span class="solution-name">${wall.solution}</span>
-                        <span class="solution-score">Effectiveness: ${(wall.score * 100).toFixed(1)}%</span>
-                    </div>
-                    <div class="solution-details">
-                        ${wall.reasoning.map(reason => `<div class="solution-reason">• ${reason}</div>`).join('')}
-                    </div>`;
-
-            if (costs && !costs.error) {
-                html += `
-                    <div class="cost-breakdown">
-                        <h5>Material Breakdown:</h5>
-                        <ul>
-                            ${costs.costs.map(item => `
-                                <li>
-                                    <span class="material-name">${item.name}</span>
-                                    <span class="material-quantity">${item.quantity} units</span>
-                                    <span class="material-cost">£${item.total_cost.toFixed(2)}</span>
-                                </li>
-                            `).join('')}
-                        </ul>
-                        <div class="total-cost">
-                            <span>Total Cost</span>
-                            <span>£${costs.total.toFixed(2)}</span>
-                        </div>
-                    </div>`;
-            }
-
-            html += '</div>';
-            return html;
-        }
-
         // Add this method to the SoundproofingManager class
         generateEffectivenessHtml(effectiveness) {
             const effectivenessPercent = effectiveness.overall ? 
@@ -1758,107 +1895,186 @@ if (!window.SoundproofingManager) {
                 </div>`;
         }
 
-        // Update the wall solutions HTML generator
-        async generateWallSolutionsHtml(walls) {
-            let html = '<div class="primary-solution">';
-            html += '<h4>Wall Treatments</h4>';
-            
-            const dimensions = window.FormState.dimensions;
-            const dimensionsValidation = this.validateDimensions(dimensions);
-            
-            if (!dimensionsValidation.isValid) {
-                dimensionsValidation.errors.push('Please enter valid room dimensions');
-                return html + `
-                    <div class="error-message">
-                        Please enter valid room dimensions to see cost breakdown.
-                        <ul>
-                            ${dimensionsValidation.errors.map(error => `<li>${error}</li>`).join('')}
-                        </ul>
-                    </div>
-                </div>`;
-            }
+        // Add solution mapping function
+        getSolutionDisplayName(solutionId) {
+            const solutionData = this.solutionCharacteristics[solutionId];
+            return solutionData?.displayName || solutionId;
+        }
 
-            for (const wall of walls) {
-                try {
-                    const costs = this.calculateLocalCosts(wall.solution, dimensions, 'wall', wall.wall.toLowerCase());
-                    if (costs.error) {
-                        throw new Error(costs.message);
+        // Update the wall solutions HTML generator
+        async generateWallSolutionsHtml(recommendations) {
+            try {
+                if (!recommendations || !recommendations.walls || !Array.isArray(recommendations.walls)) {
+                    console.warn('No wall recommendations available:', recommendations);
+                    return '<p>No wall solutions available.</p>';
+                }
+
+                let html = '<div class="wall-solutions">';
+                
+                // Get current dimensions
+                const dimensions = {
+                    length: parseFloat(document.getElementById('length')?.value || 0),
+                    width: parseFloat(document.getElementById('width')?.value || 0),
+                    height: parseFloat(document.getElementById('height')?.value || 0)
+                };
+
+                console.log('Current dimensions:', dimensions);
+
+                for (const wall of recommendations.walls) {
+                    if (!wall || !wall.solution) {
+                        console.warn('Invalid wall data:', wall);
+                        continue;
                     }
-                    html += `
-                        <div class="solution-item">
-                            <div class="solution-header">
-                                <span class="solution-location">${wall.wall} Wall (${costs.area} m²)</span>
-                                <span class="solution-name">${wall.solution}</span>
-                                <span class="solution-score">Effectiveness: ${(wall.score * 100).toFixed(1)}%</span>
-                            </div>
-                            <div class="solution-details">
-                                ${wall.reasoning.map(reason => `<div class="solution-reason">• ${reason}</div>`).join('')}
-                            </div>
-                            <div class="material-breakdown">
-                                <h5>Materials Required:</h5>
-                                <ul>
+                    
+                    const solutionData = this.solutionCharacteristics[wall.solution];
+                    if (!solutionData) {
+                        console.warn('No solution data found for:', wall.solution);
+                        continue;
+                    }
+
+                    // Calculate costs
+                    console.log('Calculating costs for wall:', wall.wall);
+                    const costs = await this.calculateLocalCosts(
+                        wall.solution,
+                        dimensions,
+                        'wall',
+                        wall.wall.toLowerCase()
+                    );
+
+                    console.log('Cost calculation result:', costs);
+
+                    // Generate cost breakdown HTML
+                    let costBreakdownHtml = '';
+                    if (costs && !costs.error) {
+                        costBreakdownHtml = `
+                            <div class="cost-breakdown">
+                                <h6>Cost Breakdown</h6>
+                                <div class="cost-items">
                                     ${costs.materials.map(material => `
-                                        <li>
+                                        <div class="cost-item">
                                             <span class="material-name">${material.name}</span>
                                             <span class="material-amount">${material.amount} ${material.unit}</span>
                                             <span class="material-cost">£${material.cost.toFixed(2)}</span>
-                                        </li>
+                                        </div>
                                     `).join('')}
-                                </ul>
-                                <div class="total-cost">Total Cost: £${costs.total.toFixed(2)}</div>
+                                </div>
+                                <div class="total-cost">
+                                    <strong>Total Cost:</strong> £${costs.total.toFixed(2)}
+                                </div>
+                                <div class="area-info">
+                                    <strong>Wall Area:</strong> ${costs.area}m²
+                                </div>
                             </div>
-                        </div>`;
-                } catch (error) {
-                    console.error('Error generating wall solution HTML:', error);
+                        `;
+                    } else {
+                        console.error('Cost calculation failed:', costs);
+                        costBreakdownHtml = `
+                            <div class="error-message">
+                                Unable to calculate costs. Please check dimensions.
+                            </div>
+                        `;
+                    }
+
+                    // Add the solution card HTML
                     html += `
-                        <div class="error-message">
-                            Error calculating costs for ${wall.solution}. Please try again.
-                        </div>`;
+                        <div class="solution-card ${wall.score > 0.7 ? 'premium' : 'standard'}">
+                            <div class="solution-header">
+                                <div class="header-main">
+                                    <h4>${wall.wall} Wall</h4>
+                                    <div class="solution-badge ${wall.score > 0.7 ? 'premium' : 'standard'}">
+                                        ${wall.score > 0.7 ? 'Premium' : 'Standard'}
+                                    </div>
+                                </div>
+                                <div class="effectiveness-meter">
+                                    <div class="meter-fill" style="width: ${(wall.score * 100)}%"></div>
+                                    <span class="meter-label">${(wall.score * 100).toFixed(0)}% Effective</span>
+                                </div>
+                            </div>
+                            
+                            <div class="solution-content">
+                                <div class="solution-main-details">
+                                    <h5 class="solution-name">${solutionData.displayName || wall.solution}</h5>
+                                    <div class="specs-grid">
+                                        <div class="spec-item">
+                                            <i class="fas fa-volume-down"></i>
+                                            <span class="label">Reduction</span>
+                                            <span class="value">${solutionData.soundReduction}dB</span>
+                                        </div>
+                                        <div class="spec-item">
+                                            <i class="fas fa-wave-square"></i>
+                                            <span class="label">Frequency</span>
+                                            <span class="value">${solutionData.frequencyRange[0]}-${solutionData.frequencyRange[1]}Hz</span>
+                                        </div>
+                                        <div class="spec-item">
+                                            <i class="fas fa-clock"></i>
+                                            <span class="label">Install Time</span>
+                                            <span class="value">${solutionData.installationTime} days</span>
+                                        </div>
+                                        <div class="spec-item">
+                                            <i class="fas fa-tools"></i>
+                                            <span class="label">Maintenance</span>
+                                            <span class="value">${solutionData.maintenanceRequired}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="solution-features">
+                                    <h6>Key Features</h6>
+                                    <ul class="features-list">
+                                        ${wall.reasoning.map(reason => `<li>${reason}</li>`).join('')}
+                                    </ul>
+                                </div>
+
+                                ${costBreakdownHtml}
+                            </div>
+                        </div>
+                    `;
                 }
+
+                html += '</div>';
+                return html;
+
+            } catch (error) {
+                console.error('Error generating wall solutions HTML:', error);
+                return '<p>Error displaying wall solutions.</p>';
+            }
+        }
+
+        // Update the ceiling solution HTML generator to use the new solution names
+        async generateCeilingSolutionHtml(ceiling) {
+            let html = `
+                    <div class="solution-item">
+                        <div class="solution-header">
+                        <span class="solution-location">Ceiling Treatment</span>
+                        <span class="solution-name">${this.getSolutionDisplayName(ceiling.solution)}</span>
+                            <span class="solution-score">Effectiveness: ${(ceiling.score * 100).toFixed(1)}%</span>
+                    </div>`;
+
+            const solutionData = this.solutionCharacteristics[ceiling.solution];
+            if (solutionData) {
+                html += `
+                        <div class="solution-details">
+                        <div class="solution-specs">
+                            <p><strong>Sound Reduction:</strong> ${solutionData.soundReduction} dB</p>
+                            <p><strong>Frequency Range:</strong> ${solutionData.frequencyRange[0]}-${solutionData.frequencyRange[1]} Hz</p>
+                            <p><strong>STC Rating:</strong> ${solutionData.stc_rating}</p>
+                        </div>
+                        ${ceiling.reasoning.map(reason => `<div class="solution-reason">• ${reason}</div>`).join('')}
+                    </div>`;
+            }
+
+            try {
+                const costs = await this.calculateLocalCosts(ceiling.solution, window.FormState.dimensions, 'ceiling');
+                if (costs && !costs.error) {
+                    html += this.generateCostBreakdownHtml(costs);
+                }
+            } catch (error) {
+                console.error('Error fetching ceiling costs:', error);
+                html += `<div class="error-message">Error loading cost breakdown</div>`;
             }
 
             html += '</div>';
             return html;
-        }
-
-        // Update the ceiling solution HTML generator
-        async generateCeilingSolutionHtml(ceiling) {
-            try {
-                const dimensions = window.FormState.dimensions;
-                const costs = this.calculateLocalCosts(ceiling.solution, dimensions);
-                if (costs.error) {
-                    throw new Error(costs.message);
-                }
-                return `
-                    <div class="solution-item">
-                        <div class="solution-header">
-                            <span class="solution-name">${ceiling.solution}</span>
-                            <span class="solution-score">Effectiveness: ${(ceiling.score * 100).toFixed(1)}%</span>
-                        </div>
-                        <div class="solution-details">
-                            ${ceiling.reasoning.map(reason => `<div class="solution-reason">• ${reason}</div>`).join('')}
-                        </div>
-                        <div class="material-breakdown">
-                            <h5>Materials Required:</h5>
-                            <ul>
-                                ${costs.materials.map(material => `
-                                    <li>
-                                        <span class="material-name">${material.name}</span>
-                                        <span class="material-amount">${material.amount} ${material.unit}</span>
-                                        <span class="material-cost">£${material.cost.toFixed(2)}</span>
-                                    </li>
-                                `).join('')}
-                            </ul>
-                            <div class="total-cost">Total Cost: £${costs.total.toFixed(2)}</div>
-                        </div>
-                    </div>`;
-            } catch (error) {
-                console.error('Error generating ceiling solution HTML:', error);
-                return `
-                    <div class="error-message">
-                        Error calculating costs for ${ceiling.solution}. Please try again.
-                    </div>`;
-            }
         }
 
         validateDimensions(dimensions) {
@@ -1879,605 +2095,570 @@ if (!window.SoundproofingManager) {
         }
 
         // Add local cost calculation function
-        calculateLocalCosts(solution, dimensions, surfaceType = 'wall', wall = null) {
-            const solutionData = this.solutionCharacteristics[solution];
-            if (!solutionData || !solutionData.materials) {
+        async calculateLocalCosts(solution, dimensions, surfaceType = 'wall', wall = null) {
+            // Input validation
+            if (!dimensions || !dimensions.length || !dimensions.width || !dimensions.height) {
+                console.error('Invalid dimensions:', dimensions);
                 return {
                     error: true,
-                    message: 'Solution data not found'
+                    message: 'Please provide valid room dimensions'
                 };
             }
 
-            // Calculate the correct area based on surface type and wall
-            let area;
+            // Find solution data
+            const solutionData = this.solutionCharacteristics.find(s => s.name === solution);
+            if (!solutionData) {
+                console.error('Solution not found:', solution);
+                return {
+                    error: true,
+                    message: 'Solution not found'
+                };
+            }
+
+            // Calculate area and perimeter
+            let area = 0;
+            let perimeter = 0;
             if (surfaceType === 'wall') {
                 if (wall === 'north' || wall === 'south') {
                     area = dimensions.width * dimensions.height;
+                    perimeter = 2 * (dimensions.width + dimensions.height);
                 } else if (wall === 'east' || wall === 'west') {
                     area = dimensions.length * dimensions.height;
+                    perimeter = 2 * (dimensions.length + dimensions.height);
                 }
             } else if (surfaceType === 'ceiling' || surfaceType === 'floor') {
                 area = dimensions.length * dimensions.width;
+                perimeter = 2 * (dimensions.length + dimensions.width);
             }
 
-            if (!area) {
+            if (!area || area <= 0) {
+                console.error('Invalid area calculation');
                 return {
                     error: true,
-                    message: 'Invalid surface type or dimensions'
+                    message: 'Invalid area calculation'
                 };
             }
 
-            const materials = solutionData.materials.map(material => {
-                let quantity;
-                if (material.coverage === '1') {
-                    // For items sold as single units (like clips, channels, etc.)
-                    if (material.name.toLowerCase().includes('clip')) {
-                        quantity = Math.ceil(area * 0.7); // Approximately 0.7 clips per m²
-                    } else if (material.name.toLowerCase().includes('channel') || 
-                             material.name.toLowerCase().includes('bar')) {
-                        quantity = Math.ceil(area * 0.5); // Approximately 0.5 channels/bars per m²
-                    } else if (material.name.toLowerCase().includes('screw') || 
-                             material.name.toLowerCase().includes('fixing')) {
-                        quantity = Math.ceil(area * 8); // Approximately 8 screws per m²
-                    } else {
-                        quantity = Math.ceil(area / 20); // Default for other unit items
-                    }
+            // Calculate costs for each material
+            let totalCost = 0;
+            const materialsCosts = [];
+
+            for (const material of solutionData.materials) {
+                const coverage = parseFloat(material.coverage) || 1;
+                const needsWastage = [
+                    'Premium Acoustic Panel',
+                    'Dampening Material',
+                    '12.5mm Sound Plasterboard',
+                    'SP15 Soundboard',
+                    'Rockwool RWA45 50mm',
+                    'Rockwool RW3 100mm'
+                ].includes(material.name);
+
+                const isPerimeterBased = [
+                    'Acoustic Sealant',
+                    'Acoustic Mastic'
+                ].includes(material.name);
+
+                let amount;
+                if (isPerimeterBased) {
+                    amount = Math.ceil(perimeter / coverage);
                 } else {
-                    // For materials sold by area
-                    quantity = Math.ceil(area / parseFloat(material.coverage));
+                    const calcArea = needsWastage ? area * 1.1 : area;
+                    amount = Math.ceil(calcArea / coverage);
                 }
 
-                const totalCost = material.cost * quantity;
-                return {
+                const cost = amount * material.cost;
+                totalCost += cost;
+
+                materialsCosts.push({
                     name: material.name,
-                    amount: quantity.toFixed(0), // Round to whole units
-                    unit: material.coverage === '1' ? 'unit(s)' : 'm²',
-                    cost: totalCost
-                };
+                    amount: amount,
+                    unit: material.unit,
+                    cost: cost
+                });
+            }
+
+            // Add labor cost
+            const laborUnits = Math.ceil(area / 10); // 1 unit per 10m²
+            const laborCost = laborUnits * solutionData.labor_rate;
+            totalCost += laborCost;
+
+            materialsCosts.push({
+                name: 'Installation Labor',
+                amount: laborUnits,
+                unit: 'hours',
+                cost: laborCost
             });
 
-            const total = materials.reduce((sum, material) => sum + material.cost, 0);
-
             return {
-                materials,
-                total,
-                area: area.toFixed(2),
-                error: false
+                costs: materialsCosts,
+                total: totalCost,
+                area: area,
+                perimeter: perimeter
             };
         }
 
         bindDynamicUpdates() {
             // Listen for form state updates
             window.addEventListener('formStateUpdated', (event) => {
-                const { detail } = event;
-                console.log('Form state updated:', detail);
+                console.log('Form state updated:', event.detail);
                 this.handleFormUpdate('formState');
             });
 
             // Listen for blockage updates
             window.addEventListener('blockagesUpdated', (event) => {
-                const { detail } = event;
-                console.log('Blockages updated:', detail);
+                console.log('Blockages updated:', event.detail);
                 this.handleFormUpdate('blockages');
             });
 
             // Listen for dimensions updates
             window.addEventListener('dimensionsUpdated', (event) => {
-                const { detail } = event;
-                console.log('Dimensions updated:', detail);
+                console.log('Dimensions updated:', event.detail);
                 this.handleFormUpdate('dimensions');
             });
 
             // Listen for noise data updates
             window.addEventListener('noiseDataUpdated', (event) => {
-                const { detail } = event;
-                console.log('Noise data updated:', detail);
+                console.log('Noise data updated:', event.detail);
                 this.handleFormUpdate('noise');
             });
-        }
 
-        // Add this method to the SoundproofingManager class
-        generateFloorPlaceholderHtml(floor) {
-            return `
-                <div class="solution-item floor-placeholder">
-                    <div class="solution-header">
-                        <span class="solution-location">Floor Treatment</span>
-                    </div>
-                    <div class="solution-details">
-                        <div class="solution-reason info-message">
-                            ${floor.message}
-                        </div>
-                        <div class="solution-note">
-                            • Contact our specialists for custom floor solutions
-                            • We'll analyze your specific requirements
-                            • Get a detailed quote for your floor treatment
-                        </div>
-                    </div>
-                </div>`;
-        }
+            // Add click event listeners for surfaces using event delegation
+            document.addEventListener('click', async (event) => {
+                const surfaceElement = event.target.closest('.surface-clickable');
+                if (!surfaceElement) return;
 
-        updateNoiseCharacteristics(noiseType) {
-            const characteristics = this.noiseCharacteristics[noiseType];
-            if (characteristics) {
-                this.noiseAssessment.sourceDetails.characteristics.bass_content = characteristics.bassHeavy || false;
-                this.noiseAssessment.sourceDetails.characteristics.vibration = characteristics.impactComponent || false;
-                this.noiseAssessment.sourceDetails.characteristics.impact_noise = characteristics.impactComponent || false;
-            }
-        }
-
-        calculateOverallEffectiveness(noiseData) {
-            try {
-                // Get noise characteristics
-                const noiseSpecs = this.noiseCharacteristics[noiseData.type];
-                if (!noiseSpecs) return { overall: 0, breakdown: {} };
-
-                // Initialize effectiveness components
-                const components = {
-                    soundReduction: 0,
-                    frequencyMatch: 0,
-                    impactControl: 0,
-                    bassHandling: 0,
-                    roomCoverage: 0
-                };
-
-                // Calculate sound reduction effectiveness
-                const intensity = parseInt(noiseData.intensity) || 3;
-                const requiredReduction = noiseSpecs.typicalIntensity * (intensity / 5);
-                
-                // Get all active solutions
-                const activeSolutions = this.getNoiseSourceSurfaces();
-                let totalSolutions = 0;
-                let totalScore = 0;
-
-                // Process wall solutions
-                if (activeSolutions.walls.length > 0) {
-                    activeSolutions.walls.forEach(wall => {
-                        const solution = this.findBestSolutionForWall(wall, noiseData);
-                        if (solution) {
-                            const specs = this.solutionCharacteristics[solution];
-                            if (specs) {
-                                components.soundReduction += specs.soundReduction / requiredReduction;
-                                components.frequencyMatch += this.calculateFrequencyMatch(
-                                    specs.frequencyRange,
-                                    noiseSpecs.frequencyRange
-                                );
-                                if (specs.impactResistance > 0.7) components.impactControl += 1;
-                                if (specs.frequencyRange[0] < 100) components.bassHandling += 1;
-                                totalSolutions++;
-                                totalScore += this.calculateSolutionScore(solution, noiseData, {});
-                            }
-                        }
+                try {
+                    // Remove active class from all surfaces
+                    document.querySelectorAll('.surface-clickable').forEach(el => {
+                        if (el !== surfaceElement) el.classList.remove('active');
                     });
-                }
 
-                // Process ceiling solution
-                if (activeSolutions.ceiling) {
-                    const ceilingSolution = this.findBestCeilingSolution(noiseData);
-                    if (ceilingSolution) {
-                        const specs = this.solutionCharacteristics[ceilingSolution];
-                        if (specs) {
-                            components.soundReduction += specs.soundReduction / requiredReduction;
-                            components.frequencyMatch += this.calculateFrequencyMatch(
-                                specs.frequencyRange,
-                                noiseSpecs.frequencyRange
-                            );
-                            if (specs.impactResistance > 0.7) components.impactControl += 1;
-                            if (specs.frequencyRange[0] < 100) components.bassHandling += 1;
-                            totalSolutions++;
-                            totalScore += this.calculateSolutionScore(ceilingSolution, noiseData, {});
-                        }
-                    }
-                }
+                    // Toggle active class on clicked surface
+                    surfaceElement.classList.toggle('active');
 
-                // Normalize components
-                if (totalSolutions > 0) {
-                    Object.keys(components).forEach(key => {
-                        components[key] = components[key] / totalSolutions;
-                    });
-                }
-
-                // Calculate room coverage
-                const surfaces = this.getNoiseSourceSurfaces();
-                const totalSurfaces = surfaces.walls.length + (surfaces.ceiling ? 1 : 0) + (surfaces.floor ? 1 : 0);
-                components.roomCoverage = totalSurfaces / (surfaces.walls.length + 2); // +2 for ceiling and floor
-
-                // Calculate overall effectiveness
-                const weights = {
-                    soundReduction: 0.35,
-                    frequencyMatch: 0.25,
-                    impactControl: 0.15,
-                    bassHandling: 0.15,
-                    roomCoverage: 0.10
-                };
-
-                const overall = Object.entries(components).reduce((sum, [key, value]) => {
-                    return sum + (value * weights[key]);
-                }, 0);
-
-                return {
-                    overall: Math.min(overall, 1),
-                    breakdown: components
-                };
-
-            } catch (error) {
-                console.error('Error calculating overall effectiveness:', error);
-                return {
-                    overall: 0,
-                    breakdown: {}
-                };
-            }
-        }
-
-        findBestSolutionForWall(wall, noiseData) {
-            const priority = this.calculateOverallPriority(noiseData);
-            const solutions = priority === 'high' ? 
-                this.solutions.wall.premium : 
-                this.solutions.wall.standard;
-            
-            let bestScore = 0;
-            let bestSolution = null;
-
-            solutions.forEach(solution => {
-                const score = this.calculateSolutionScore(solution, noiseData, {});
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestSolution = solution;
-                }
-            });
-
-            return bestSolution;
-        }
-
-        findBestCeilingSolution(noiseData) {
-            const priority = this.calculateOverallPriority(noiseData);
-            const solutions = priority === 'high' ? 
-                this.solutions.ceiling.premium : 
-                this.solutions.ceiling.standard;
-            
-            let bestScore = 0;
-            let bestSolution = null;
-
-            solutions.forEach(solution => {
-                const score = this.calculateSolutionScore(solution, noiseData, {});
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestSolution = solution;
-                }
-            });
-
-            return bestSolution;
-        }
-
-        calculateSpaceEfficiency(solution, roomContext) {
-            // Base efficiency score based on solution thickness
-            let score = 1 - (solution.thickness / 0.3); // Normalize to max reasonable thickness of 300mm
-
-            // Adjust for room dimensions if available
-            if (roomContext && roomContext.dimensions) {
-                const { width, length, height } = roomContext.dimensions;
-                
-                // Penalize if room is small and solution is thick
-                const roomVolume = width * length * height;
-                if (roomVolume < 30 && solution.thickness > 0.15) { // 30 cubic meters as small room threshold
-                    score *= 0.8;
-                }
-                
-                // Penalize if ceiling height is low and solution is thick
-                if (height < 2.4 && solution.thickness > 0.1) { // 2.4m as standard ceiling height
-                    score *= 0.9;
-                }
-            }
-
-            // Bonus for solutions with good space efficiency
-            if (solution.thickness < 0.1) { // Less than 100mm
-                score *= 1.2;
-            }
-
-            return Math.min(Math.max(score, 0), 1); // Ensure score is between 0 and 1
-        }
-
-        generateSummaryHtml() {
-            const noiseData = window.FormState?.noiseData || {};
-            const dimensions = window.FormState?.dimensions || {};
-            const blockages = window.FormState?.blockages || {};
-            
-            let html = '<div class="calculator-section review-section">';
-            
-            // Project Summary
-            html += '<div class="summary-group">';
-            html += '<h3 class="section-header">Project Summary</h3>';
-            html += '<div class="summary-content">';
-            html += `
-                <div class="info-grid">
-                    <div class="info-item">
-                        <label>Noise Type:</label>
-                        <span class="value">${this.formatValue(noiseData.type)}</span>
-                    </div>
-                    <div class="info-item">
-                        <label>Intensity:</label>
-                        <span class="value">Level ${this.formatValue(noiseData.intensity)}</span>
-                    </div>
-                    <div class="info-item">
-                        <label>Time:</label>
-                        <span class="value">${this.formatArrayValue(noiseData.time)}</span>
-                    </div>
-                    <div class="info-item">
-                        <label>Direction:</label>
-                        <span class="value">${this.formatArrayValue(noiseData.direction)}</span>
-                    </div>
-                </div>
-            `;
-            html += '</div></div>';
-
-            // Room Dimensions
-            html += '<div class="summary-group">';
-            html += '<h3 class="section-header">Room Dimensions</h3>';
-            html += '<div class="summary-content">';
-            html += `
-                <div class="dimensions-grid">
-                    <div class="dimension-item">
-                        <label>Length:</label>
-                        <span class="value">${this.formatDimension(dimensions.length)} m</span>
-                    </div>
-                    <div class="dimension-item">
-                        <label>Width:</label>
-                        <span class="value">${this.formatDimension(dimensions.width)} m</span>
-                    </div>
-                    <div class="dimension-item">
-                        <label>Height:</label>
-                        <span class="value">${this.formatDimension(dimensions.height)} m</span>
-                    </div>
-                </div>
-            `;
-            html += '</div></div>';
-
-            // Surface Features
-            html += '<div class="summary-group">';
-            html += '<h3 class="section-header">Surface Features</h3>';
-            html += '<div class="summary-content">';
-            
-            if (this.hasAnyBlockages(blockages)) {
-                html += '<div class="features-grid">';
-                
-                // Wall features
-                if (blockages.wall?.length > 0) {
-                    html += '<div class="feature-category"><h4>Wall Features</h4>';
-                    blockages.wall.forEach(blockage => {
-                        if (blockage?.type && blockage?.wall) {
-                            html += `
-                                <div class="feature-item">
-                                    <label>${blockage.wall} Wall:</label>
-                                    <span class="value">${blockage.type} (${blockage.width}m × ${blockage.height}m)</span>
-                                </div>`;
-                        }
-                    });
-                    html += '</div>';
-                }
-
-                // Ceiling features
-                if (blockages.ceiling?.length > 0) {
-                    html += '<div class="feature-category"><h4>Ceiling Features</h4>';
-                    blockages.ceiling.forEach(blockage => {
-                        if (blockage?.type) {
-                            html += `
-                                <div class="feature-item">
-                                    <label>Feature:</label>
-                                    <span class="value">${blockage.type} (${blockage.width}m × ${blockage.length}m)</span>
-                                </div>`;
-                        }
-                    });
-                    html += '</div>';
-                }
-
-                // Floor features
-                if (blockages.floor?.length > 0) {
-                    html += '<div class="feature-category"><h4>Floor Features</h4>';
-                    blockages.floor.forEach(blockage => {
-                        if (blockage?.type) {
-                            html += `
-                                <div class="feature-item">
-                                    <label>Feature:</label>
-                                    <span class="value">${blockage.type} (${blockage.width}m × ${blockage.length}m)</span>
-                                </div>`;
-                        }
-                    });
-                    html += '</div>';
-                }
-                
-                html += '</div>';
-            } else {
-                html += '<div class="no-features">No surface features reported</div>';
-            }
-            html += '</div></div>';
-
-            // Cost Summary
-            html += '<div class="summary-group">';
-            html += '<h3 class="section-header">Cost Summary</h3>';
-            html += '<div class="summary-content costs-container">';
-            
-            try {
-                const noiseSurfaces = this.getNoiseSourceSurfaces();
-                let totalCost = 0;
-                let costBreakdown = [];
-
-                // Calculate costs for each surface
-                if (noiseSurfaces.walls?.length > 0) {
-                    noiseSurfaces.walls.forEach(wall => {
-                        const solution = this.findBestSolutionForWall(wall, noiseData);
-                        if (solution) {
-                            const costs = this.calculateLocalCosts(solution, dimensions, 'wall', wall.toLowerCase());
-                            if (!costs.error) {
-                                totalCost += costs.total;
-                                costBreakdown.push({
-                                    surface: wall,
-                                    solution: solution,
-                                    cost: costs.total,
-                                    area: costs.area,
-                                    materials: costs.materials
-                                });
-                            }
-                        }
-                    });
-                }
-
-                if (noiseSurfaces.ceiling) {
-                    const solution = this.findBestCeilingSolution(noiseData);
-                    if (solution) {
-                        const costs = this.calculateLocalCosts(solution, dimensions, 'ceiling');
-                        if (!costs.error) {
-                            totalCost += costs.total;
-                            costBreakdown.push({
-                                surface: 'Ceiling',
-                                solution: solution,
-                                cost: costs.total,
-                                area: costs.area,
-                                materials: costs.materials
-                            });
-                        }
-                    }
-                }
-
-                // Display cost breakdown
-                costBreakdown.forEach(item => {
-                    html += `
-                        <div class="cost-section">
-                            <div class="cost-header">
-                                <span class="surface">${item.surface}</span>
-                                <span class="area">${item.area.toFixed(2)} m²</span>
-                                <span class="solution">${item.solution}</span>
-                            </div>
-                            <div class="materials-list">
-                                ${item.materials.map(material => `
-                                    <div class="material-item">
-                                        <span class="name">${material.name}</span>
-                                        <span class="amount">${material.amount} ${material.unit}</span>
-                                        <span class="cost">£${material.cost.toFixed(2)}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                            <div class="surface-total">
-                                <label>Surface Total:</label>
-                                <span class="cost">£${item.cost.toFixed(2)}</span>
-                            </div>
-                        </div>`;
-                });
-
-                // Blockage adjustment
-                const blockageAdjustment = this.calculateBlockageAdjustment(blockages);
-                if (blockageAdjustment > 0) {
-                    const adjustmentAmount = totalCost * blockageAdjustment;
-                    html += `
-                        <div class="adjustment-section">
-                            <div class="adjustment-item">
-                                <label>Blockage Adjustment (+${(blockageAdjustment * 100).toFixed(0)}%):</label>
-                                <span class="cost">£${adjustmentAmount.toFixed(2)}</span>
-                            </div>
-                        </div>`;
-                    totalCost += adjustmentAmount;
-                }
-
-                // Total cost
-                html += `
-                    <div class="total-section">
-                        <div class="total-cost">
-                            <label>Total Estimated Cost:</label>
-                            <span class="cost">£${totalCost.toFixed(2)}</span>
-                        </div>
-                    </div>`;
-
-            } catch (error) {
-                console.error('Error calculating costs:', error);
-                html += '<div class="error-message">Error calculating costs. Please check your inputs.</div>';
-            }
-
-            html += '</div></div>';
-
-            // Add quote button
-            html += `
-                <div class="quote-section">
-                    <button type="button" class="quote-button" onclick="window.workflowManager.generateQuote()">
-                        Download Detailed Quote
-                    </button>
-                </div>`;
-
-            html += '</div>';
-            return html;
-        }
-
-        // Helper methods for formatting
-        formatValue(value) {
-            return value || 'Not specified';
-        }
-
-        formatArrayValue(arr) {
-            return Array.isArray(arr) && arr.length > 0 ? arr.join(', ') : 'Not specified';
-        }
-
-        formatDimension(value) {
-            return value ? `${value.toFixed(2)} meters` : '0 meters';
-        }
-
-        hasAnyBlockages(blockages) {
-            return ['wall', 'ceiling', 'floor'].some(type => 
-                blockages[type] && Array.isArray(blockages[type]) && blockages[type].length > 0
-            );
-        }
-
-        calculateBlockageAdjustment(blockages) {
-            try {
-                if (!blockages || typeof blockages !== 'object') {
-                    return 0;
-                }
-
-                let totalAdjustment = 0;
-                const processBlockageType = (type) => {
-                    if (!type || typeof type !== 'string') {
-                        return 0;
-                    }
+                    const surfaceType = surfaceElement.dataset.surface;
+                    const wall = surfaceElement.dataset.wall;
                     
-                    const typeStr = type.toLowerCase();
-                    // Adjustment percentages for different blockage types
-                    if (typeStr.includes('window')) return 0.15;
-                    if (typeStr.includes('door')) return 0.20;
-                    if (typeStr.includes('pipe')) return 0.10;
-                    if (typeStr.includes('vent')) return 0.25;
-                    if (typeStr.includes('electrical')) return 0.05;
-                    return 0;
+                    // Get current dimensions
+                    const dimensions = {
+                        length: parseFloat(document.getElementById('length')?.value || 0),
+                        width: parseFloat(document.getElementById('width')?.value || 0),
+                        height: parseFloat(document.getElementById('height')?.value || 0)
+                    };
+
+                    console.log('Surface clicked:', { surfaceType, wall, dimensions });
+
+                    // Validate dimensions
+                    if (this.validateDimensions(dimensions).isValid) {
+                        const solutionName = surfaceElement.querySelector('.solution-name')?.textContent;
+                        console.log('Calculating costs for solution:', solutionName);
+
+                        if (!solutionName) {
+                            console.error('No solution name found in element');
+                            return;
+                        }
+
+                        const costs = await this.calculateLocalCosts(
+                            solutionName,
+                            dimensions,
+                            surfaceType,
+                            wall
+                        );
+                        
+                        console.log('Calculated costs:', costs);
+                        
+                        // Update the cost breakdown display
+                        const costBreakdownElement = surfaceElement.querySelector('.cost-breakdown');
+                        if (costBreakdownElement) {
+                            if (costs.error) {
+                                costBreakdownElement.innerHTML = `<div class="error-message">${costs.message}</div>`;
+                            } else {
+                                const costHtml = this.generateCostBreakdownHtml(costs);
+                                console.log('Generated cost HTML:', costHtml);
+                                costBreakdownElement.innerHTML = costHtml;
+                            }
+                            costBreakdownElement.style.display = 'block';
+                        } else {
+                            console.error('Cost breakdown element not found');
+                        }
+                    } else {
+                        console.error('Invalid dimensions:', dimensions);
+                    }
+                } catch (error) {
+                    console.error('Error in surface click handler:', error);
+                }
+            });
+        }
+
+        generateCostBreakdownHtml(costs) {
+            if (!costs || !costs.materials) {
+                return '<div class="cost-breakdown"><p class="no-data">No cost information available.</p></div>';
+            }
+
+            return `
+                <div class="cost-breakdown">
+                    <div class="cost-breakdown-header">
+                        <h5>Cost Breakdown</h5>
+                        <div class="area-info">Surface Area: ${costs.area} m²</div>
+                    </div>
+                    <div class="cost-items">
+                        <div class="cost-item header">
+                            <span>Material</span>
+                            <span>Quantity</span>
+                            <span>Cost</span>
+                        </div>
+                        ${costs.materials.map(material => `
+                            <div class="cost-item">
+                                <span class="material-name">${material.name}</span>
+                                <span class="material-amount">${material.amount} ${material.unit}</span>
+                                <span class="material-cost">£${material.cost.toFixed(2)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="total-cost">
+                        <span>Total Cost</span>
+                        <span class="total-amount">£${costs.total.toFixed(2)}</span>
+                    </div>
+                    <div class="cost-notes">
+                        <p>* Prices include standard installation</p>
+                        <p>* Additional costs may apply for complex installations</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ... existing code ...
+
+        // Keep only the new generateSolutionHtml method
+        generateSolutionHtml(wall, costs) {
+            if (!wall || !wall.solution) {
+                return '<p>No solution available for this surface.</p>';
+            }
+
+            const solutionData = this.solutionCharacteristics[wall.solution];
+            if (!solutionData) {
+                return '<p>Solution data not found.</p>';
+            }
+
+            return `
+                <div class="solution-details">
+                    <h4 class="solution-name">${solutionData.displayName || wall.solution}</h4>
+                    <div class="solution-specs">
+                        <p><strong>Sound Reduction:</strong> ${solutionData.soundReduction} dB</p>
+                        <p><strong>Frequency Range:</strong> ${solutionData.frequencyRange[0]}-${solutionData.frequencyRange[1]} Hz</p>
+                        <p><strong>Installation Time:</strong> ${solutionData.installationTime} days</p>
+                        <p><strong>STC Rating:</strong> ${solutionData.stc_rating}</p>
+                                            </div>
+                    <div class="solution-notes">
+                        ${solutionData.notes.map(note => `<p class="note">${note}</p>`).join('')}
+                                            </div>
+                    ${costs ? this.generateCostBreakdownHtml(costs) : ''}
+                                            </div>
+            `;
+        }
+
+        getPrimarySolutions(noiseData, noiseSurfaces, priority) {
+            try {
+                const solutions = {
+                    walls: [],
+                    ceiling: null,
+                    floor: null
                 };
 
-                // Process wall blockages
-                if (Array.isArray(blockages.wall)) {
-                    blockages.wall.forEach(blockage => {
-                        if (blockage && typeof blockage === 'object' && blockage.type) {
-                            totalAdjustment += processBlockageType(blockage.type);
+                // Process wall solutions based on multiple factors
+                if (noiseSurfaces.walls && noiseSurfaces.walls.length > 0) {
+                    noiseSurfaces.walls.forEach(wall => {
+                        // Adjust solution selection based on wall position and noise direction
+                        const wallScore = this.calculateWallSpecificScore(wall, noiseData);
+                        const solutionScore = this.calculateSolutionScore(noiseData, wallScore);
+                        
+                        // Get different solutions based on wall position and noise characteristics
+                        let solution;
+                        if (noiseData.direction.includes(wall.toLowerCase())) {
+                            // Direct noise path gets premium solutions
+                            solution = this.selectBestSolution(
+                                { standard: 0.3, premium: 0.7 }, // Bias towards premium for direct noise
+                                noiseData,
+                                wall
+                            );
+                        } else {
+                            // Indirect noise paths get balanced solution selection
+                            solution = this.selectBestSolution(
+                                solutionScore,
+                                noiseData,
+                                wall
+                            );
                         }
+
+                        solutions.walls.push({
+                            wall: wall,
+                            solution: solution.name,
+                            score: solution.score,
+                            reasoning: solution.reasoning
+                        });
                     });
                 }
 
-                // Process ceiling blockages
-                if (Array.isArray(blockages.ceiling)) {
-                    blockages.ceiling.forEach(blockage => {
-                        if (blockage && typeof blockage === 'object' && blockage.type) {
-                            totalAdjustment += processBlockageType(blockage.type);
-                        }
-                    });
+                // Process ceiling solution based on noise characteristics
+                if (noiseSurfaces.ceiling) {
+                    const ceilingScore = this.calculateCeilingSolutionScore(noiseData);
+                    const ceilingSolution = this.selectBestCeilingSolution(ceilingScore, noiseData);
+                    solutions.ceiling = {
+                        solution: ceilingSolution.name,
+                        score: ceilingSolution.score,
+                        reasoning: ceilingSolution.reasoning
+                    };
                 }
 
-                // Process floor blockages
-                if (Array.isArray(blockages.floor)) {
-                    blockages.floor.forEach(blockage => {
-                        if (blockage && typeof blockage === 'object' && blockage.type) {
-                            totalAdjustment += processBlockageType(blockage.type);
-                        }
-                    });
+                // Process floor solution if needed
+                if (noiseSurfaces.floor) {
+                    const floorScore = this.calculateFloorSolutionScore(noiseData);
+                    solutions.floor = this.selectBestFloorSolution(floorScore, noiseData);
                 }
 
-                // Cap the total adjustment at 50%
-                return Math.min(totalAdjustment, 0.5);
+                return solutions;
             } catch (error) {
-                console.error('Error calculating blockage adjustment:', error);
-                return 0;
+                console.error('Error in getPrimarySolutions:', error);
+                return { walls: [], ceiling: null, floor: null };
             }
+        }
+
+        calculateWallSpecificScore(wall, noiseData) {
+            // Base score
+            let wallScore = 1.0;
+
+            // Adjust score based on noise direction
+            if (noiseData.direction.includes(wall.toLowerCase())) {
+                wallScore *= 1.5; // Increase importance for walls directly facing noise
+            }
+
+            // Adjust for noise type
+            const noiseTypeMultipliers = {
+                'music': 1.4,
+                'machinery': 1.3,
+                'speech': 1.1,
+                'tv': 1.2,
+                'traffic': 1.3,
+                'aircraft': 1.4,
+                'footsteps': 1.1
+            };
+            wallScore *= noiseTypeMultipliers[noiseData.type] || 1.0;
+
+            // Adjust for intensity
+            wallScore *= (noiseData.intensity / 5); // Normalize intensity effect
+
+            return wallScore;
+        }
+
+        selectBestSolution(scores, noiseData, wall) {
+            const solutions = {
+                standard: this.solutions.wall.standard,
+                premium: this.solutions.wall.premium
+            };
+
+            // Select category based on scores and wall-specific factors
+            const category = scores.premium > scores.standard ? 'premium' : 'standard';
+            const solutionList = solutions[category];
+
+            // Select specific solution based on multiple factors
+            const intensityIndex = Math.min(
+                Math.floor(noiseData.intensity / 3.34),
+                solutionList.length - 1
+            );
+
+            // Add variation based on wall position
+            const wallPositionOffset = wall.toLowerCase() === noiseData.direction[0] ? 1 : 0;
+            const finalIndex = Math.min(
+                intensityIndex + wallPositionOffset,
+                solutionList.length - 1
+            );
+
+            return {
+                name: solutionList[finalIndex],
+                score: scores[category],
+                reasoning: this.generateSolutionReasoning(solutionList[finalIndex], noiseData, wall)
+            };
+        }
+
+        calculateCeilingSolutionScore(noiseData) {
+            const scores = {
+                standard: 0,
+                premium: 0
+            };
+
+            // Factor 1: Noise Type Weight
+            const noiseTypeWeights = {
+                'music': { standard: 0.3, premium: 0.7 },
+                'machinery': { standard: 0.2, premium: 0.8 },
+                'speech': { standard: 0.7, premium: 0.3 },
+                'tv': { standard: 0.6, premium: 0.4 },
+                'traffic': { standard: 0.4, premium: 0.6 },
+                'aircraft': { standard: 0.3, premium: 0.7 },
+                'footsteps': { standard: 0.5, premium: 0.5 }
+            };
+
+            // Factor 2: Noise Intensity Weight
+            const intensityWeight = noiseData.intensity / 10; // Assuming intensity is 1-10
+
+            // Factor 3: Budget Consideration
+            const budgetWeight = window.FormState?.requirements?.budget === 'high' ? 0.7 : 0.3;
+
+            // Calculate final scores
+            const typeWeights = noiseTypeWeights[noiseData.type] || { standard: 0.5, premium: 0.5 };
+            scores.standard = (typeWeights.standard * 0.4) + ((1 - intensityWeight) * 0.4) + ((1 - budgetWeight) * 0.2);
+            scores.premium = (typeWeights.premium * 0.4) + (intensityWeight * 0.4) + (budgetWeight * 0.2);
+
+            return scores;
+        }
+
+        selectBestCeilingSolution(scores, noiseData) {
+            const solutions = {
+                standard: this.solutions.ceiling.standard,
+                premium: this.solutions.ceiling.premium
+            };
+
+            // Select the appropriate category based on scores
+            const category = scores.premium > scores.standard ? 'premium' : 'standard';
+            const solutionList = solutions[category];
+
+            // Select specific solution based on noise characteristics
+            const solutionIndex = Math.min(
+                Math.floor(noiseData.intensity / 3.34), // 0-2 index based on intensity
+                solutionList.length - 1
+            );
+
+            return {
+                name: solutionList[solutionIndex],
+                score: scores[category],
+                reasoning: this.generateSolutionReasoning(solutionList[solutionIndex], noiseData)
+            };
+        }
+
+        calculateFloorSolutionScore(noiseData) {
+            const scores = {
+                standard: 0,
+                premium: 0
+            };
+
+            // Factor 1: Noise Type Weight
+            const noiseTypeWeights = {
+                'music': { standard: 0.3, premium: 0.7 },
+                'machinery': { standard: 0.2, premium: 0.8 },
+                'speech': { standard: 0.7, premium: 0.3 },
+                'tv': { standard: 0.6, premium: 0.4 },
+                'traffic': { standard: 0.4, premium: 0.6 },
+                'aircraft': { standard: 0.3, premium: 0.7 },
+                'footsteps': { standard: 0.5, premium: 0.5 }
+            };
+
+            // Factor 2: Noise Intensity Weight
+            const intensityWeight = noiseData.intensity / 10; // Assuming intensity is 1-10
+
+            // Factor 3: Budget Consideration
+            const budgetWeight = window.FormState?.requirements?.budget === 'high' ? 0.7 : 0.3;
+
+            // Calculate final scores
+            const typeWeights = noiseTypeWeights[noiseData.type] || { standard: 0.5, premium: 0.5 };
+            scores.standard = (typeWeights.standard * 0.4) + ((1 - intensityWeight) * 0.4) + ((1 - budgetWeight) * 0.2);
+            scores.premium = (typeWeights.premium * 0.4) + (intensityWeight * 0.4) + (budgetWeight * 0.2);
+
+            return scores;
+        }
+
+        selectBestFloorSolution(scores, noiseData) {
+            const solutions = {
+                standard: this.solutions.floor.standard,
+                premium: this.solutions.floor.premium
+            };
+
+            // Select the appropriate category based on scores
+            const category = scores.premium > scores.standard ? 'premium' : 'standard';
+            const solutionList = solutions[category];
+
+            // Select specific solution based on noise characteristics
+            const solutionIndex = Math.min(
+                Math.floor(noiseData.intensity / 3.34), // 0-2 index based on intensity
+                solutionList.length - 1
+            );
+
+            return {
+                name: solutionList[solutionIndex],
+                score: scores[category],
+                reasoning: this.generateSolutionReasoning(solutionList[solutionIndex], noiseData)
+            };
+        }
+
+        generateSolutionReasoning(solutionName, noiseData) {
+            if (!noiseData || !noiseData.type) {
+                console.warn('Missing noise data for generating solution reasoning');
+                return ['Recommended based on general soundproofing requirements'];
+            }
+
+            const solutionData = this.solutionCharacteristics[solutionName];
+            if (!solutionData) {
+                console.warn('No solution data found for:', solutionName);
+                return ['Solution details not available'];
+            }
+
+            const reasons = [];
+
+            // Add noise type specific reasoning
+            switch (noiseData.type) {
+                case 'music':
+                    reasons.push(`Optimized for musical frequencies (${solutionData.frequencyRange[0]}-${solutionData.frequencyRange[1]}Hz)`);
+                    reasons.push(`Provides ${solutionData.soundReduction}dB reduction, ideal for music isolation`);
+                    break;
+                case 'speech':
+                    reasons.push(`Effective against speech frequencies (${solutionData.frequencyRange[0]}-${solutionData.frequencyRange[1]}Hz)`);
+                    reasons.push(`${solutionData.soundReduction}dB reduction suitable for conversation privacy`);
+                    break;
+                case 'machinery':
+                    reasons.push(`Designed to combat mechanical noise and vibrations`);
+                    reasons.push(`Heavy-duty sound reduction of ${solutionData.soundReduction}dB`);
+                    break;
+                case 'tv':
+                    reasons.push(`Balanced frequency response for TV and entertainment sound`);
+                    reasons.push(`${solutionData.soundReduction}dB reduction for media noise control`);
+                    break;
+                case 'traffic':
+                    reasons.push(`Effective against low-frequency traffic noise`);
+                    reasons.push(`${solutionData.soundReduction}dB reduction with focus on bass frequencies`);
+                    break;
+                case 'aircraft':
+                    reasons.push(`Specialized for high-intensity aircraft noise`);
+                    reasons.push(`Maximum sound reduction of ${solutionData.soundReduction}dB`);
+                    break;
+                case 'footsteps':
+                    reasons.push(`Impact noise reduction technology`);
+                    reasons.push(`${solutionData.soundReduction}dB reduction with vibration dampening`);
+                    break;
+                default:
+                    reasons.push(`General purpose soundproofing solution`);
+                    reasons.push(`Standard ${solutionData.soundReduction}dB noise reduction`);
+            }
+
+            // Add intensity-based reasoning
+            if (noiseData.intensity >= 8) {
+                reasons.push('Premium solution for high-intensity noise');
+            } else if (noiseData.intensity >= 5) {
+                reasons.push('Enhanced protection for moderate noise levels');
+            } else {
+                reasons.push('Standard protection for typical noise levels');
+            }
+
+            // Add solution-specific features
+            if (solutionData.notes && Array.isArray(solutionData.notes)) {
+                reasons.push(...solutionData.notes);
+            }
+
+            // Add installation and maintenance info
+            reasons.push(`Installation time: ${solutionData.installationTime} days`);
+            if (solutionData.maintenanceRequired) {
+                reasons.push(`Maintenance: ${solutionData.maintenanceRequired}`);
+            }
+
+            return reasons;
         }
     }
 
@@ -2490,124 +2671,7 @@ if (!window.soundproofingManager) {
     window.soundproofingManager.initialize();
 }
 
-// Helper function for fetching costs
-async function fetchSolutionCosts(solution, dimensions) {
-    try {
-        // Get CSRF token from meta tag
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
-        if (!csrfToken) {
-            throw new Error('CSRF token not found');
-        }
-
-        // Validate dimensions
-        const validatedDimensions = validateDimensions(dimensions);
-        if (!validatedDimensions.isValid) {
-            console.warn('Invalid dimensions:', validatedDimensions.errors);
-            return {
-                error: 'Please enter valid room dimensions before calculating costs',
-                costs: [],
-                total: 0
-            };
-        }
-
-        try {
-            const response = await fetch('http://192.168.1.41:10000/api/calculate-costs', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-Token': csrfToken,
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    solution: solution,
-                    dimensions: validatedDimensions.dimensions
-                })
-            });
-            
-            if (!response.ok) {
-                // Log the error response for debugging
-                const errorText = await response.text();
-                console.warn('Backend error:', response.status, errorText);
-                return generatePlaceholderCosts(solution, validatedDimensions.dimensions);
-            }
-
-            const data = await response.json();
-            return {
-                costs: data.costs || [],
-                total: data.total || 0
-            };
-
-        } catch (error) {
-            console.warn('Backend error:', error);
-            return generatePlaceholderCosts(solution, validatedDimensions.dimensions);
-        }
-
-    } catch (error) {
-        console.error('Error in fetchSolutionCosts:', error);
-        return {
-            error: error.message,
-            costs: [],
-            total: 0
-        };
-    }
-}
-
-// Add helper function to generate placeholder costs
-function generatePlaceholderCosts(solution, dimensions) {
-    // Calculate area
-    const area = dimensions.length * dimensions.width;
-    
-    // Basic placeholder data with proper coverage values
-    const baseCosts = {
-        'standard': {
-            materials: [
-                { name: 'Acoustic Panels', rate: 45, coverage: 2.88 },  // Each panel covers 2.88m²
-                { name: 'Sound Barrier', rate: 35, coverage: 2.88 },    // Each barrier covers 2.88m²
-                { name: 'Installation Materials', rate: 15, coverage: 8.64 }  // Each pack covers 8.64m²
-            ],
-            laborRate: 40
-        },
-        'premium': {
-            materials: [
-                { name: 'Premium Acoustic Panels', rate: 75, coverage: 2.88 },
-                { name: 'High-Mass Barrier', rate: 55, coverage: 2.88 },
-                { name: 'Professional Installation Kit', rate: 25, coverage: 8.64 }
-            ],
-            laborRate: 60
-        }
-    };
-
-    const tier = solution.toLowerCase().includes('premium') ? 'premium' : 'standard';
-    const costs = baseCosts[tier].materials.map(material => {
-        const unitsNeeded = Math.ceil(area / material.coverage);
-        return {
-            name: material.name,
-            quantity: unitsNeeded,
-            rate: material.rate,
-            total_cost: Math.ceil(unitsNeeded * material.rate)
-        };
-    });
-
-    // Add labor cost (1 unit per 10m²)
-    const laborUnits = Math.ceil(area / 10);
-    costs.push({
-        name: 'Installation Labor',
-        quantity: laborUnits,
-        rate: baseCosts[tier].laborRate,
-        total_cost: Math.ceil(laborUnits * baseCosts[tier].laborRate)
-    });
-
-    const total = costs.reduce((sum, item) => sum + item.total_cost, 0);
-
-    return {
-        costs,
-        total,
-        isPlaceholder: true
-    };
-}
-
-// Add dimension validation helper
+// Keep the validateDimensions helper
 function validateDimensions(dimensions) {
     const errors = [];
     const validated = {

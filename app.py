@@ -51,44 +51,58 @@ def setup_mongodb():
     try:
         # Load the MongoDB URI from the environment
         mongodb_uri = os.getenv('MONGODB_URI')
-        print(f"Loaded MongoDB URI: {mongodb_uri}")  # Debug: Print the loaded URI
-        
         if not mongodb_uri:
-            logger.warning("MONGODB_URI not set, using fallback data")
+            logger.error("MONGODB_URI environment variable not set")
             return setup_fallback_data()
+
+        # Configure MongoDB client with enhanced settings
+        client_settings = {
+            'tlsCAFile': certifi.where(),
+            'serverSelectionTimeoutMS': 10000,
+            'connectTimeoutMS': 10000,
+            'socketTimeoutMS': 20000,
+            'retryWrites': True,
+            'retryReads': True,
+            'maxPoolSize': 50,
+            'minPoolSize': 10,
+            'maxIdleTimeMS': 45000,
+            'waitQueueTimeoutMS': 10000,
+            'heartbeatFrequencyMS': 10000
+        }
+
+        # Initialize client with retry logic
+        max_retries = 3
+        retry_delay = 2  # seconds
         
-        # Initialize the MongoDB client with connection settings
-        client = MongoClient(
-            mongodb_uri,
-            tlsCAFile=certifi.where(),
-            serverSelectionTimeoutMS=10000,  # Increased to 10 seconds
-            connectTimeoutMS=10000,
-            socketTimeoutMS=20000,
-            retryWrites=True,
-            retryReads=True,
-            maxPoolSize=50,
-            waitQueueTimeoutMS=10000,
-            connect=True,  # Force initial connection
-            maxIdleTimeMS=45000,
-            heartbeatFrequencyMS=10000
-        )
-        
-        # Debug: Test the MongoDB connection
-        print("Testing MongoDB connection...")  # Debug: Connection test start
-        client.server_info()  # Ensures the connection is valid
-        print("MongoDB connection successful!")  # Debug: Connection success
-        
-        # Retrieve the database and collections
-        db = client.guyrazor
-        logger.info("Successfully connected to MongoDB!")
-        return client, db, db.wallsolutions, db.ceilingsolutions
+        for attempt in range(max_retries):
+            try:
+                client = MongoClient(mongodb_uri, **client_settings)
+                # Test connection
+                client.admin.command('ping')
+                logger.info("Successfully connected to MongoDB")
+                
+                # Initialize database and collections
+                db = client.guyrazor
+                wallsolutions = db.wallsolutions
+                ceilingsolutions = db.ceilingsolutions
+                
+                # Verify collections exist and are accessible
+                if wallsolutions.count_documents({}) >= 0 and ceilingsolutions.count_documents({}) >= 0:
+                    logger.info("Successfully verified collections access")
+                    return client, db, wallsolutions, ceilingsolutions
+                else:
+                    raise Exception("Could not verify collections")
+                    
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    logger.warning(f"MongoDB connection attempt {attempt + 1} failed: {str(e)}")
+                    time.sleep(retry_delay * (attempt + 1))  # Exponential backoff
+                else:
+                    logger.error(f"All MongoDB connection attempts failed: {str(e)}")
+                    return setup_fallback_data()
 
     except Exception as e:
-        # Log and print the error
-        logger.error(f"MongoDB Connection Error: {str(e)}")
-        print(f"MongoDB Connection Error: {e}")  # Debug: Print error message
-        
-        # Fall back to local data if connection fails
+        logger.error(f"Critical error in MongoDB setup: {str(e)}")
         return setup_fallback_data()
 
 
@@ -290,12 +304,54 @@ def get_solutions(surface_type):
         return jsonify({'error': str(e), 'error_type': type(e).__name__}), 500
 @app.route('/health')
 def health_check():
+    """Enhanced health check endpoint"""
     try:
-        client.admin.command('ping')
-        return jsonify({'status': 'healthy', 'database': 'connected'}), 200
+        # Check MongoDB connection
+        mongo_status = {'status': 'unknown', 'latency_ms': None}
+        if client:
+            start_time = time.time()
+            client.admin.command('ping')
+            latency = (time.time() - start_time) * 1000
+            mongo_status = {
+                'status': 'connected',
+                'latency_ms': round(latency, 2)
+            }
+        else:
+            mongo_status = {'status': 'disconnected'}
+
+        # Check collections
+        collections_status = {
+            'walls': wallsolutions.count_documents({}) if wallsolutions else 0,
+            'ceilings': ceilingsolutions.count_documents({}) if ceilingsolutions else 0
+        }
+
+        # Memory usage (if psutil is available)
+        memory_status = {}
+        try:
+            import psutil
+            process = psutil.Process()
+            memory_status = {
+                'memory_percent': round(process.memory_percent(), 2),
+                'memory_mb': round(process.memory_info().rss / 1024 / 1024, 2)
+            }
+        except ImportError:
+            memory_status = {'error': 'psutil not available'}
+
+        return jsonify({
+            'status': 'healthy' if mongo_status['status'] == 'connected' else 'degraded',
+            'timestamp': time.time(),
+            'mongo': mongo_status,
+            'collections': collections_status,
+            'memory': memory_status
+        }), 200 if mongo_status['status'] == 'connected' else 503
+
     except Exception as e:
-        logger.error(f"Health check failed: {e}")
-        return jsonify({'status': 'unhealthy', 'error': str(e)}), 500
+        logger.error(f"Health check failed: {str(e)}")
+        return jsonify({
+            'status': 'unhealthy',
+            'error': str(e),
+            'timestamp': time.time()
+        }), 500
 
 @app.route('/debug_solutions')
 def debug_solutions():
@@ -728,101 +784,123 @@ def get_noise_type_reasoning(noise_type):
     }
     return reasonings.get(noise_type, 'General purpose noise reduction')
 
+def get_solution_id_from_display_name(display_name):
+    """Convert display name to solution ID."""
+    name_to_id = {
+        'M20 Solution (Standard)': 'M20WallStandard',
+        'M20 Solution (SP15 Soundboard upgrade)': 'M20WallSP15',
+        'Genie Clip wall (Standard)': 'GenieClipWallStandard',
+        'Genie Clip wall (SP15 Soundboard Upgrade)': 'GenieClipWallSP15',
+        'Independent Wall (Standard)': 'IndependentWallStandard',
+        'Independent Wall (SP15 Soundboard Upgrade)': 'IndependentWallSP15',
+        'Resilient bar wall (Standard)': 'ResilientBarWallStandard',
+        'Resilient bar wall (SP15 Soundboard Upgrade)': 'ResilientBarWallSP15'
+    }
+    return name_to_id.get(display_name)
+
 @app.route('/api/calculate-costs', methods=['POST'])
 def calculate_costs():
     try:
         data = request.get_json()
-        solution_type = data.get('solution')
-        dimensions = data.get('dimensions')
-
-        # Log the request
-        logger.info(f"Calculating costs for solution: {solution_type}")
-        logger.info(f"Dimensions: {dimensions}")
-
-        # Validate input
-        if not solution_type or not dimensions:
-            return jsonify({'error': 'Missing solution type or dimensions'}), 400
-
-        # Determine which collection to query based on solution type
-        collection = db.ceilingsolutions if 'ceiling' in solution_type.lower() else db.wallsolutions
-        logger.info(f"Querying collection: {collection.name}")
-
-        # Query the MongoDB collection directly first
-        direct_match = collection.find_one({'solution': solution_type})
-        if direct_match:
-            logger.info(f"Found direct match: {direct_match}")
-            solution_data = direct_match
-        else:
-            # Try case-insensitive search with escaped regex pattern
-            solution_type_normalized = solution_type.lower().strip()
-            logger.info(f"No direct match found, trying case-insensitive search for: {solution_type_normalized}")
-            # Escape regex special characters
-            solution_type_escaped = re.escape(solution_type_normalized)
-            solution_data = collection.find_one({
-                'solution': {'$regex': f'^{solution_type_escaped}$', '$options': 'i'}
-            })
-
-        if not solution_data:
-            # Try to find similar solutions for better error message
-            # Use the first word of the solution type for fuzzy matching
-            first_word = solution_type_normalized.split()[0]
-            first_word_escaped = re.escape(first_word)
-            similar_solutions = list(collection.find(
-                {'solution': {'$regex': f'.*{first_word_escaped}.*', '$options': 'i'}},
-                {'solution': 1, '_id': 0}
-            ).limit(3))
-            
-            error_msg = f"Solution type '{solution_type}' not found"
-            if similar_solutions:
-                error_msg += ". Did you mean one of these: " + ", ".join([s['solution'] for s in similar_solutions])
-            
-            logger.error(error_msg)
-            return jsonify({'error': error_msg}), 400
-
-        # Get materials from the solution data
-        materials = solution_data.get('materials', [])
-        if not materials:
-            logger.error(f"No materials found for solution {solution_type}")
-            return jsonify({'error': 'No materials found for solution'}), 400
-
-        # Calculate area
-        area = float(dimensions.get('length', 0)) * float(dimensions.get('width', 0))
+        logger.info(f"Received calculate-costs request with data: {data}")
         
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+
+        required_fields = ['solution', 'dimensions', 'surfaceType']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'Missing required field: {field}'}), 400
+
+        solution_name = data['solution']
+        dimensions = data['dimensions']
+        surface_type = data['surfaceType']
+        wall = data.get('wall')  # Optional
+
+        # Validate dimensions
+        if not all(key in dimensions for key in ['length', 'width', 'height']):
+            return jsonify({'error': 'Invalid dimensions provided'}), 400
+
+        # Calculate area and perimeter
+        area = 0
+        perimeter = 0
+        if surface_type == 'wall':
+            if wall in ['north', 'south']:
+                area = dimensions['width'] * dimensions['height']
+                perimeter = 2 * (dimensions['width'] + dimensions['height'])
+            elif wall in ['east', 'west']:
+                area = dimensions['length'] * dimensions['height']
+                perimeter = 2 * (dimensions['length'] + dimensions['height'])
+        elif surface_type in ['ceiling', 'floor']:
+            area = dimensions['length'] * dimensions['width']
+            perimeter = 2 * (dimensions['length'] + dimensions['width'])
+
+        if not area or area <= 0:
+            return jsonify({'error': 'Invalid area calculation'}), 400
+
+        # Get solution data from database
+        solution = db.solutions.find_one({'name': solution_name})
+        if not solution:
+            logger.error(f"Could not find solution: {solution_name}")
+            return jsonify({'error': 'Solution not found'}), 404
+
         # Calculate costs for each material
-        costs = []
-        total = 0
-        
-        for material in materials:
-            quantity = math.ceil(area / float(material.get('coverage', 1)))
-            cost = quantity * material['cost']
-            costs.append({
-                'name': material['name'],
-                'quantity': quantity,
-                'rate': material['cost'],
-                'total_cost': cost
-            })
-            total += cost
+        total_cost = 0
+        materials_costs = []
 
-        # Add labor cost (1 unit per 10m²)
-        labor_units = math.ceil(area / 10)
-        labor_rate = 40  # Default labor rate
-        labor_cost = labor_units * labor_rate
-        costs.append({
+        for material in solution['materials']:
+            coverage = float(material['coverage'])
+            needs_wastage = material['name'] in [
+                'Premium Acoustic Panel',
+                'Dampening Material',
+                '12.5mm Sound Plasterboard',
+                'SP15 Soundboard',
+                'Rockwool RWA45 50mm',
+                'Rockwool RW3 100mm'
+            ]
+            is_perimeter_based = material['name'] in [
+                'Acoustic Sealant',
+                'Acoustic Mastic'
+            ]
+
+            if is_perimeter_based:
+                amount = math.ceil(perimeter / coverage)
+            else:
+                calc_area = area * 1.1 if needs_wastage else area
+                amount = math.ceil(calc_area / coverage)
+
+            cost = amount * material['cost']
+            total_cost += cost
+
+            materials_costs.append({
+                'name': material['name'],
+                'amount': amount,
+                'unit': material['unit'],
+                'cost': cost
+            })
+
+        # Add labor cost
+        labor_units = math.ceil(area / 10)  # 1 unit per 10m²
+        labor_cost = labor_units * solution['labor_rate']
+        total_cost += labor_cost
+
+        materials_costs.append({
             'name': 'Installation Labor',
-            'quantity': labor_units,
-            'rate': labor_rate,
-            'total_cost': labor_cost
+            'amount': labor_units,
+            'unit': 'hours',
+            'cost': labor_cost
         })
-        total += labor_cost
 
         return jsonify({
-            'costs': costs,
-            'total': total
+            'costs': materials_costs,
+            'total': total_cost,
+            'area': area,
+            'perimeter': perimeter
         })
 
     except Exception as e:
-        logger.error(f"Error calculating costs: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+        logger.error(f'Error calculating costs: {str(e)}')
+        return jsonify({'error': 'Internal server error'}), 500
 
 
 if __name__ == '__main__':
