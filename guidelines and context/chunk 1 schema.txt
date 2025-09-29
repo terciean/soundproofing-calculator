@@ -1,0 +1,11 @@
+Chunk 4F: Schemas
+Files:
+material_properties_schema.py
+solution_schema.py
+solutions/schemas/material_schema.py
+solutions/schemas/solution_schema.py
+Summaries:
+material_properties_schema.py: Defines Pydantic models for material acoustic properties. Key elements: AbsorptionProperties, MaterialProperties, MaterialPropertiesCollection. Data flow: Raw data → Pydantic validation → structured objects. Dependencies: typing, pydantic. Issues: Optional STC fields; fixed absorption bands; no unit specs.
+solution_schema.py: Defines Pydantic model for soundproofing solutions. Key elements: Material, Solution. Data flow: MongoDB/user data → Pydantic validation → structured solution objects. Dependencies: typing, pydantic. Issues: coverage as string; minimal fields; optional total_cost.
+solutions/schemas/material_schema.py: Defines dataclass for detailed material attributes. Key elements: Material (name, type, density, etc.). Data flow: Input data → dataclass instantiation → structured objects. Dependencies: dataclasses, typing. Issues: Many optional fields; no validation; complex scope.
+solutions/schemas/solution_schema.py: Defines dataclasses for solution characteristics and details. Key elements: SolutionCharacteristics, Solution. Data flow: Input data → dataclass instantiation → structured objects. Dependencies: dataclasses, typing, .material_schema. Issues: No validation; inconsistent frequency formats; optional fields.

@@ -1,0 +1,13 @@
+Chunk 3: Backend - Static Data
+Files:
+constants.py
+solution_constants.py
+solution_mapping.py
+solution_mapping_new.py
+solution_profiles.py
+Summaries:
+constants.py: Defines static noise profiles for soundproofing calcs. Key elements: NOISE_PROFILES (dict with typical_frequency, is_impact, typical_intensity, description). Data flow: Static data → imported by calcs/UI. Dependencies: None explicit. Issues: Hardcoded; ambiguous intensity scale; no validation.
+solution_constants.py: Stores static solution catalogs, mappings, noise profiles. Key elements: SOLUTION_CATALOG, SOLUTION_MAPPINGS, NOISE_PROFILES, get_display_name(), get_solution_description(). Data flow: Static data → recs/mappings. Dependencies: typing, json. Issues: Risks duplication with MongoDB.
+solution_mapping.py: Basic static mapping of frontend to DB names. Key elements: SOLUTION_MAP, get_db_name(). Data flow: Frontend input → DB name. Dependencies: None. Issues: Legacy, simpler than solution_mapping_new.py.
+solution_mapping_new.py: Advanced mapping with MongoDB retrieval and calculator instantiation. Key elements: SOLUTION_TYPES, DB_TO_CODE, CODE_TO_DB, SOLUTION_NAME_MAPPING, get_solutions(), get_calculator(). Data flow: Frontend → MongoDB/fallbacks → calculators. Dependencies: logging, db_init.py, solution modules. Issues: Overlaps with solutions.py.
+solution_profiles.py: Defines static acoustic and noise profiles with caching. Key elements: SolutionProfile, AcousticProperties, SOLUTION_PROFILES, NOISE_PROFILES, get_compatible_solutions(). Data flow: Noise input → profile matching → recs. Dependencies: flask, typing, dataclasses, functools. Issues: Overlaps with solution_constants.py.

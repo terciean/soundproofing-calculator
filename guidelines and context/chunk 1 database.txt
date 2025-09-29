@@ -1,0 +1,9 @@
+Chunk 2: Backend - Database
+Files:
+db_init.py
+database.py
+
+Summaries:
+db_init.py: Initializes MongoDB connections with retry logic and application integration. Key elements: get_db(), init_app(), close_connection(). Data flow: Environment variables → MongoDB connection → DB instance with auto-reconnect. Dependencies: pymongo, logging, os, time, flask.cli. Features: Connection pooling, retry mechanism with exponential backoff, Flask application context integration, and connection health checks.
+
+database.py: Manages MongoDB data access with caching and error resilience. Key elements: get_solution_data(), get_solution(), get_solution_names(), get_solution_id_from_display_name(), get_collection_names(), get_materials(). Data flow: Query parameters → cache check → MongoDB queries → validated data → output. Dependencies: os, logging, time, typing, functools, pymongo, bson.json_util, cache_manager, db_init, logger. Features: Comprehensive error handling, cache prioritization, collection-specific queries, and automatic reconnection on failure.

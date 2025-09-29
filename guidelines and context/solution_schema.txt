@@ -1,0 +1,52 @@
+Solution Schema Documentation
+
+MongoDB Solution Document Structure:
+{
+    "_id": ObjectId,
+    "solution": String,          // Display name of the solution (e.g., "Independent Wall (Standard)")
+    "surface_type": String,      // Type of surface ("walls", "ceilings", "floors")
+    "materials": [               // Array of required materials
+        {
+            "name": String,      // Material name (e.g., "Metal Frame Work")
+            "cost": Number,      // Cost per unit
+            "coverage": String   // Coverage per unit (e.g., "1" for per unit, "8.64" for per square meter)
+        }
+    ],
+    "total_cost": Number,        // Total cost for the solution
+    "notes": [String]           // Additional notes about the solution
+}
+
+Example:
+{
+    "_id": ObjectId("671baf8ec10b2e4a14c90e39"),
+    "solution": "Independent Wall (Standard)",
+    "surface_type": "walls",
+    "materials": [
+        {
+            "name": "Metal Frame Work",
+            "cost": 12.65,
+            "coverage": "1"
+        },
+        {
+            "name": "Rockwool RWA45 50mm",
+            "cost": 50.2,
+            "coverage": "8.64"
+        }
+        // ... other materials
+    ],
+    "total_cost": 241.2,
+    "notes": ["Two layers of 12.5mm Sound Plasterboard."]
+}
+
+Key Points:
+1. All costs are stored as numbers (Double or Int)
+2. Coverage values are strings to support various units
+3. Surface types are standardized: "walls", "ceilings", "floors"
+4. Notes array provides implementation details
+5. Total cost represents the base cost for a standard installation
+
+Usage in Frontend:
+- Solutions are loaded via solution-profiles.js
+- Cost calculations use the coverage values to determine quantities
+- Surface type is used for filtering and categorization
+- Notes are displayed in the UI for implementation guidance 

@@ -1,8 +1,10 @@
+
+
 import os
-from dotenv import load_dotenv
-from pymongo import MongoClient
+from pathlib import Path
+from dotenv import load_dotenv 
 import logging
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory, session, redirect, url_for
 from flask_cors import CORS
 import sys
 from flask_wtf.csrf import CSRFProtect
@@ -13,896 +15,665 @@ import certifi
 import dns.resolver
 import time
 import math
-from solutions.database import get_db
+from dataclasses import dataclass
+from typing import Optional, List, Dict, Any
+from bson import json_util
+
+from solutions.logger import get_logger
+from solutions.base_solution import BaseSolution
+from solutions.cost_calculator import calculate_solution_costs, calculate_material_cost
+from solutions.material_properties import get_material_characteristics, get_material_properties
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from solutions.config import SOLUTION_MAPPINGS, SOLUTION_DESCRIPTIONS, SOLUTION_CATALOG, NOISE_PROFILES, SOLUTION_VARIANT_MONGO_IDS
+from solutions.solution_mapping_new import SolutionMapping
+from functools import lru_cache
+from flask_caching import Cache
+from solutions.acoustic_calculator import get_acoustic_calculator
+import requests
+from solutions.cache_manager import get_cache_manager
+
+from solutions.walls import get_genie_clip_wall, get_m20_wall, get_independent_wall, get_resilient_bar_wall
+from solutions.ceilings import get_genie_clip_ceiling, get_independent_ceiling, get_resilient_bar_ceiling
+from solutions.walls.GenieClipWall import load_genieclipwall_solutions
+from solutions.walls.M20Wall import load_m20wall_solutions
+from solutions.walls.Independentwall import load_independentwall_solutions
+from solutions.walls.resilientbarwall import load_resilientbarwall_solutions
+from solutions.ceilings.genieclipceiling import load_genieclipceiling_solutions
+from solutions.ceilings.lb3genieclipceiling import load_lb3genieclipceiling_solutions
+from solutions.ceilings.independentceiling import load_independentceiling_solutions
+from solutions.ceilings.resilientbarceiling import load_resilientbarceiling_solutions
+
+import traceback
+import uuid
 import re
+from datetime import datetime, timedelta
 
-# Add debug logging for imports
-print("Starting imports...")
-try:
-    from solutions.room import Room
-    from solutions.walls.M20Wall import M20WallStandard, M20WallSP15
-    from solutions.walls.GenieClipWall import GenieClipWallStandard, GenieClipWallSP15
-    from solutions.walls.resilientbarwall import ResilientBarWallStandard, ResilientBarWallSP15
-    from solutions.walls.Independentwall import IndependentWallStandard, IndependentWallSP15
-    from solutions.ceilings.resilientbarceiling import (
-        ResilientBarCeilingStandard,
-        ResilientBarCeilingSP15
-    )
-    print("All imports successful")
-except Exception as e:
-    print(f"Import failed: {str(e)}")
-    sys.exit(1)
+from solutions.solutions import get_solutions_manager
+from solutions.recommendation_engine import rank_solutions, RoomInputs, NoiseProfile
+from solutions.database import get_all_materials_from_db, get_solution_by_id
 
-# Initialize logging
-logger = logging.getLogger(__name__)
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler('app.log')
-    ]
-)
+# Add before Flask app initialization
+@dataclass
+class NoiseData:
+    type: str
+    intensity: int
+    direction: List[str]
+    time: Optional[List[str]] = None
 
-# Load environment variables
+# Initialize Flask app first
+app = Flask(__name__, static_folder='static')
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-key-please-change-in-production')
+app.config['DEBUG'] = True
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+
+# Initialize cache manager first
+app.logger.info("Initializing cache manager...")
+from solutions.cache_manager import CacheManager
+cache_manager = get_cache_manager()
+if cache_manager is None:
+    app.logger.error("Cache manager initialization failed")
+else:
+    app.logger.info("Cache manager initialized successfully")
+
+# Initialize solutions manager after cache manager
+app.logger.info("Initializing solutions manager...")
+solutions_manager = get_solutions_manager()
+if solutions_manager is None:
+    app.logger.error("Solutions manager initialization failed, will retry on first request")
+else:
+    app.logger.info("Solutions manager initialized successfully with cached solutions")
+
+def ensure_solutions_manager():
+    """Ensure solutions manager is initialized with proper caching"""
+    global solutions_manager, cache_manager
+    
+    # Ensure cache manager is initialized first
+    if cache_manager is None:
+        app.logger.info("Attempting to initialize cache manager...")
+        cache_manager = get_cache_manager()
+        if cache_manager:
+            app.logger.info("Cache manager initialized successfully")
+        else:
+            app.logger.error("Cache manager initialization failed")
+    
+    # Then initialize solutions manager
+    if solutions_manager is None:
+        app.logger.info("Attempting to initialize solutions manager...")
+        solutions_manager = get_solutions_manager()
+        if solutions_manager:
+            app.logger.info("Solutions manager initialized successfully")
+        else:
+            app.logger.error("Solutions manager initialization failed")
+    
+    return solutions_manager is not None
+
+# Load environment variables before any other imports
 load_dotenv()
 
-def setup_mongodb():
-    try:
-        # Load the MongoDB URI from the environment
-        mongodb_uri = os.getenv('MONGODB_URI')
-        if not mongodb_uri:
-            logger.error("MONGODB_URI environment variable not set")
-            return setup_fallback_data()
+# Initialize logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-        # Configure MongoDB client with enhanced settings
-        client_settings = {
-            'tlsCAFile': certifi.where(),
-            'serverSelectionTimeoutMS': 10000,
-            'connectTimeoutMS': 10000,
-            'socketTimeoutMS': 20000,
-            'retryWrites': True,
-            'retryReads': True,
-            'maxPoolSize': 50,
-            'minPoolSize': 10,
-            'maxIdleTimeMS': 45000,
-            'waitQueueTimeoutMS': 10000,
-            'heartbeatFrequencyMS': 10000
-        }
+# Create a file handler for detailed solution logging
+solution_file_handler = logging.FileHandler('solution_data.log')
+solution_file_handler.setLevel(logging.INFO)
+solution_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+solution_file_handler.setFormatter(solution_formatter)
 
-        # Initialize client with retry logic
-        max_retries = 3
-        retry_delay = 2  # seconds
-        
-        for attempt in range(max_retries):
-            try:
-                client = MongoClient(mongodb_uri, **client_settings)
-                # Test connection
-                client.admin.command('ping')
-                logger.info("Successfully connected to MongoDB")
-                
-                # Initialize database and collections
-                db = client.guyrazor
-                wallsolutions = db.wallsolutions
-                ceilingsolutions = db.ceilingsolutions
-                
-                # Verify collections exist and are accessible
-                if wallsolutions.count_documents({}) >= 0 and ceilingsolutions.count_documents({}) >= 0:
-                    logger.info("Successfully verified collections access")
-                    return client, db, wallsolutions, ceilingsolutions
-                else:
-                    raise Exception("Could not verify collections")
-                    
-            except Exception as e:
-                if attempt < max_retries - 1:
-                    logger.warning(f"MongoDB connection attempt {attempt + 1} failed: {str(e)}")
-                    time.sleep(retry_delay * (attempt + 1))  # Exponential backoff
-                else:
-                    logger.error(f"All MongoDB connection attempts failed: {str(e)}")
-                    return setup_fallback_data()
+# Add a filter to only log solution data messages
+class SolutionDataFilter(logging.Filter):
+    def filter(self, record):
+        return '[SOLUTION DATA]' in record.getMessage() or '[DATA SOURCE]' in record.getMessage()
 
-    except Exception as e:
-        logger.error(f"Critical error in MongoDB setup: {str(e)}")
-        return setup_fallback_data()
+solution_file_handler.addFilter(SolutionDataFilter())
+
+# Add the handler to the root logger to capture all solution data logs
+logging.getLogger().addHandler(solution_file_handler)
+
+# Regular file handler for app logs
+file_handler = logging.FileHandler('app.log')
+file_handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 
-def setup_fallback_data():
-    """Provide fallback data when MongoDB is unavailable"""
-    logger.info("Using fallback data")
-    
-    class FallbackDB:
-        def __init__(self):
-            self.wallsolutions = FallbackCollection([
-                {"name": "Basic Wall", "type": "wall", "nrc": 0.05},
-                {"name": "Standard Drywall", "type": "wall", "nrc": 0.1}
-            ])
-            self.ceilingsolutions = FallbackCollection([
-                {"name": "Basic Ceiling", "type": "ceiling", "nrc": 0.05},
-                {"name": "Standard Ceiling", "type": "ceiling", "nrc": 0.1}
-            ])
 
-    class FallbackCollection:
-        def __init__(self, data):
-            self.data = data
+# Initialize CORS properly
+CORS(app, resources={r"/*": {"origins": "*"}})
 
-        def find(self, query=None):
-            return self.data
+# Initialize CSRF protection
+csrf = CSRFProtect(app)
+csrf.exempt(r"/api/*")
+csrf.exempt(r"/recommendations")
+csrf.exempt(r"/get_solutions/*")
 
-        def find_one(self, query=None):
-            return self.data[0] if self.data else None
+# App version
+APP_VERSION = '1.0.0'
 
-        def count_documents(self, query=None):
-            return len(self.data)
-
-    db = FallbackDB()
-    return None, db, db.wallsolutions, db.ceilingsolutions
-
-# Initialize MongoDB and Flask
+# Configure cache with Redis if available, otherwise use SimpleCache
 try:
-    client, db, wallsolutions, ceilingsolutions = setup_mongodb()
-    app = Flask(__name__)
-    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max-limit
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-secret-key')
-    csrf = CSRFProtect()
-    csrf.init_app(app)
-    limiter = Limiter(
-        get_remote_address,
-        app=app,
-        default_limits=["200 per day", "50 per hour"]
-    )
-    CORS(app)
-except Exception as e:
-    logger.error(f"Failed to initialize MongoDB: {e}")
-    sys.exit(1)
-
-# Import solution classes
-try:
-    # Wall solutions
-    from solutions.walls.Independentwall import IndependentWallStandard, IndependentWallSP15
-    from solutions.walls.resilientbarwall import ResilientBarWallStandard, ResilientBarWallSP15
-    from solutions.walls.GenieClipWall import GenieClipWallStandard, GenieClipWallSP15
-    from solutions.walls.M20Wall import M20WallStandard, M20WallSP15
-    
-    # Ceiling solutions
-    from solutions.ceilings.independentceiling import IndependentCeilingStandard, IndependentCeilingSP15
-    from solutions.ceilings.genieclipceiling import GenieClipCeilingStandard, GenieClipCeilingSP15
-    from solutions.ceilings.lb3genieclipceiling import LB3GenieClipCeilingStandard, LB3GenieClipCeilingSP15
-    from solutions.ceilings.resilientbarceiling import ResilientBarCeilingStandard, ResilientBarCeilingSP15
-    
-    logger.info("Successfully imported solution classes")
-except ImportError as e:
-    logger.error(f"Import Error: {e}")
-    sys.exit(1)
-
-# Dictionary mapping solution names to calculator classes
-CALCULATORS = {
-    "Independent Wall (Standard)": IndependentWallStandard,
-    "Independent Wall (SP15 Soundboard Upgrade)": IndependentWallSP15,
-    "Resilient bar wall (Standard)": ResilientBarWallStandard,
-    "Resilient bar wall (SP15 Soundboard Upgrade)": ResilientBarWallSP15,
-    "Genie Clip wall (Standard)": GenieClipWallStandard,
-    "Genie Clip wall (SP15 Soundboard Upgrade)": GenieClipWallSP15,
-    "M20 Solution (Standard)": M20WallStandard,
-    "M20 Solution (SP15 Soundboard upgrade)": M20WallSP15,
-    "Independent Ceiling": IndependentCeilingStandard,
-    "Independent Ceiling (SP15 Soundboard Upgrade)": IndependentCeilingSP15,
-    "Genie Clip ceiling": GenieClipCeilingStandard,
-    "Genie Clip ceiling (SP15 Soundboard Upgrade)": GenieClipCeilingSP15,
-    "LB3 Genie Clip": LB3GenieClipCeilingStandard,
-    "LB3 Genie Clip (SP15 Soundboard Upgrade)": LB3GenieClipCeilingSP15,
-    "Resilient bar Ceiling": ResilientBarCeilingStandard,
-    "Resilient bar Ceiling (SP15 Soundboard Upgrade)": ResilientBarCeilingSP15
-}
-
-SOLUTION_TYPES = {
-    'walls': [
-        'Independent Wall Standard',
-        'Independent Wall SP15',
-        'Resilient Bar Wall Standard',
-        'Resilient Bar Wall SP15',
-        'Genie Clip Wall Standard',
-        'Genie Clip Wall SP15',
-        'M20 Wall Standard',
-        'M20 Wall SP15'
-    ],
-    'ceilings': [
-        'Resilient Bar Ceiling Standard',
-        'Resilient Bar Ceiling SP15',
-        'LB3 Genie Clip Ceiling Standard',
-        'LB3 Genie Clip Ceiling SP15'
-    ]
-}
-
-SURFACE_TYPES = ['walls', 'ceilings']
-
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    try:
-        if request.method == 'POST':
-            if request.is_json:
-                data = request.get_json()
-                wall_features = data.get('wall_features', [])
-                ceiling_features = data.get('ceiling_features', [])
-                floor_features = data.get('floor_features', [])
-                length = float(data.get('length', 0))
-                width = float(data.get('width', 0))
-                height = float(data.get('height', 0))
-            else:
-                # Existing form data handling
-                wall_features = request.form.getlist('wall_features[]')
-                ceiling_features = request.form.getlist('ceiling_features[]')
-                floor_features = request.form.getlist('floor_features[]')
-                length = float(request.form.get('length', 0))
-                width = float(request.form.get('width', 0))
-                height = float(request.form.get('height', 0))
-            
-            # Create room instance
-            room = Room(
-                name="Main Room",
-                length=length,
-                width=width,
-                height=height
-            )
-            
-            # Process blockages if present
-            if 'blockages' in request.form:
-                blockages_data = request.form.getlist('blockages[]')
-                for blockage in blockages_data:
-                    blockage_data = json.loads(blockage)
-                    room.add_blockage(
-                        surface_type=blockage_data['surface_type'],
-                        length=float(blockage_data['length']),
-                        width=float(blockage_data['width']),
-                        position=blockage_data.get('position')
-                    )
-            
-            # Calculate room summary
-            room_summary = room.get_room_summary()
-            
-            return render_template('index.html',
-                                solution_types=SOLUTION_TYPES,
-                                surface_types=SURFACE_TYPES,
-                                room_data=room_summary,
-                                wall_features=wall_features,
-                                ceiling_features=ceiling_features,
-                                floor_features=floor_features)
-        
-        # GET request
-        return render_template('index.html',
-                            solution_types=SOLUTION_TYPES,
-                            surface_types=SURFACE_TYPES)
-                            
-    except Exception as e:
-        logger.error(f"Error in index route: {str(e)}")
-        return render_template('index.html',
-                            error="Server Error",
-                            message=str(e),
-                            solution_types=SOLUTION_TYPES,
-                            surface_types=SURFACE_TYPES)
-@app.route('/get_solutions/<surface_type>', methods=['GET'])
-def get_solutions(surface_type):
-    valid_surface_types = ['walls', 'ceilings', 'floors']
-    if surface_type not in valid_surface_types:
-        return jsonify({'error': f'Invalid surface type: {surface_type}'}), 400
-    
-    try:
-        if surface_type == 'walls':
-            solutions = list(walls.find({}, {'_id': 0}))  # Fetch wall solutions
-        elif surface_type == 'ceilings':
-            solutions = list(ceilings.find({}, {'_id': 0}))  # Fetch ceiling solutions
-        elif surface_type == 'floors':
-            solutions = []  # Add floor logic here if necessary
-        else:
-            solutions = []
-        
-        if not solutions:
-            return jsonify({'error': 'No solutions found'}), 404
-        
-        return jsonify(solutions), 200
-    except Exception as e:
-        logger.error(f"Error fetching solutions for {surface_type}: {str(e)}")
-        return jsonify({'error': str(e), 'error_type': type(e).__name__}), 500
-@app.route('/health')
-def health_check():
-    """Enhanced health check endpoint"""
-    try:
-        # Check MongoDB connection
-        mongo_status = {'status': 'unknown', 'latency_ms': None}
-        if client:
-            start_time = time.time()
-            client.admin.command('ping')
-            latency = (time.time() - start_time) * 1000
-            mongo_status = {
-                'status': 'connected',
-                'latency_ms': round(latency, 2)
-            }
-        else:
-            mongo_status = {'status': 'disconnected'}
-
-        # Check collections
-        collections_status = {
-            'walls': wallsolutions.count_documents({}) if wallsolutions else 0,
-            'ceilings': ceilingsolutions.count_documents({}) if ceilingsolutions else 0
-        }
-
-        # Memory usage (if psutil is available)
-        memory_status = {}
-        try:
-            import psutil
-            process = psutil.Process()
-            memory_status = {
-                'memory_percent': round(process.memory_percent(), 2),
-                'memory_mb': round(process.memory_info().rss / 1024 / 1024, 2)
-            }
-        except ImportError:
-            memory_status = {'error': 'psutil not available'}
-
-        return jsonify({
-            'status': 'healthy' if mongo_status['status'] == 'connected' else 'degraded',
-            'timestamp': time.time(),
-            'mongo': mongo_status,
-            'collections': collections_status,
-            'memory': memory_status
-        }), 200 if mongo_status['status'] == 'connected' else 503
-
-    except Exception as e:
-        logger.error(f"Health check failed: {str(e)}")
-        return jsonify({
-            'status': 'unhealthy',
-            'error': str(e),
-            'timestamp': time.time()
-        }), 500
-
-@app.route('/debug_solutions')
-def debug_solutions():
-    try:
-        # Test direct MongoDB access
-        wall_count = wallsolutions.count_documents({})
-        ceiling_count = ceilingsolutions.count_documents({})
-        logger.info(f"Wall solutions count: {wall_count}")
-        logger.info(f"Ceiling solutions count: {ceiling_count}")
-
-        # Get raw documents without any filtering
-        wall_sols = list(wallsolutions.find({}, {'_id': 0}))
-        ceiling_sols = list(ceilingsolutions.find({}, {'_id': 0}))
-        
-        logger.info(f"Raw wall solutions: {wall_sols}")
-        logger.info(f"Raw ceiling solutions: {ceiling_sols}")
-
-        return jsonify({
-            'database_counts': {
-                'walls': wall_count,
-                'ceilings': ceiling_count
-            },
-            'raw_data': {
-                'wall_solutions': wall_sols,
-                'ceiling_solutions': ceiling_sols
-            },
-            'calculators': list(CALCULATORS.keys())
+    redis_url = os.getenv('REDIS_URL')
+    if redis_url:
+        cache = Cache(app, config={
+            'CACHE_TYPE': 'redis',
+            'CACHE_REDIS_URL': redis_url,
+            'CACHE_DEFAULT_TIMEOUT': 300
         })
-    except Exception as e:
-        logger.error(f"Debug route error: {str(e)}")
-        return jsonify({'error': str(e), 'error_type': type(e).__name__}), 500
+        logger.info("Using Redis for caching")
+    else:
+        cache = Cache(app, config={
+            'CACHE_TYPE': 'SimpleCache',
+            'CACHE_DEFAULT_TIMEOUT': 300
+        })
+        logger.info("Using SimpleCache for caching")
+except Exception as e:
+    logger.warning(f"Failed to initialize Redis cache, falling back to SimpleCache: {e}")
+    cache = Cache(app, config={
+        'CACHE_TYPE': 'SimpleCache',
+        'CACHE_DEFAULT_TIMEOUT': 300
+    })
+    logger.info("Using SimpleCache for caching")
 
-@app.errorhandler(500)
-def handle_500(e):
-    logger.error(f"Server error: {str(e)}")
-    return render_template('index.html', 
-                         error="Server Error",
-                         message="An internal server error occurred.",
-                         solution_types=SOLUTION_TYPES,
-                         surface_types=SURFACE_TYPES)
+# Initialize Flask extensions with Redis storage if available
+limiter = Limiter(
+    app=app,
+    key_func=get_remote_address,
+    storage_uri=os.getenv('REDIS_URL', 'memory://'),
+    default_limits=["200 per day", "50 per hour"]
+)
 
-@app.errorhandler(404)
-def handle_404(e):
-    return render_template('index.html',
-                         error="Not Found",
-                         message="The requested page was not found.",
-                         solution_types=SOLUTION_TYPES,
-                         surface_types=SURFACE_TYPES)
-
-@app.route('/room/<room_id>', methods=['GET', 'POST'])
-def room_details(room_id):
-    try:
-        if request.method == 'POST':
-            data = request.get_json()
+def initialize_all_solutions_with_debug():
+    """Initialize all solutions from MongoDB and register them with the solutions manager."""
+    logger.info("Loading and caching all wall and ceiling solutions with debug info...")
+    debug_results = []
+    
+    # Get solutions manager and cache manager
+    solutions_manager = get_solutions_manager()
+    cache_manager = get_cache_manager()
+    
+    if not solutions_manager or not cache_manager:
+        logger.error("Failed to get solutions manager or cache manager")
+        return debug_results
+    
+    # Define solution loaders with their MongoDB document IDs
+    solution_loaders = {
+        'walls': [
+            (load_genieclipwall_solutions, 'GenieClipWall'),
+            (load_m20wall_solutions, 'M20Wall'),
+            (load_independentwall_solutions, 'IndependentWall'),
+            (load_resilientbarwall_solutions, 'ResilientBarWall'),
+        ],
+        'ceilings': [
+            (load_genieclipceiling_solutions, 'GenieClipCeiling'),
+            (load_lb3genieclipceiling_solutions, 'LB3GenieClipCeiling'),
+            (load_independentceiling_solutions, 'IndependentCeiling'),
+            (load_resilientbarceiling_solutions, 'ResilientBarCeiling'),
+        ]
+    }
+    
+    # Load solutions by surface type
+    for surface_type, loaders in solution_loaders.items():
+        surface_solutions = []
+        
+        for loader, name in loaders:
+            try:
+                std, pro = loader()
+                std_loaded = std is not None and getattr(std, '_solution_data', None) is not None
+                pro_loaded = pro is not None and getattr(pro, '_solution_data', None) is not None
+                
+                logger.info(f"Loaded {name} Standard: {std_loaded}")
+                logger.info(f"Loaded {name} SP15: {pro_loaded}")
+                
+                debug_results.append({f'{name}_Standard': std_loaded})
+                debug_results.append({f'{name}_SP15': pro_loaded})
+                
+                # Register solutions with solutions manager if they have data
+                if std_loaded and std:
+                    solution_id = f"{name.lower()}_standard"
+                    solutions_manager.register_solution_with_characteristics(solution_id, std)
+                    surface_solutions.append(std)
+                    logger.info(f"Registered {solution_id} with solutions manager")
+                
+                if pro_loaded and pro:
+                    solution_id = f"{name.lower()}_sp15"
+                    solutions_manager.register_solution_with_characteristics(solution_id, pro)
+                    surface_solutions.append(pro)
+                    logger.info(f"Registered {solution_id} with solutions manager")
+                
+            except Exception as e:
+                logger.error(f"Error loading {name} solutions: {e}")
+                debug_results.append({f'{name}_error': str(e)})
+        
+        # Cache solutions by surface type
+        if surface_solutions:
+            # Convert solutions to serializable format for caching
+            serializable_solutions = []
+            logger.info(f"[DEBUG] Processing {len(surface_solutions)} {surface_type} solutions for serialization")
+            for solution in surface_solutions:
+                try:
+                    if hasattr(solution, 'get_characteristics'):
+                        characteristics = solution.get_characteristics()
+                        logger.info(f"[DEBUG] Solution {getattr(solution, 'CODE_NAME', 'Unknown')} characteristics: {len(characteristics) if characteristics else 0} items")
+                        if characteristics:
+                            # Add solution identifier
+                            characteristics['solution_id'] = getattr(solution, 'CODE_NAME', 'Unknown')
+                            characteristics['surface_type'] = surface_type
+                            characteristics['variant'] = 'SP15' if hasattr(solution, 'IS_SP15') and solution.IS_SP15 else 'Standard'
+                            serializable_solutions.append(characteristics)
+                            logger.info(f"[DEBUG] Added solution {getattr(solution, 'CODE_NAME', 'Unknown')} to serializable list")
+                        else:
+                            logger.warning(f"[DEBUG] Solution {getattr(solution, 'CODE_NAME', 'Unknown')} returned empty characteristics")
+                    else:
+                        logger.warning(f"[DEBUG] Solution {getattr(solution, 'CODE_NAME', 'Unknown')} has no get_characteristics method")
+                except Exception as e:
+                    logger.error(f"Error serializing solution {getattr(solution, 'CODE_NAME', 'Unknown')}: {e}")
             
-            # Create or update room
-            room = Room(
-                name=data.get('name', f'Room {room_id}'),
-                length=float(data.get('length', 0)),
-                width=float(data.get('width', 0)),
-                height=float(data.get('height', 0))
-            )
+            logger.info(f"[DEBUG] Created {len(serializable_solutions)} serializable solutions for {surface_type}")
             
-            # Handle blockages if present
-            if 'blockages' in data:
-                for blockage in data['blockages']:
-                    room.add_blockage(
-                        surface_type=blockage['surface_type'],
-                        length=float(blockage['length']),
-                        width=float(blockage['width']),
-                        position=blockage.get('position')
-                    )
+            # Cache solutions by surface type
+            cache_key = f"{surface_type.rstrip('s')}_solutions"  # Use singular form
+            cache_manager.set(cache_key, serializable_solutions, 3600)
+            logger.info(f"Cached {len(serializable_solutions)} {surface_type} solutions for recommendation engine")
             
-            # Calculate room summary
-            summary = room.get_room_summary()
-            return jsonify(summary)
+            # Debug: Check what's actually in the cache
+            cached_data = cache_manager.get(cache_key)
+            logger.info(f"[DEBUG] Cache key '{cache_key}' contains {len(cached_data) if cached_data else 0} items")
+            if cached_data:
+                logger.info(f"[DEBUG] First cached solution: {cached_data[0] if len(cached_data) > 0 else 'None'}")
             
+            # Also cache individual solutions for backward compatibility
+            for solution in surface_solutions:
+                try:
+                    cache_key = f"{getattr(solution, 'CODE_NAME', 'Unknown').lower().replace(' ', '').replace('(', '').replace(')', '')}_{'sp15' if hasattr(solution, 'IS_SP15') and solution.IS_SP15 else 'standard'}"
+                    cache_manager.set(cache_key, solution, 3600)
+                except Exception as e:
+                    logger.error(f"Error caching individual solution: {e}")
         else:
-            # GET request - return room template or data
-            return jsonify({
-                'status': 'success',
-                'message': 'Room details endpoint ready'
-            })
-            
-    except Exception as e:
-        logger.error(f"Room details error: {str(e)}")
-        return jsonify({
-            'error': str(e),
-            'error_type': type(e).__name__
-        }), 500
+            logger.warning(f"[DEBUG] No {surface_type} solutions to cache")
+    
+    logger.info(f"Solution loading debug summary: {debug_results}")
+    logger.info(f"Total solutions registered with manager: {len(solutions_manager.get_all_solutions())}")
+    
+    return debug_results
 
-@app.route('/update_room', methods=['POST'])
-def update_room():
+# Call this at startup
+initialize_all_solutions_with_debug()
+
+@app.route('/api/solutions', methods=['GET'])
+def get_all_solutions():
+    """Get all wall and ceiling solutions from the cache, with debug info."""
     try:
-        data = request.get_json()
-        if not data:
-            return jsonify({'error': 'No data provided'}), 400
-
-        # Extract and validate dimensions
-        dimensions = data.get('dimensions', {})
-        try:
-            dimensions = {
-                'length': float(dimensions.get('length', 0)),
-                'width': float(dimensions.get('width', 0)),
-                'height': float(dimensions.get('height', 0))
-            }
-        except (TypeError, ValueError):
-            return jsonify({'error': 'Invalid dimension values'}), 400
-
-        # Validate dimensions
-        if any(d <= 0 for d in dimensions.values()):
-            return jsonify({'error': 'All dimensions must be positive numbers'}), 400
-
-        # Create room instance
-        room = Room(name="Room", **dimensions)
-
-        # Handle surfaces
-        if 'surfaces' in data:
-            surfaces = data['surfaces']
-            
-            # Process ceiling
-            if 'ceiling' in surfaces:
-                ceiling = surfaces['ceiling']
-                for feature in ceiling.get('features', []):
-                    room.add_ceiling_feature(feature)
-
-            # Process floor
-            if 'floor' in surfaces:
-                floor = surfaces['floor']
-                for feature in floor.get('features', []):
-                    room.add_floor_feature(feature)
-
-        return jsonify(room.get_room_summary())
-
+        cache_manager = get_cache_manager()
+        wall_keys = [
+            'genieclipwall_standard', 'genieclipwall_sp15',
+            'm20wall_standard', 'm20wall_sp15',
+            'independentwall_standard', 'independentwall_sp15',
+            'resilientbarwall_standard', 'resilientbarwall_sp15',
+        ]
+        ceiling_keys = [
+            'genieclipceiling_standard', 'genieclipceiling_sp15',
+            'lb3genieclipceiling_standard', 'lb3genieclipceiling_sp15',
+            'independentceiling_standard', 'independentceiling_sp15',
+            'resilientbarceiling_standard', 'resilientbarceiling_sp15',
+        ]
+        all_solutions = []
+        for key in wall_keys + ceiling_keys:
+            sol = cache_manager.get(key)
+            if sol and hasattr(sol, '_solution_data') and sol._solution_data:
+                data = dict(sol._solution_data)
+                data['cache_key'] = key
+                data['variant'] = 'SP15' if 'sp15' in key else 'Standard'
+                all_solutions.append(data)
+            else:
+                logger.warning(f"Solution not found or missing data for cache key: {key}")
+        return jsonify(all_solutions)
     except Exception as e:
-        logger.error(f"Room update error: {str(e)}")
+        logger.error(f"Error getting all solutions: {e}")
         return jsonify({'error': str(e)}), 500
 
-def get_solutions_from_db(surface_type):
-    if surface_type == 'walls':
-        return list(walls.find({}, {'_id': 0}))  # Adjust according to your MongoDB collection
-    elif surface_type == 'ceilings':
-        return list(ceilings.find({}, {'_id': 0}))
-    elif surface_type == 'floors':
-        return list(floors.find({}, {'_id': 0}))
-    return []
-
-@app.route('/api/generate-quote', methods=['POST'])
-def generate_quote():
+@app.route('/api/materials', methods=['GET'])
+def get_all_materials():
+    """Get all materials from the MongoDB database."""
     try:
-        data = request.get_json()
-        
-        # Extract data
-        dimensions = data.get('dimensions', {})
-        noise_data = data.get('noiseData', {})
-        blockages = data.get('blockages', {})
-        room_type = data.get('roomType')
-
-        # Validate required data
-        if not all([dimensions.get(d) for d in ['length', 'width', 'height']]):
-            return jsonify({'error': 'Missing room dimensions'}), 400
-        if not all([noise_data.get(n) for n in ['type', 'intensity', 'direction']]):
-            return jsonify({'error': 'Missing noise data'}), 400
-
-        # Determine solution types based on noise data
-        noise_priority = determine_noise_priority(noise_data)
-        affected_surfaces = get_affected_surfaces(noise_data['direction'])
-        
-        # Generate recommendations
-        recommendations = generate_recommendations(
-            noise_priority=noise_priority,
-            affected_surfaces=affected_surfaces,
-            noise_type=noise_data['type']
-        )
-
-        # Calculate costs for each recommended solution
-        costs = calculate_solution_costs(
-            recommendations=recommendations,
-            dimensions=dimensions,
-            blockages=blockages
-        )
-
-        # Generate implementation details
-        implementation = generate_implementation_details(
-            recommendations=recommendations,
-            dimensions=dimensions,
-            noise_data=noise_data
-        )
-
-        return jsonify({
-            'recommendations': recommendations,
-            'costs': costs,
-            'implementation': implementation
-        })
-
+        materials = get_all_materials_from_db()
+        logger.info(f"[MATERIALS] Found {len(materials)} materials in MongoDB.")
+        if materials:
+            logger.info(f"[MATERIALS] Sample material: {materials[0]}")
+        # Convert materials to frontend format
+        materials_list = []
+        for mat in materials:
+            material = {
+                '_id': str(mat.get('_id', '')),
+                'name': mat.get('name', ''),
+                'category': mat.get('category', 'unknown'),
+                'thickness': mat.get('thickness', 0),
+                'density': mat.get('density', 0),
+                'stc_rating': mat.get('stc_rating', 0),
+                'cost_per_sqm': mat.get('cost', 0)
+            }
+            materials_list.append(material)
+        return jsonify(materials_list)
     except Exception as e:
-        app.logger.error(f"Error generating quote: {str(e)}")
-        return jsonify({'error': 'Failed to generate quote'}), 500
+        logger.error(f"Error getting all materials: {e}")
+        return jsonify([]), 200
 
-def determine_noise_priority(noise_data):
-    """Determine the priority level of noise treatment needed."""
-    priority = 'medium'
-    
-    # High priority cases
-    if (
-        int(noise_data.get('intensity', 3)) >= 4 or  # High/Very High intensity
-        'night' in noise_data.get('time', []) or     # Night-time noise
-        noise_data.get('type') in ['music', 'machinery']  # Specific noise types
-    ):
-        priority = 'high'
-    # Low priority cases
-    elif (
-        int(noise_data.get('intensity', 3)) <= 2 and  # Low/Very Low intensity
-        'night' not in noise_data.get('time', [])     # Not night-time
-    ):
-        priority = 'low'
-    
-    return priority
-
-def get_affected_surfaces(directions):
-    """Determine which surfaces need treatment based on noise directions."""
-    surfaces = {
-        'walls': [],
-        'floor': False,
-        'ceiling': False
-    }
-    
-    for direction in directions:
-        if direction == 'above':
-            surfaces['ceiling'] = True
-        elif direction == 'below':
-            surfaces['floor'] = True
-        elif direction in ['north', 'east', 'south', 'west']:
-            surfaces['walls'].append(direction)
-    
-    return surfaces
-
-def generate_recommendations(noise_priority, affected_surfaces, noise_type):
-    """Generate recommended solutions based on requirements."""
-    solutions = {
-        'wall': {
-            'standard': ['M20WallStandard', 'GenieClipWallStandard', 'ResilientBarWallStandard', 'IndependentWallStandard'],
-            'premium': ['M20WallSP15', 'GenieClipWallSP15', 'ResilientBarWallSP15', 'IndependentWallSP15']
-        },
-        'ceiling': {
-            'standard': ['ResilientBarCeilingStandard'],
-            'premium': ['ResilientBarCeilingSP15']
+@app.route('/api/solutions/<surface_type>', methods=['GET'])
+def get_solutions_api(surface_type):
+    """Get solutions for a specific surface type from the cache manager (standard and SP15)."""
+    try:
+        cache_manager = get_cache_manager()
+        surface_type = surface_type.lower()
+        key_map = {
+            'wall': [
+                'genieclipwall_standard', 'genieclipwall_sp15',
+                'm20wall_standard', 'm20wall_sp15',
+                'independentwall_standard', 'independentwall_sp15',
+                'resilientbarwall_standard', 'resilientbarwall_sp15',
+            ],
+            'ceiling': [
+                'genieclipceiling_standard', 'genieclipceiling_sp15',
+                'lb3genieclipceiling_standard', 'lb3genieclipceiling_sp15',
+                'independentceiling_standard', 'independentceiling_sp15',
+                'resilientbarceiling_standard', 'resilientbarceiling_sp15',
+            ],
         }
-    }
+        keys = key_map.get(surface_type, [])
+        solutions = []
+        for key in keys:
+            sol = cache_manager.get(key)
+            if sol and hasattr(sol, '_solution_data') and sol._solution_data:
+                data = dict(sol._solution_data)
+                data['cache_key'] = key
+                data['variant'] = 'SP15' if 'sp15' in key else 'Standard'
+                solutions.append(data)
+            else:
+                logger.warning(f"Solution not found or missing data for cache key: {key}")
+        return jsonify(solutions)
+    except Exception as e:
+        logger.error(f"Error getting solutions for {surface_type}: {e}")
+        return jsonify({'error': str(e)}), 500
 
-    recommendations = {
-        'primary': {
-            'walls': [],
-            'ceiling': None,
-            'floor': None,
-            'reasoning': []
-        },
-        'alternatives': []
-    }
 
-    # Select solutions based on priority
-    solution_tier = 'premium' if noise_priority == 'high' else 'standard'
-    
-    # Wall solutions
-    if affected_surfaces['walls']:
-        wall_solution = solutions['wall'][solution_tier][0]  # Primary solution
-        recommendations['primary']['walls'] = [
-            {'wall': wall, 'solution': wall_solution}
-            for wall in affected_surfaces['walls']
-        ]
-        recommendations['primary']['reasoning'].append(
-            f"Selected {wall_solution} for {', '.join(affected_surfaces['walls'])} walls based on {noise_priority} priority noise"
-        )
-        
-        # Add alternative wall solutions
-        for alt_solution in solutions['wall'][solution_tier][1:]:
-            recommendations['alternatives'].append({
-                'type': 'wall',
-                'solution': alt_solution,
-                'description': get_solution_description(alt_solution)
-            })
-
-    # Ceiling solution
-    if affected_surfaces['ceiling']:
-        ceiling_solution = solutions['ceiling'][solution_tier][0]
-        recommendations['primary']['ceiling'] = ceiling_solution
-        recommendations['primary']['reasoning'].append(
-            f"Selected {ceiling_solution} for ceiling due to noise from above"
-        )
-
-    # Add noise-specific reasoning
-    recommendations['primary']['reasoning'].append(
-        get_noise_type_reasoning(noise_type)
-    )
-
-    return recommendations
-
-def calculate_solution_costs(recommendations, dimensions, blockages):
-    """Calculate costs for recommended solutions."""
-    costs = {
-        'wall': 0,
-        'floor': 0,
-        'ceiling': 0,
-        'total': 0
-    }
-
-    # Calculate wall costs
-    for wall_rec in recommendations['primary'].get('walls', []):
-        solution_class = get_solution_class(wall_rec['solution'])
-        if solution_class:
-            calculator = solution_class(
-                length=dimensions['length'],
-                height=dimensions['height']
-            )
-            wall_costs = calculator.calculate(get_solution_materials(wall_rec['solution']))
-            if wall_costs:
-                costs['wall'] += sum(item['total_cost'] for item in wall_costs)
-
-    # Calculate ceiling costs
-    ceiling_solution = recommendations['primary'].get('ceiling')
-    if ceiling_solution:
-        solution_class = get_solution_class(ceiling_solution)
-        if solution_class:
-            calculator = solution_class(
-                length=dimensions['length'],
-                height=dimensions['width']  # For ceiling, height is room width
-            )
-            ceiling_costs = calculator.calculate(get_solution_materials(ceiling_solution))
-            if ceiling_costs:
-                costs['ceiling'] = sum(item['total_cost'] for item in ceiling_costs)
-
-    # Calculate total
-    costs['total'] = costs['wall'] + costs['floor'] + costs['ceiling']
-    
-    return costs
-
-def generate_implementation_details(recommendations, dimensions, noise_data):
-    """Generate implementation details for the recommended solutions."""
-    skill_levels = {
-        'M20WallStandard': 'Intermediate',
-        'GenieClipWallStandard': 'Professional',
-        'ResilientBarWallStandard': 'Professional',
-        'IndependentWallStandard': 'Professional',
-        'ResilientBarCeilingStandard': 'Professional'
-    }
-
-    # Get primary solution for skill level
-    primary_solution = (
-        recommendations['primary']['walls'][0]['solution'] 
-        if recommendations['primary']['walls'] 
-        else recommendations['primary'].get('ceiling')
-    )
-
-    # Calculate total area for time estimate
-    wall_area = sum(
-        dimensions['length'] * dimensions['height'] 
-        for _ in recommendations['primary'].get('walls', [])
-    )
-    ceiling_area = (
-        dimensions['length'] * dimensions['width'] 
-        if recommendations['primary'].get('ceiling') 
-        else 0
-    )
-    total_area = wall_area + ceiling_area
-
-    # Estimate installation time (1 day per 20m² plus setup/cleanup)
-    install_days = math.ceil(total_area / 20) + 1
-
-    # Determine special requirements
-    special_reqs = []
-    if int(noise_data.get('intensity', 3)) >= 4:
-        special_reqs.append('Enhanced ventilation during installation')
-    if noise_data.get('type') in ['music', 'machinery']:
-        special_reqs.append('Vibration testing recommended')
-
-    return {
-        'installTime': f"{install_days} days",
-        'skillLevel': skill_levels.get(primary_solution, 'Professional'),
-        'specialRequirements': special_reqs
-    }
-
-def get_solution_class(solution_name):
-    """Get the calculator class for a solution."""
-    solution_classes = {
-        'M20WallStandard': M20WallStandard,
-        'M20WallSP15': M20WallSP15,
-        'GenieClipWallStandard': GenieClipWallStandard,
-        'GenieClipWallSP15': GenieClipWallSP15,
-        'ResilientBarWallStandard': ResilientBarWallStandard,
-        'ResilientBarWallSP15': ResilientBarWallSP15,
-        'IndependentWallStandard': IndependentWallStandard,
-        'IndependentWallSP15': IndependentWallSP15,
-        'ResilientBarCeilingStandard': ResilientBarCeilingStandard,
-        'ResilientBarCeilingSP15': ResilientBarCeilingSP15
-    }
-    return solution_classes.get(solution_name)
-
-def get_solution_materials(solution_name):
-    """Get the list of materials for a solution."""
-    # This would be replaced with actual material data from your database
-    return []  # Placeholder
-
-def get_solution_description(solution):
-    """Get the description for a solution."""
-    descriptions = {
-        'M20WallStandard': 'Standard double-layer solution with excellent cost-effectiveness',
-        'GenieClipWallStandard': 'Premium isolation using specialized clip system',
-        'ResilientBarWallStandard': 'Effective decoupling using resilient bars',
-        'IndependentWallStandard': 'Maximum isolation with independent wall construction',
-        'M20WallSP15': 'Enhanced performance with SP15 sound board',
-        'GenieClipWallSP15': 'Maximum performance clip system with SP15',
-        'ResilientBarWallSP15': 'Enhanced bar system with SP15 upgrade',
-        'IndependentWallSP15': 'Premium independent wall with SP15 enhancement',
-        'ResilientBarCeilingStandard': 'Standard ceiling isolation system',
-        'ResilientBarCeilingSP15': 'Enhanced ceiling system with SP15'
-    }
-    return descriptions.get(solution, 'Custom solution')
-
-def get_noise_type_reasoning(noise_type):
-    """Get the reasoning for a noise type."""
-    reasonings = {
-        'speech': 'Optimized for voice frequency ranges (100Hz-8kHz)',
-        'music': 'Enhanced low frequency treatment for music and bass',
-        'tv': 'Balanced treatment for mixed media frequencies',
-        'traffic': 'Focus on low-mid frequency road noise reduction',
-        'aircraft': 'Enhanced high frequency and impact noise treatment',
-        'footsteps': 'Specialized impact noise reduction',
-        'furniture': 'Impact noise and structural transmission reduction',
-        'machinery': 'Vibration isolation and broadband noise treatment'
-    }
-    return reasonings.get(noise_type, 'General purpose noise reduction')
-
-def get_solution_id_from_display_name(display_name):
-    """Convert display name to solution ID."""
-    name_to_id = {
-        'M20 Solution (Standard)': 'M20WallStandard',
-        'M20 Solution (SP15 Soundboard upgrade)': 'M20WallSP15',
-        'Genie Clip wall (Standard)': 'GenieClipWallStandard',
-        'Genie Clip wall (SP15 Soundboard Upgrade)': 'GenieClipWallSP15',
-        'Independent Wall (Standard)': 'IndependentWallStandard',
-        'Independent Wall (SP15 Soundboard Upgrade)': 'IndependentWallSP15',
-        'Resilient bar wall (Standard)': 'ResilientBarWallStandard',
-        'Resilient bar wall (SP15 Soundboard Upgrade)': 'ResilientBarWallSP15'
-    }
-    return name_to_id.get(display_name)
 
 @app.route('/api/calculate-costs', methods=['POST'])
-def calculate_costs():
+def calculate_costs_api():
+    """Calculate costs for soundproofing solutions."""
     try:
         data = request.get_json()
-        logger.info(f"Received calculate-costs request with data: {data}")
-        
         if not data:
             return jsonify({'error': 'No data provided'}), 400
 
-        required_fields = ['solution', 'dimensions', 'surfaceType']
-        for field in required_fields:
-            if field not in data:
-                return jsonify({'error': f'Missing required field: {field}'}), 400
-
-        solution_name = data['solution']
+        # Validate input data
+        if not data.get('recommendations') or not data.get('dimensions'):
+            return jsonify({'error': 'Missing required fields'}), 400
+            
+        # Check for detailed breakdown flag
+        detailed = data.get('detailed', False)
+            
+        # Get solutions manager
+        solutions_manager = get_solutions_manager()
+        if not solutions_manager:
+            return jsonify({'error': 'Failed to get solutions manager'}), 500
+        
+        # Extract data
+        recommendations = data['recommendations']
         dimensions = data['dimensions']
-        surface_type = data['surfaceType']
-        wall = data.get('wall')  # Optional
-
-        # Validate dimensions
-        if not all(key in dimensions for key in ['length', 'width', 'height']):
-            return jsonify({'error': 'Invalid dimensions provided'}), 400
-
-        # Calculate area and perimeter
-        area = 0
-        perimeter = 0
-        if surface_type == 'wall':
-            if wall in ['north', 'south']:
-                area = dimensions['width'] * dimensions['height']
-                perimeter = 2 * (dimensions['width'] + dimensions['height'])
-            elif wall in ['east', 'west']:
-                area = dimensions['length'] * dimensions['height']
-                perimeter = 2 * (dimensions['length'] + dimensions['height'])
-        elif surface_type in ['ceiling', 'floor']:
-            area = dimensions['length'] * dimensions['width']
-            perimeter = 2 * (dimensions['length'] + dimensions['width'])
-
-        if not area or area <= 0:
-            return jsonify({'error': 'Invalid area calculation'}), 400
-
-        # Get solution data from database
-        solution = db.solutions.find_one({'name': solution_name})
-        if not solution:
-            logger.error(f"Could not find solution: {solution_name}")
-            return jsonify({'error': 'Solution not found'}), 404
-
-        # Calculate costs for each material
-        total_cost = 0
-        materials_costs = []
-
-        for material in solution['materials']:
-            coverage = float(material['coverage'])
-            needs_wastage = material['name'] in [
-                'Premium Acoustic Panel',
-                'Dampening Material',
-                '12.5mm Sound Plasterboard',
-                'SP15 Soundboard',
-                'Rockwool RWA45 50mm',
-                'Rockwool RW3 100mm'
-            ]
-            is_perimeter_based = material['name'] in [
-                'Acoustic Sealant',
-                'Acoustic Mastic'
-            ]
-
-            if is_perimeter_based:
-                amount = math.ceil(perimeter / coverage)
-            else:
-                calc_area = area * 1.1 if needs_wastage else area
-                amount = math.ceil(calc_area / coverage)
-
-            cost = amount * material['cost']
-            total_cost += cost
-
-            materials_costs.append({
-                'name': material['name'],
-                'amount': amount,
-                'unit': material['unit'],
-                'cost': cost
-            })
-
-        # Add labor cost
-        labor_units = math.ceil(area / 10)  # 1 unit per 10m²
-        labor_cost = labor_units * solution['labor_rate']
-        total_cost += labor_cost
-
-        materials_costs.append({
-            'name': 'Installation Labor',
-            'amount': labor_units,
-            'unit': 'hours',
-            'cost': labor_cost
-        })
-
-        return jsonify({
-            'costs': materials_costs,
-            'total': total_cost,
-            'area': area,
-            'perimeter': perimeter
-        })
-
+        selected_directions = data.get('selectedDirections', [])
+        blockages = data.get('blockages', {})
+        region = data.get('region', 'UK')
+        
+        # Calculate costs for each surface type
+        costs = {
+            'wall': 0,
+            'ceiling': 0,
+            'floor': 0,
+            'total': 0
+        }
+        detailed_breakdown = {'wall': [], 'ceiling': [], 'floor': []} if detailed else None
+        
+        # Calculate wall costs
+        if recommendations.get('primary', {}).get('walls'):
+            for wall in recommendations['primary']['walls']:
+                if wall.get('solution') and (not selected_directions or wall.get('direction') in selected_directions):
+                    wall_cost = calculate_material_cost(wall['solution'], dimensions)
+                    costs['wall'] += wall_cost
+                    if detailed:
+                        # Fetch solution and material breakdown
+                        breakdown = get_solution_material_breakdown(wall['solution'], dimensions)
+                        detailed_breakdown['wall'].append(breakdown)
+        
+        # Calculate ceiling cost
+        if recommendations.get('primary', {}).get('ceiling'):
+            ceiling = recommendations['primary']['ceiling']
+            if ceiling.get('solution'):
+                costs['ceiling'] = calculate_material_cost(ceiling['solution'], dimensions)
+                if detailed:
+                    breakdown = get_solution_material_breakdown(ceiling['solution'], dimensions)
+                    detailed_breakdown['ceiling'].append(breakdown)
+        
+        # Calculate floor cost
+        if recommendations.get('primary', {}).get('floor'):
+            floor = recommendations['primary']['floor']
+            if floor.get('solution'):
+                costs['floor'] = calculate_material_cost(floor['solution'], dimensions)
+                if detailed:
+                    breakdown = get_solution_material_breakdown(floor['solution'], dimensions)
+                    detailed_breakdown['floor'].append(breakdown)
+        
+        # Apply regional price factor
+        price_factor = get_regional_price_factor(region)
+        for key in costs:
+            if key != 'total':
+                costs[key] *= price_factor
+        
+        # Calculate total
+        costs['total'] = costs['wall'] + costs['ceiling'] + costs['floor']
+        
+        response = costs
+        if detailed:
+            response = {'costs': costs, 'detailed_breakdown': detailed_breakdown}
+        return jsonify(response)
+        
     except Exception as e:
-        logger.error(f'Error calculating costs: {str(e)}')
-        return jsonify({'error': 'Internal server error'}), 500
+        logger.error(f"Error calculating costs: {e}")
+        return jsonify({'error': str(e)}), 500
 
+def get_regional_price_factor(region):
+    """Get price factor for a region."""
+    price_factors = {
+        'UK': 1.0,
+        'US': 0.9,
+        'Canada': 0.95,
+        'Australia': 1.1,
+        'Europe': 1.05
+    }
+    return price_factors.get(region, 1.0)
+
+@app.route('/api/calculate-acoustic-properties', methods=['POST'])
+def calculate_acoustic_properties():
+    """Calculate acoustic properties for a solution."""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+            
+        # Validate input data
+        if not data.get('solution_id') or not data.get('dimensions'):
+            return jsonify({'error': 'Missing required fields'}), 400
+            
+        # Get acoustic calculator
+        calculator = get_acoustic_calculator()
+        if not calculator:
+            return jsonify({'error': 'Failed to get acoustic calculator'}), 500
+            
+        # Calculate properties
+        properties = calculator.calculate_properties(
+            solution_id=data['solution_id'],
+            dimensions=data['dimensions']
+        )
+        
+        return jsonify(properties)
+        
+    except Exception as e:
+        logger.error(f"Error calculating acoustic properties: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@csrf.exempt
+@app.route('/api/recommendations', methods=['POST'])
+def get_recommendations_flask():
+    """Generate recommendations for soundproofing based on input data."""
+    try:
+        payload = request.get_json()
+        logger.info(f"[DEBUG] Incoming /api/recommendations payload: {payload}")
+        if not isinstance(payload, dict):
+            logger.warning("Invalid payload format: not a dict")
+            return jsonify({'error': 'Invalid payload format.'}), 400
+        # Extract and validate required fields
+        required_fields = [
+            "room_type", "noise_type", "noise_level", "room_dimensions",
+            "surface_areas", "existing_construction", "noise_profile"
+        ]
+        missing_fields = [f for f in required_fields if f not in payload]
+        if missing_fields:
+            logger.warning(f"Missing required fields: {missing_fields}")
+            return jsonify({'error': f"Missing required fields: {missing_fields}"}), 400
+        if not isinstance(payload["noise_profile"], dict):
+            logger.warning("Malformed noise_profile field")
+            return jsonify({'error': 'Malformed noise_profile field.'}), 400
+        # Validate types of other fields
+        if not isinstance(payload["room_dimensions"], dict):
+            logger.warning("Malformed room_dimensions field")
+            return jsonify({'error': 'Malformed room_dimensions field.'}), 400
+        if not isinstance(payload["surface_areas"], dict):
+            logger.warning("Malformed surface_areas field")
+            return jsonify({'error': 'Malformed surface_areas field.'}), 400
+        if not isinstance(payload["existing_construction"], dict):
+            logger.warning("Malformed existing_construction field")
+            return jsonify({'error': 'Malformed existing_construction field.'}), 400
+        try:
+            room_inputs = RoomInputs(
+                room_type=payload["room_type"],
+                noise_type=payload["noise_type"],
+                noise_level=payload["noise_level"],
+                room_dimensions=payload["room_dimensions"],
+                surface_areas=payload["surface_areas"],
+                existing_construction=payload["existing_construction"],
+                budget_constraints=payload.get("budget_constraints"),
+                priority_surfaces=payload.get("priority_surfaces"),
+                special_requirements=payload.get("special_requirements")
+            )
+            noise_profile = NoiseProfile(
+                type=payload["noise_profile"].get("type"),
+                intensity=payload["noise_profile"].get("intensity"),
+                direction=payload["noise_profile"].get("direction", []),
+                time=payload["noise_profile"].get("time"),
+                frequency=payload["noise_profile"].get("frequency"),
+                is_impact=payload["noise_profile"].get("is_impact", False)
+            )
+        except Exception as e:
+            logger.error(f"Invalid input data: {e}")
+            return jsonify({'error': f"Invalid input data: {e}"}), 400
+        try:
+            solutions_manager = get_solutions_manager()
+            if not solutions_manager:
+                logger.error("Failed to initialize solutions manager.")
+                return jsonify({'error': 'Failed to initialize solutions manager.'}), 500
+            # Gather all possible solutions (for all surface types)
+            all_solutions = []
+            solution_types = getattr(solutions_manager, "SOLUTION_TYPES", None)
+            if not solution_types:
+                solution_types = ['wall', 'ceiling', 'floor']
+            for surface_type in solution_types:
+                surface_solutions = solutions_manager.get_solutions_by_type(surface_type)
+                logger.info(f"[DEBUG] {surface_type} solutions found: {len(surface_solutions) if surface_solutions else 0}")
+                if surface_solutions:
+                    # Convert solution instances to dictionaries for rank_solutions
+                    for solution in surface_solutions:
+                        if isinstance(solution, dict):
+                            # Solution is already in dictionary format
+                            all_solutions.append(solution)
+                        elif hasattr(solution, 'get_characteristics'):
+                            # Convert solution instance to dictionary
+                            characteristics = solution.get_characteristics()
+                            if characteristics:
+                                # Add solution identifier
+                                characteristics['solution_id'] = getattr(solution, 'CODE_NAME', 'Unknown')
+                                characteristics['surface_type'] = surface_type
+                                characteristics['variant'] = 'SP15' if hasattr(solution, 'IS_SP15') and solution.IS_SP15 else 'Standard'
+                                all_solutions.append(characteristics)
+                        else:
+                            logger.warning(f"Solution {solution} has no get_characteristics method")
+            logger.info(f"[DEBUG] Total solutions passed to rank_solutions: {len(all_solutions)}")
+            logger.debug(f"[DEBUG] all_solutions sample: {all_solutions[:2] if all_solutions else '[]'}")
+            logger.debug(f"[DEBUG] room_inputs: {room_inputs}")
+            logger.debug(f"[DEBUG] noise_profile: {noise_profile}")
+            recommendations = rank_solutions(all_solutions, room_inputs, noise_profile)
+            logger.info(f"Generated {len(recommendations) if recommendations else 0} recommendations.")
+        except Exception as e:
+            logger.error(f"Recommendation engine error: {e}")
+            return jsonify({'error': f"Recommendation engine error: {e}"}), 500
+        # Check for detailed breakdown flag
+        detailed = payload.get('detailed', False)
+        if detailed:
+            # Attach detailed material breakdown for each recommended solution
+            for surface in ['walls', 'ceiling', 'floor']:
+                if recommendations and recommendations.get('primary', {}).get(surface):
+                    if isinstance(recommendations['primary'][surface], list):
+                        for rec in recommendations['primary'][surface]:
+                            rec['material_breakdown'] = get_solution_material_breakdown(rec.get('solution'), payload.get('room_dimensions', {}))
+                    elif isinstance(recommendations['primary'][surface], dict):
+                        rec = recommendations['primary'][surface]
+                        rec['material_breakdown'] = get_solution_material_breakdown(rec.get('solution'), payload.get('room_dimensions', {}))
+        return jsonify({"recommendations": recommendations or []})
+    except Exception as e:
+        logger.error(f"[FATAL] Unhandled exception in /api/recommendations: {e}")
+        return jsonify({'error': f'Unhandled exception: {e}'}), 400
+
+# Utility function for detailed material breakdown
+
+def get_solution_material_breakdown(solution_id, dimensions):
+    """Return a detailed breakdown of materials for a solution, including acoustic and cost properties using new loader."""
+    from solutions.material_properties import get_material_properties
+    from solutions.cost_calculator import calculate_material_cost
+    from solutions.database import get_solution_by_id
+    solution = get_solution_by_id(solution_id)
+    if not solution or 'materials' not in solution:
+        return {'solution_id': solution_id, 'materials': [], 'error': 'Solution or materials not found'}
+    material_names = [m['name'] if isinstance(m, dict) else m for m in solution['materials']]
+    material_props = get_material_properties(material_names)
+    breakdown = []
+    for m in solution['materials']:
+        name = m['name'] if isinstance(m, dict) else m
+        props = material_props.get(name, {})
+        cost = props.get('cost', 0)
+        coverage = props.get('coverage', m.get('coverage', None))
+        stc = props.get('stc_rating', None)
+        freq = props.get('acoustic_properties', {}).get('frequency_response', None)
+        breakdown.append({
+            'name': name,
+            'cost': cost,
+            'coverage': coverage,
+            'stc_rating': stc,
+            'frequency_response': freq
+        })
+    total_cost = calculate_material_cost(solution_id, dimensions)
+    return {'solution_id': solution_id, 'materials': breakdown, 'total_cost': total_cost}
+
+@app.route('/')
+def index():
+    """Serve the main application page."""
+    return render_template('index.html')
 
 if __name__ == '__main__':
-    port = int(os.getenv('PORT', 10000))
-    app.run(host='0.0.0.0', port=port)
+    # Initialize all required components
+    if not ensure_solutions_manager():
+        logger.error("Failed to initialize solutions manager. Application may not work correctly.")
+    
+    # Run the Flask application
+    port = int(os.environ.get('PORT', 5000))
+    logger.info(f"Starting server at http://localhost:{port}")
+    app.run(host='0.0.0.0', port=port, debug=True)

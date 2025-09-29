@@ -1,0 +1,13 @@
+{
+    "mcpServers": {
+      "browser-tools-mcp": {
+        "command": "npx",
+        "args": [
+          "@agentdeskai/browser-tools-mcp@latest"
+        ],
+        "env": {
+          "PORT": "3034"
+        }
+      }
+    }
+}

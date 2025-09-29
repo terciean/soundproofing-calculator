@@ -1,0 +1,15 @@
+Chunk 4D: Ceilings
+Files:
+lb3genieclipceiling.py
+resilientbarceiling.py
+genieclipceiling.py
+independentceiling.py
+base_genieclip.py
+base_sp15.py
+Summaries:
+lb3genieclipceiling.py: Implements LB3GenieClipCeilingStandard and LB3GenieClipCeilingSP15 for ceiling solutions. Key elements: LB3GenieClipCeilingStandard (CODE_NAME, CLIP_SPACING=0.6, calculate(), get_characteristics()), LB3GenieClipCeilingSP15 (STC=65). Data flow: Dimensions/materials → base calcs → LB3-specific (clips, channels) → output dict. Dependencies: logging, math, typing, solutions, solutions.base_calculator, solutions.base_solution, solutions.database, solutions.material_properties, solutions.solutions. Issues: Hardcoded spacing; weak error handling; SP15 enhancements vague.
+resilientbarceiling.py: Defines ResilientBarCeilingStandard and ResilientBarCeilingSP15 for ceiling solutions. Key elements: ResilientBarCeilingStandard (CODE_NAME, get_characteristics(), calculate()), ResilientBarCeilingSP15 (STC=65). Data flow: Dimensions/materials → characteristics → area/cost calcs → output dict. Dependencies: logging, math, solutions, solutions.base_calculator, solutions.base_solution, solutions.database. Issues: No bar calcs; minimal error handling; SP15 duplicated logic.
+genieclipceiling.py: Provides GenieClipCeilingStandard and GenieClipCeilingSP15 for ceiling solutions. Key elements: GenieClipCeilingStandard (CODE_NAME, CLIP_SPACING=0.6, calculate(), get_characteristics()), GenieClipCeilingSP15 (STC=65). Data flow: Dimensions/materials → base calcs → Genie Clip-specific → output dict. Dependencies: logging, math, typing, solutions.base_calculator, solutions.base_solution, solutions.material_properties, solutions.solutions. Issues: Hardcoded spacing; returns None on errors; code duplication.
+independentceiling.py: Implements IndependentCeilingStandard and IndependentCeilingSP15 for standalone ceilings. Key elements: IndependentCeilingStandard (CODE_NAME, JOIST_SPACING=0.4, calculate(), get_characteristics()), IndependentCeilingSP15 (STC=65). Data flow: Dimensions/materials → base calcs → joist/hanger calcs → output dict. Dependencies: logging, math, typing, solutions.base_calculator, solutions.base_solution, solutions.material_properties, solutions.solutions. Issues: Fixed spacing; weak error handling; complex calcs risk errors.
+base_genieclip.py: Provides base functionality for GenieClip-based solutions. Key elements: BaseGenieClip (CLIP_SPACING, calculate_clips(), get_mounting_requirements()). Data flow: Dimensions → clip calculations → mounting specs. Dependencies: base_solution.py, material_properties.py. Issues: Hardcoded values; limited customization.
+base_sp15.py: Defines base functionality for SP15-rated solutions. Key elements: BaseSP15 (STC_RATING=65, calculate_sp15(), get_sp15_characteristics()). Data flow: Base solution → SP15 enhancements → output dict. Dependencies: base_solution.py, material_properties.py. Issues: Rating assumptions; enhancement complexity.

@@ -1,0 +1,54 @@
+Service Architecture Overview
+
+The application uses a layered service architecture with two main services:
+
+1. DataService (data-service.js)
+- Provides centralized data access layer
+- Handles caching of noise profiles, solution catalog, and mappings
+- Uses 5 minute cache TTL for frequently changing data
+- Implements fallback data for offline operation
+
+2. EndpointService (endpoint-service.js)
+- Manages API communication
+- Uses 24 hour cache TTL for relatively static data
+- Implements retry logic and cooldown periods
+- Provides fallback solutions when API is unavailable
+
+Both services extend BaseService which provides:
+- Unified caching implementation (memory + localStorage)
+- Standardized error handling and logging
+- Service initialization and lifecycle management
+- Retry logic for failed requests
+
+Key Improvements:
+
+1. Caching Strategy
+- Two-level caching (memory + localStorage)
+- Configurable TTL per service
+- Automatic cache invalidation
+- Cache versioning support
+
+2. Error Handling
+- Centralized error management
+- Fallback data support
+- Graceful degradation
+- Detailed error logging
+
+3. Service Initialization
+- Asynchronous initialization
+- Health checks for endpoints
+- Event-based status updates
+- Dependency management
+
+4. Data Management
+- Centralized data access
+- Consistent API interfaces
+- Type validation
+- Data transformation
+
+This architecture provides:
+- Improved reliability through caching
+- Better error recovery
+- Consistent data access patterns
+- Reduced code duplication
+- Easier maintenance

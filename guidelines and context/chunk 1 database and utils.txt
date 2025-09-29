@@ -1,0 +1,9 @@
+Chunk 4C: Database & Utils
+Files:
+floors/FloorSolutions.py
+wall_solutions.py
+ceilings/__init__.py
+Summaries:
+floors/FloorSolutions.py: Implements floor solutions with dual BaseSolution and BaseFloorCalculator approaches. Key elements: BaseFloorCalculator, FloatingFloorStandard, IsolationMatFloor. Data flow: MongoDB/static data → floor calcs → output. Dependencies: typing, math, os, sys, logging, base_calculator.py, base_solution.py. Issues: Dual implementations need resolution; potential redundancy.
+wall_solutions.py: Implements wall-specific calculators via WallCalculator. Key elements: WallCalculator, specific classes (e.g., M20WallSP15). Data flow: Solution data → wall calcs → output. Dependencies: typing, base.py (likely base_calculator.py), solutions.py, logger.py, math. Issues: Logic duplication across classes.
+ceilings/__init__.py: Exposes ceiling solution classes as a package. Key elements: Exports ResilientBarCeilingStandard, GenieClipCeilingStandard, etc. Data flow: Import → class availability → instantiation elsewhere. Dependencies: .resilientbarceiling, .genieclipceiling, .independentceiling, .lb3genieclipceiling. Issues: Narrow scope; fails if submodules missing; undocumented.

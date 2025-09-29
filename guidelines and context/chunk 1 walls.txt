@@ -1,0 +1,98 @@
+# Surface & Room Management Documentation - Walls
+
+## Overview
+This document describes the wall-related surface management components of the application.
+
+## Core Components
+
+### Unified Surface Manager (unified-surface-manager.js)
+- Manages all surface-related operations
+- Coordinates between different surface types
+- Handles surface data synchronization
+
+### Surface UI (surface-ui.js)
+- Manages wall surface UI components
+- Handles surface visualization
+- Provides user interaction handling
+
+### Surface Core (surface-core.js)
+- Implements core wall surface logic
+- Handles surface calculations
+- Manages surface properties
+
+### Surface Utils (surface-utils.js)
+- Provides utility functions for surfaces
+- Handles surface data formatting
+- Manages surface-related constants
+
+### Surface Manager (surface-manager.js)
+- Coordinates wall surface operations
+- Manages surface state
+- Handles surface updates
+
+## Room Management
+
+### Room Manager (room-manager.js)
+- Manages room-related operations
+- Handles room state
+- Coordinates room updates
+
+### Room Calculator (room-calculator.js)
+- Performs room-related calculations
+- Handles dimension processing
+- Manages room measurements
+
+## Backend Integration
+- Surface data is synchronized with backend
+- Room calculations are validated
+- State changes are persisted
+
+## Dependencies
+- Surface components depend on room manager
+- UI components depend on core logic
+- Utils are used across components
+
+## Usage Examples
+```javascript
+// Managing wall surfaces
+const surfaceManager = new SurfaceManager();
+surfaceManager.updateWallSurface(wallId, newProperties);
+
+// Calculating room dimensions
+const roomCalculator = new RoomCalculator();
+const roomVolume = roomCalculator.calculateVolume(dimensions);
+
+// Updating surface UI
+const surfaceUI = new SurfaceUI();
+surfaceUI.updateWallDisplay(wallId, properties);
+```
+
+## Maintenance Notes
+- Keep surface calculations accurate
+- Maintain UI consistency
+- Document surface properties
+
+Chunk 4E: Walls
+Files:
+genieclipwall.py
+base_wall.py
+independentwall.py
+m20wall.py
+resilientbarwall.py
+wall_solutions.py
+base_genieclip.py
+
+Summaries:
+genieclipwall.py: Implements GenieClipWallStandard and GenieClipWallSP15 for wall solutions. Key elements: GenieClipWallStandard (CODE_NAME, calculate() with 0.6m spacing), GenieClipWallSP15 (STC=65). Data flow: Dimensions/materials → base calcs → clip additions → output dict. Dependencies: logging, math, typing, solutions.base_calculator, solutions.base_solution, solutions.material_properties, solutions.solutions. Issues: Minimal detail; hardcoded spacing; weak error handling.
+
+base_wall.py: Defines BaseWall as a base class for wall solutions. Key elements: BaseWall (calculate() adds surface type/area). Data flow: Materials/dimensions → base calcs → wall-specific fields → output dict. Dependencies: logging, solutions.base_solution. Issues: Abstract; minimal wall logic; returns None on errors.
+
+independentwall.py: Implements IndependentWallStandard and IndependentWallSP15 for standalone walls. Key elements: IndependentWallStandard (get_characteristics(), calculate()), IndependentWallSP15 (STC=65). Data flow: Dimensions/materials → characteristics → quantity calcs → output dict. Dependencies: logging, math, typing, solutions, solutions.base_calculator, solutions.solution_mapping, solutions.base_solution, solutions.material_properties, solutions.solutions. Issues: No spacing calcs; empty dict on errors; SP15 minimal.
+
+m20wall.py: Implements M20WallStandard and M20WallSP15 with M20 rubber panels. Key elements: M20WallStandard (CODE_NAME, PANEL_SPACING=0.6, calculate(), get_characteristics()), M20WallSP15 (STC=65). Data flow: Dimensions/materials → base calcs → panel/mount calcs → output dict. Dependencies: logging, math, typing, solutions.base_calculator, solutions.base_solution, solutions.material_properties, solutions.solutions. Issues: Hardcoded spacing; returns None on errors; SP15 vague.
+
+resilientbarwall.py: Implements ResilientBarWallStandard and ResilientBarWallSP15 for walls. Key elements: ResilientBarWallStandard (CODE_NAME, BAR_SPACING=0.4, calculate(), get_characteristics()), ResilientBarWallSP15 (STC=65). Data flow: Dimensions/materials → base calcs → bar/plasterboard calcs → output dict. Dependencies: logging, math, typing, solutions, solutions.base_calculator, solutions.solution_mapping, solutions.base_solution, solutions.material_properties, solutions.solutions. Issues: Hardcoded spacing; returns None on errors; SP15 minimal.
+
+wall_solutions.py: Centralizes wall solution management and configuration. Key elements: WallSolutions (get_wall_types(), get_wall_solution(), configure_wall()). Data flow: Solution config → wall type mapping → solution instances. Dependencies: solutions.py, base_wall.py, config.py. Issues: Configuration complexity; solution coupling.
+
+base_genieclip.py: Provides base functionality for GenieClip-based solutions. Key elements: BaseGenieClip (CLIP_SPACING, calculate_clips(), get_mounting_requirements()). Data flow: Dimensions → clip calculations → mounting specs. Dependencies: base_solution.py, material_properties.py. Issues: Hardcoded values; limited customization.

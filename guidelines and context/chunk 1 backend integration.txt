@@ -1,0 +1,33 @@
+Chunk 9: Backend Integration
+Files:
+base_solution.py
+recommendation_engine.py
+solutions.py
+solutions_manager.py
+cache_manager.py
+acoustic_calculator.py
+database.py
+material_properties.py
+base_calculator.py
+base_sp15.py
+
+Summaries:
+base_solution.py: Defines abstract base class for solutions. Key elements: BaseSolution (calculate(), validate(), get_characteristics()), SolutionConfig (materials, properties, constraints). Data flow: Input data → validation → calculations → output. Dependencies: material_properties.py, base_calculator.py. Issues: Abstract implementation; complex inheritance; validation overhead.
+
+recommendation_engine.py: Generates recommendations based on user input. Key elements: RecommendationEngine (generate(), filter(), rank()), EngineConfig (weights, thresholds, rules). Data flow: User input → analysis → filtering → ranking → output. Dependencies: solutions.py, cache_manager.py. Issues: Complex ranking; performance; configuration management.
+
+solutions.py: Centralizes solution management and creation. Key elements: Solutions (create(), get(), list()), SolutionRegistry (types, instances, configs). Data flow: Solution requests → creation/retrieval → configuration → instances. Dependencies: solutions_manager.py, base_solution.py. Issues: Instance management; configuration complexity; type safety.
+
+solutions_manager.py: Implements singleton pattern for solution management. Key elements: SolutionsManager (get_instance(), register(), unregister()), ManagerConfig (cache, validation, logging). Data flow: Manager access → instance management → configuration → solutions. Dependencies: solutions.py, cache_manager.py. Issues: Singleton pattern; thread safety; configuration updates.
+
+cache_manager.py: Manages caching of solutions and calculations. Key elements: CacheManager (get(), set(), invalidate()), CacheConfig (ttl, size, strategy). Data flow: Cache requests → hit/miss → storage/retrieval → updates. Dependencies: database.py. Issues: Cache invalidation; memory usage; consistency.
+
+acoustic_calculator.py: Handles acoustic calculations and analysis. Key elements: AcousticCalculator (calculate_stc(), calculate_nrc(), analyze()), CalculatorConfig (formulas, constants, precision). Data flow: Material data → calculations → analysis → results. Dependencies: math, numpy, material_properties.py. Issues: Complex calculations; performance; accuracy.
+
+database.py: Manages database operations and connections. Key elements: Database (connect(), query(), transaction()), DBConfig (connection, pool, timeout). Data flow: DB operations → connection → query → results. Dependencies: pymongo, redis. Issues: Connection management; query optimization; error handling.
+
+material_properties.py: Defines material properties and characteristics. Key elements: MaterialProperties (get(), set(), validate()), PropertyConfig (types, units, ranges). Data flow: Material requests → property lookup → validation → results. Dependencies: database.py. Issues: Property updates; validation complexity; unit conversion.
+
+base_calculator.py: Provides base calculation functionality. Key elements: BaseCalculator (calculate(), validate(), format()), CalculatorConfig (precision, rounding, units). Data flow: Input data → calculations → validation → output. Dependencies: math, material_properties.py. Issues: Calculation accuracy; performance; error handling.
+
+base_sp15.py: Implements base functionality for SP15-rated solutions. Key elements: BaseSP15 (calculate_sp15(), validate_sp15(), get_characteristics()), SP15Config (rating, requirements, tests). Data flow: Solution data → SP15 calculations → validation → characteristics. Dependencies: base_solution.py, acoustic_calculator.py. Issues: Rating compliance; test coverage; performance impact. 

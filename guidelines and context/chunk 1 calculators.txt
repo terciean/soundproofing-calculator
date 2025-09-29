@@ -1,0 +1,24 @@
+Chunk 4B: Calculators
+Files:
+material_properties.py
+room.py
+solution_calculator.py
+acoustic_calculator.py
+cost_calculator.py
+blockage_calculator.py
+base_calculator.py
+
+Summaries:
+material_properties.py: Manages material acoustic and physical properties with database and cache integration. Key elements: get_material_properties(), get_material_characteristics(), calculate_solution_stc(). Data flow: Database/cache queries → material data (density, absorption, STC) → solution calculations. Dependencies: pymongo, logging, db_init.py, cache_manager.py. Features: Fallback mechanisms, property normalization, and STC rating calculations.
+
+room.py: Manages room dimensions and surface calculations for solution recommendations. Key elements: Room class with dimensions, blockages, and surface area calculations. Data flow: User dimensions → room object → area calculations → recommendations. Dependencies: typing, base_calculator.py. Features: Blockage handling, surface area calculations, and dimension validation.
+
+solution_calculator.py: Generates implementation details and handles solution calculations with caching. Key elements: generate_implementation_details(), calculate_solution(), get_solutions_manager(), SKILL_LEVELS. Data flow: Solution ID/dimensions → cache check → calculation → implementation details. Dependencies: typing, math, logger.py, database.py, cache_manager.py, solutions.py. Features: Cache prioritization, skill level mapping, and installation time estimation.
+
+acoustic_calculator.py: Performs acoustic calculations for soundproofing solutions. Key elements: AcousticCalculator class, calculate_properties(), estimate_stc_rating(), adjust_for_room_acoustics(). Data flow: Solution/room data → database/cache → acoustic properties → recommendations. Dependencies: typing, dataclasses, math, logging, numpy, db_init.py, material_properties.py, solutions.py, cache_manager.py. Features: Frequency analysis, STC rating estimation, and room acoustic adjustments.
+
+cost_calculator.py: Calculates material costs and quantities based on dimensions and solution properties. Key elements: calculate_material_cost(), calculate_solution_costs(), get_material_cost(). Data flow: Solution ID/dimensions → material quantities → cost breakdown → total cost. Dependencies: typing, base_calculator.py, cache_manager.py, db_init.py, logger.py. Features: Blockage adjustments, regional price factors, and cached calculations.
+
+blockage_calculator.py: Calculates the impact of blockages (windows, doors) on surface areas. Key elements: calculate_blockage_area(), calculate_blockage_summary(), safe_float(). Data flow: Blockage data → area calculations → adjusted surface areas. Dependencies: logging, typing. Features: Error resilience, dimension validation, and blockage type handling.
+
+base_calculator.py: Foundational class for all calculation modules with core calculation logic. Key elements: BaseCalculator class, calculate_material_quantity(), calculate_perimeter(), calculate_costs(). Data flow: Dimensions/materials → area/perimeter → quantities/costs. Dependencies: typing, math, logging, dataclasses. Features: Material coverage conversion, wastage calculation, and cost breakdown generation.

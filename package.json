@@ -1,0 +1,10 @@
+{
+  "name": "soundproofing-calculator",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Soundproofing Calculator Application",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "puppeteer": "^24.7.2"
+  }
+}

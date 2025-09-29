@@ -1,0 +1,54 @@
+Chunk 5: Recommendation System
+Files:
+recommendation_engine.py
+cache_manager.py
+acoustic_calculator.py
+recommendation-display-manager.js
+recommendation-cache.js
+recommendation-validator.js
+
+Summaries:
+recommendation_engine.py: Core recommendation generation system. Key elements: RecommendationEngine (generate_recommendations(), filter_by_budget(), rank_solutions()), NoiseProfile (type, level, frequency), BudgetConstraint (min, max, priority). Data flow: User input → noise analysis → solution filtering → ranking → output. Dependencies: solutions, cache_manager, acoustic_calculator. Issues: Complex ranking logic; performance on large datasets; budget filtering assumptions.
+
+cache_manager.py: Manages caching of recommendations and calculations. Key elements: CacheManager (get(), set(), invalidate()), CacheEntry (key, value, timestamp, ttl). Data flow: Request → cache check → fetch/store → return. Dependencies: datetime, typing, logging. Issues: Memory usage; cache invalidation strategy; race conditions.
+
+acoustic_calculator.py: Handles acoustic calculations for recommendations. Key elements: AcousticCalculator (calculate_stc(), calculate_nrc(), calculate_transmission_loss()), MaterialProperties (density, thickness, absorption). Data flow: Material specs → acoustic calcs → performance metrics. Dependencies: math, numpy, solutions.material_properties. Issues: Complex calculations; performance bottlenecks; accuracy assumptions.
+
+recommendation-display-manager.js: Manages UI for displaying recommendations. Key elements: RecommendationDisplay (render(), update(), handleInteraction()), DisplayConfig (layout, animations, filters). Data flow: Recommendation data → UI rendering → user interaction → updates. Dependencies: DOM, recommendation-cache.js. Issues: Performance on large lists; animation smoothness; mobile responsiveness.
+
+recommendation-cache.js: Client-side caching of recommendations. Key elements: RecommendationCache (store(), retrieve(), clear()), CacheStrategy (LRU, FIFO, custom). Data flow: API response → cache storage → retrieval → display. Dependencies: localStorage, recommendation-validator.js. Issues: Storage limits; cache invalidation; data freshness.
+
+recommendation-validator.js: Validates recommendation data and user input. Key elements: RecommendationValidator (validateInput(), validateOutput(), checkConstraints()), ValidationRules (required, type, range). Data flow: Input/output → validation rules → results → error handling. Dependencies: form-data-validator.js. Issues: Complex validation logic; performance impact; error message clarity.
+
+## Recommendation & Cost Calculation System: Material-Driven Logic (June 2025)
+
+### Solution & Material Caching
+- Each solution caches its own `materials` array, with each material containing:
+  - `name`: Name of the material as used in the solution.
+  - `cost`: Cost per unit (solution context).
+  - `coverage`: Coverage per unit (e.g., per board, per pack, per m²).
+- The universal `materials` collection in MongoDB contains all materials, with extra properties (e.g., `stc_rating`, `density`, `frequency_response`, etc.).
+
+### Recommendation Logic
+- The backend recommendation engine uses `RoomProfile` and `NoiseProfile` to select and score solutions.
+- For each solution, the system:
+  1. Aggregates relevant acoustic properties (e.g., STC, frequency response) from its materials.
+  2. Cross-references the universal materials collection for detailed data.
+  3. Scores solutions based on how well their materials match the noise profile (frequency, intensity, etc.).
+- The effectiveness of a solution is a function of both its overall STC and the summed/weighted properties of its materials.
+
+### Cost Calculation Logic
+- Cost is calculated per solution by summing the cost of each material, adjusted for the required coverage (based on room/surface area).
+- Regional price factors are applied as needed.
+- The system will support a detailed cost breakdown (per material, per surface, per unit) if requested by the frontend.
+
+### Frontend Integration & Modularization
+- The frontend will be updated to:
+  - Display not just the recommended solution, but also a breakdown of materials, costs, and acoustic effectiveness.
+  - Allow users to request a detailed breakdown for each recommendation.
+  - Modularize display logic for easier maintenance and extension.
+
+### Next Steps
+- Backend: Update recommendation and cost endpoints to support detailed breakdowns and always cross-reference universal materials.
+- Frontend: Plan and begin updates to display detailed breakdowns and modularize recommendation/cost UI.
+- Keep this document and related MD files up to date as the system evolves. 

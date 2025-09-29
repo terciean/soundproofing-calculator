@@ -1,0 +1,63 @@
+# Testing & Development Tools Documentation
+
+## Overview
+This document describes the testing and development tools used in the application.
+
+## Testing Framework
+
+### Unit Tests
+- Comprehensive test coverage for core functionality
+- Automated test execution and reporting
+- Performance benchmarking and monitoring
+
+### Integration Tests
+- End-to-end testing of system components
+- API endpoint validation
+- Database integration testing
+
+### Development Tools
+
+### Performance Monitor (performance-monitor.js)
+- Tracks application performance metrics
+- Monitors resource usage
+- Provides performance alerts
+
+### Logger (logger.js)
+- Centralized logging system
+- Log level management
+- Log persistence and retrieval
+
+### Theme Manager (theme-manager.js)
+- Manages application themes
+- Handles theme switching
+- Persists theme preferences
+
+## Backend Integration
+- Tests validate backend functionality
+- Performance monitoring tracks system health
+- Logging integrates with backend services
+
+## Dependencies
+- Tests depend on pytest and unittest
+- Development tools are independent
+- Monitoring tools integrate with backend
+
+## Usage Examples
+```javascript
+// Running tests
+pytest tests/unit/
+pytest tests/integration/
+
+// Monitoring performance
+const monitor = new PerformanceMonitor();
+monitor.trackMetrics();
+
+// Managing themes
+const themeManager = new ThemeManager();
+themeManager.setTheme('dark');
+```
+
+## Maintenance Notes
+- Keep tests up to date with code changes
+- Maintain test coverage above 80%
+- Document test scenarios and requirements

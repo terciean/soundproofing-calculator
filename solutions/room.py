@@ -1,202 +1,125 @@
+import math
+from solutions.base_calculator import BaseCalculator
+from typing import Dict, List, Optional
+from .logger import logger
+
 class Room:
-    # Add ceiling feature definitions at class level
-    CEILING_FEATURES = {
-        'concrete': {
-            'density': 2400,  # kg/m³
-            'thickness': 0.15,  # meters
-            'soundproof_rating': 55  # dB reduction
-        },
-        'timber': {
-            'density': 500,  # kg/m³
-            'thickness': 0.025,  # meters
-            'soundproof_rating': 35  # dB reduction
-        },
-        'coving': {
-            'area_reduction': 0.05,  # 5% reduction in ceiling area
-            'soundproof_rating': 2  # dB reduction
-        },
-        'down_lights': {
-            'area_per_light': 0.09,  # m² per light
-            'soundproof_reduction': -3  # dB reduction (negative because it reduces soundproofing)
-        }
-    }
+    """Class to handle room dimensions"""
+    
+    def __init__(self, dimensions: Dict[str, float], surfaces: List[str], room_type: Optional[str] = None):
+        self.dimensions = dimensions
+        self.surfaces = surfaces
+        self.room_type = room_type
+        self.calculator = BaseCalculator(dimensions['length'], dimensions['height'])
+        self.walls = []
+        self.ceilings = []
+        self.floors = []
+        self.total_cost = 0
+        self.materials = []
+        self.solutions = {}  # Track active solutions by surface type
 
-    # Add floor feature definitions
-    FLOOR_FEATURES = {
-        'parquet': {
-            'thickness': 0.015,  # meters
-            'soundproof_rating': 25  # dB reduction
-        },
-        'floor_boards': {
-            'thickness': 0.020,  # meters
-            'soundproof_rating': 30  # dB reduction
-        },
-        'lino': {
-            'thickness': 0.002,  # meters
-            'soundproof_rating': 15  # dB reduction
-        },
-        'real_wood': {
-            'thickness': 0.025,  # meters
-            'soundproof_rating': 35  # dB reduction
-        }
-    }
-
-    def __init__(self, name, length, width, height):
-        # Validate dimensions
+    def set_dimensions(self, length: float, width: float, height: float) -> bool:
+        """Set room dimensions with basic number validation"""
         try:
-            self.length = float(length)
-            self.width = float(width)
-            self.height = float(height)
-            
-            if any(d <= 0 for d in [self.length, self.width, self.height]):
-                raise ValueError("All dimensions must be positive numbers")
-                
-            self.name = str(name)
-            self.walls = []
-            self.blockages = []
-            self.floor = {
-                'area': 0,
-                'effective_area': 0,
-                'features': [],
-                'soundproof_rating': 0
-            }
-            self.ceiling = {
-                'area': 0,
-                'effective_area': 0,
-                'features': [],
-                'mass': 0,
-                'soundproof_rating': 0
+            # Convert to float and validate
+            dimensions = {
+                'length': float(length),
+                'width': float(width),
+                'height': float(height)
             }
             
-            # Initialize room components
-            self._initialize_walls()
-            self._initialize_floor_ceiling()
+            self.dimensions = dimensions
+            logger.info(f"Set room dimensions: {self.dimensions}")
+            return True
             
-        except (TypeError, ValueError) as e:
-            raise ValueError(f"Invalid room dimensions: {str(e)}")
+        except (ValueError, TypeError) as e:
+            logger.error(f"Invalid dimensions - must be valid numbers: {str(e)}")
+            return False
 
-    def _initialize_floor_ceiling(self):
-        """Initialize floor and ceiling with base properties"""
-        base_area = self.length * self.width
+    def get_dimensions(self) -> Dict[str, float]:
+        """Get current room dimensions"""
+        return self.dimensions.copy()
+
+    def get_area(self) -> float:
+        """Get total area of the room"""
+        return self.calculator.area
         
-        # Initialize ceiling (existing code)
-        self.ceiling.update({
-            'area': base_area,
-            'effective_area': base_area,
-            'features': [],
-            'mass': 0,
-            'soundproof_rating': 0
-        })
+    def get_perimeter(self) -> float:
+        """Get perimeter of the room"""
+        return self.calculator.calculate_perimeter()
         
-        # Initialize floor
-        self.floor.update({
-            'area': base_area,
-            'effective_area': base_area,
-            'features': [],
-            'soundproof_rating': 0
-        })
-
-    def add_ceiling_feature(self, feature_type):
-        """Add a ceiling feature and recalculate properties"""
-        if feature_type not in self.CEILING_FEATURES:
-            raise ValueError(f"Unknown ceiling feature: {feature_type}")
+    def get_surface_area(self, surface_type: str) -> float:
+        """Get area of a specific surface"""
+        if surface_type not in self.surfaces:
+            return 0.0
+            
+        if surface_type == "walls":
+            return self.dimensions['length'] * self.dimensions['height'] * 2 + \
+                   self.dimensions['width'] * self.dimensions['height'] * 2
+        elif surface_type == "ceiling" or surface_type == "floor":
+            return self.dimensions['length'] * self.dimensions['width']
+            
+        return 0.0
         
-        if feature_type not in self.ceiling['features']:
-            self.ceiling['features'].append(feature_type)
-            self._recalculate_ceiling_properties()
-
-    def _recalculate_ceiling_properties(self):
-        """Recalculate ceiling properties based on features"""
-        base_area = self.length * self.width
-        effective_area = base_area
-        mass = 0
-        soundproof_rating = 0
-
-        for feature in self.ceiling['features']:
-            feature_data = self.CEILING_FEATURES[feature]
-            
-            # Calculate mass and area effects
-            if feature in ['concrete', 'timber']:
-                mass += base_area * feature_data['thickness'] * feature_data['density']
-                soundproof_rating += feature_data['soundproof_rating']
-            
-            elif feature == 'coving':
-                effective_area *= (1 - feature_data['area_reduction'])
-                soundproof_rating += feature_data['soundproof_rating']
-            
-            elif feature == 'down_lights':
-                num_lights = int(base_area / 4)  # One light per 4m²
-                effective_area -= num_lights * feature_data['area_per_light']
-                soundproof_rating += feature_data['soundproof_reduction']
-
-        self.ceiling.update({
-            'area': base_area,
-            'effective_area': max(0, effective_area),
-            'mass': mass,
-            'soundproof_rating': max(0, soundproof_rating)
-        })
-
-    def add_floor_feature(self, feature_type):
-        """Add a floor feature and recalculate properties"""
-        if feature_type not in self.FLOOR_FEATURES:
-            raise ValueError(f"Unknown floor feature: {feature_type}")
+    def get_total_surface_area(self) -> float:
+        """Get total area of all surfaces"""
+        total = 0.0
+        for surface in self.surfaces:
+            total += self.get_surface_area(surface)
+        return total
         
-        if feature_type not in self.floor['features']:
-            self.floor['features'].append(feature_type)
-            self._recalculate_floor_properties()
+    def get_volume(self) -> float:
+        """Get volume of the room"""
+        return self.dimensions['length'] * self.dimensions['width'] * self.dimensions['height']
 
-    def _recalculate_floor_properties(self):
-        """Recalculate floor properties based on features"""
-        base_area = self.length * self.width
-        effective_area = base_area
-        soundproof_rating = 0
+    def add_wall(self, solution_data, wall_name=None):
+        """Add wall solution data"""
+        if solution_data:
+            if wall_name:
+                self.solutions[f'wall_{wall_name}'] = solution_data
+            self.walls.append(solution_data)
+            if 'total_cost' in solution_data:
+                self.total_cost += solution_data['total_cost']
+            if 'materials' in solution_data:
+                self._add_materials(solution_data['materials'])
 
-        for feature in self.floor['features']:
-            feature_data = self.FLOOR_FEATURES[feature]
-            
-            # Calculate soundproof_rating effects
-            soundproof_rating += feature_data['soundproof_rating']
+    def add_ceiling(self, solution_data, ceiling_name=None):
+        """Add ceiling solution data"""
+        if solution_data:
+            if ceiling_name:
+                self.solutions[f'ceiling_{ceiling_name}'] = solution_data
+            self.ceilings.append(solution_data)
+            if 'total_cost' in solution_data:
+                self.total_cost += solution_data['total_cost']
+            if 'materials' in solution_data:
+                self._add_materials(solution_data['materials'])
 
-        self.floor.update({
-            'effective_area': max(0, effective_area),
-            'soundproof_rating': max(0, soundproof_rating)
-        })
+    def _add_materials(self, materials):
+        """Helper method to add materials with wastage calculation"""
+        for material in materials:
+            needs_wastage = material['name'] in BaseCalculator.WASTAGE_MATERIALS
+            if needs_wastage:
+                material['amount'] = math.ceil(material['amount'] * 1.1)
+                material['cost'] = material['amount'] * material.get('cost', 0)
+            self.materials.append(material)
 
-    def get_ceiling_summary(self):
-        """Get detailed ceiling information"""
-        return {
-            'area': self.ceiling['area'],
-            'effective_area': self.ceiling['effective_area'],
-            'features': self.ceiling['features'],
-            'mass': self.ceiling['mass'],
-            'soundproof_rating': self.ceiling['soundproof_rating']
-        }
+    def get_solution(self, surface_type, name):
+        """Get specific solution data"""
+        key = f'{surface_type}_{name}'
+        return self.solutions.get(key)
 
-    def get_floor_summary(self):
-        """Get detailed floor information"""
-        return {
-            'area': self.floor['area'],
-            'effective_area': self.floor['effective_area'],
-            'features': self.floor['features'],
-            'soundproof_rating': self.floor['soundproof_rating']
-        }
+    def get_total_cost(self):
+        """Get total cost of all solutions"""
+        return self.total_cost
 
-    def get_room_summary(self):
-        """Get complete room summary including ceiling and floor details"""
-        return {
-            'dimensions': {
-                'length': self.length,
-                'width': self.width,
-                'height': self.height
-            },
-            'areas': {
-                'wall': self.calculate_wall_area(),
-                'floor': self.length * self.width,
-                'ceiling': self.get_ceiling_summary()
-            },
-            'blockages': {
-                'windows': len([b for b in self.blockages if b['type'] == 'window']),
-                'doors': len([b for b in self.blockages if b['type'] == 'door']),
-                'vents': len([b for b in self.blockages if b['type'] == 'vent'])
-            }
-        }
+    def get_all_materials(self):
+        """Get combined materials list with quantities"""
+        combined = {}
+        for material in self.materials:
+            name = material['name']
+            if name in combined:
+                combined[name]['amount'] += material['amount']
+                combined[name]['cost'] += material['cost']
+            else:
+                combined[name] = material.copy()
+        return list(combined.values())

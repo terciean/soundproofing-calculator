@@ -1,0 +1,30 @@
+Chunk 7: Surface & Room Management
+Files:
+surface-ui.js
+surface-core.js
+surface-utils.js
+surface-manager.js
+room-manager.js
+room-calculator.js
+surface-data.js
+surface-events.js
+surface-validation.js
+
+Summaries:
+surface-ui.js: Manages surface-related UI components and interactions. Key elements: SurfaceUI (render(), update(), handleInput()), SurfaceConfig (templates, styles, events). Data flow: Surface data → UI rendering → user interaction → updates. Dependencies: DOM, surface-manager.js. Issues: Performance on complex surfaces; event handling; state synchronization.
+
+surface-core.js: Implements core surface functionality and calculations. Key elements: SurfaceCore (calculate(), validate(), transform()), SurfaceProperties (dimensions, materials, orientation). Data flow: Surface input → calculations → validation → output. Dependencies: surface-utils.js, surface-validation.js. Issues: Complex calculations; error handling; performance optimization.
+
+surface-utils.js: Provides utility functions for surface operations. Key elements: SurfaceUtils (normalize(), convert(), format()), UnitConversion (metric, imperial). Data flow: Input → conversion/formatting → output. Dependencies: math, surface-validation.js. Issues: Unit conversion accuracy; rounding errors; locale handling.
+
+surface-manager.js: Coordinates surface components and lifecycle. Key elements: SurfaceManager (create(), update(), delete()), SurfaceRegistry (surfaces, events, state). Data flow: Surface operations → state management → event emission. Dependencies: surface-core.js, surface-ui.js. Issues: State consistency; event management; memory usage.
+
+room-manager.js: Manages room-related operations and state. Key elements: RoomManager (create(), update(), calculate()), RoomProperties (dimensions, surfaces, acoustics). Data flow: Room data → validation → calculations → updates. Dependencies: room-calculator.js, surface-manager.js. Issues: Complex room shapes; surface relationships; state management.
+
+room-calculator.js: Handles room-specific calculations and analysis. Key elements: RoomCalculator (calculateVolume(), calculateSurfaceArea(), analyzeAcoustics()), RoomMetrics (volume, area, RT60). Data flow: Room dimensions → calculations → analysis → metrics. Dependencies: math, surface-core.js. Issues: Complex geometries; calculation accuracy; performance.
+
+surface-data.js: Manages surface data persistence and retrieval. Key elements: SurfaceData (save(), load(), sync()), DataConfig (storage, format, version). Data flow: Surface data → storage → retrieval → updates. Dependencies: storage-service.js, surface-validation.js. Issues: Data consistency; versioning; sync conflicts.
+
+surface-events.js: Handles surface-related events and notifications. Key elements: SurfaceEvents (emit(), subscribe(), unsubscribe()), EventTypes (create, update, delete). Data flow: Surface changes → event emission → handler execution. Dependencies: event-bus.js. Issues: Event ordering; memory leaks; handler complexity.
+
+surface-validation.js: Validates surface data and operations. Key elements: SurfaceValidator (validate(), checkConstraints(), sanitize()), ValidationRules (dimensions, materials, relationships). Data flow: Surface data → validation rules → results → error handling. Dependencies: validation-service.js. Issues: Complex validation logic; performance impact; error messages. 

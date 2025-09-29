@@ -4,71 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soundproofing Calculator</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/surface-details.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
-    <!-- Initialize global state and dependencies -->
     <script>
-        // Initialize global state before any scripts load
-        window.FormState = {
-            currentStep: 0,
-            dimensions: {
-                length: null,
-                width: null,
-                height: null
-            },
-            surfaces: {},
-            blockages: {
-                wall: [],
-                floor: [],
-                ceiling: []
-            },
-            blockageAreas: {
-                wall: 0,
-                floor: 0,
-                ceiling: 0
-            },
-            requirements: {
-                noiseReduction: null,
-                budget: null,
-                timeframe: null
-            }
+        window.APP_STATE = window.APP_STATE || {
+            isInitialized: false,
+            dependencies: new Set(),
+            initializedComponents: new Set(),
+            errors: new Map(),
+            managers: {}
         };
 
-        window.InitializationState = {
-            initialized: new Set(),
-            dependencies: {
-                errorUtils: [],
-                roomManager: [],
-                roomCalculator: ['roomManager'],
-                surfaceManager: ['roomManager', 'roomCalculator'],
-                wallManager: ['roomManager', 'surfaceManager'],
-                soundproofingManager: ['roomManager'],
-                workflowManager: ['roomManager', 'surfaceManager', 'wallManager', 'soundproofingManager'],
-                formHandlers: ['workflowManager']
-            }
+        window.SOLUTION_CONSTANTS = window.SOLUTION_CONSTANTS || {};
+        {{ solution_constants_js|safe }}
+        
+        window.SOLUTION_CONSTANTS.DIRECTION_LABELS = {
+            'north_wall': 'North Wall',
+            'south_wall': 'South Wall',
+            'east_wall': 'East Wall',
+            'west_wall': 'West Wall',
+            'ceiling': 'Ceiling',
+            'floor': 'Floor'
         };
+        window.APP_STATE.dependencies.add('constants');
     </script>
 
-    <!-- Load core utilities first -->
-    <script src="{{ url_for('static', filename='js/error-utils.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='js/utils.js') }}" defer></script>
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
 
-    <!-- Load managers in dependency order -->
-    <script src="{{ url_for('static', filename='js/room-manager.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='js/room-calculator.js') }}" defer onerror="window.errorUtils?.displayError('Failed to load room-calculator.js');"></script>
-    <script src="{{ url_for('static', filename='js/surface-manager.js') }}" defer onerror="window.errorUtils?.displayError('Failed to load surface-manager.js');"></script>
-    <script src="{{ url_for('static', filename='js/wall-manager.js') }}" defer onerror="window.errorUtils?.displayError('Failed to load wall-manager.js');"></script>
-    <script src="{{ url_for('static', filename='js/soundproofing-manager.js') }}" defer onerror="window.errorUtils?.displayError('Failed to load soundproofing-manager.js');"></script>
-    <script src="{{ url_for('static', filename='js/workflow-manager.js') }}" defer onerror="window.errorUtils?.displayError('Failed to load workflow-manager.js');"></script>
-    <script src="{{ url_for('static', filename='js/form-handlers.js') }}" defer onerror="window.errorUtils?.displayError('Failed to load form-handlers.js');"></script>
-
-    <!-- Loading Indicator -->
-    
 </head>
-
 <body>
+    <div class="dimension-displays">
+        <div id="length-display" class="dimension-value">Length: 0.0 m</div>
+        <div id="width-display" class="dimension-value">Width: 0.0 m</div>
+        <div id="height-display" class="dimension-value">Height: 0.0 m</div>
+    </div>
+    <button id="debug-button" class="btn btn-sm btn-secondary" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">Debug System</button>
+    
+    <div id="error-container"></div>
+    
     <div class="container">
         <header>
             <h1>Soundproofing Calculator</h1>
@@ -99,45 +77,30 @@
                             <div class="step-number">4</div>
                             <div class="step-label">Review</div>
                         </div>
-                        <div class="step-connector"></div>
                     </div>
                 </div>
-
                 <!-- Sections Container -->
                 <div class="sections-container">
                     <!-- Room Details Section -->
                     <section id="room-details" class="section active">
                         <div class="section-header">
                             <h2>Room Details</h2>
-                            <p class="section-description">Enter your room dimensions</p>
+                            <p class="section-description">Enter the dimensions of your room</p>
                         </div>
                         <div class="room-details-container">
                             <form id="room-dimensions-form">
-                                <!-- Dimensions Section -->
+                                <!-- Room Dimensions Section -->
                                 <div class="form-section">
                                     <h3>Room Dimensions</h3>
-                                    <div class="form-group">
-                                        <label for="length">Length (m)</label>
-                                        <input type="number" id="length" name="length" min="0" step="0.1">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="width">Width (m)</label>
-                                        <input type="number" id="width" name="width" min="0" step="0.1">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="height">Height (m)</label>
-                                        <input type="number" id="height" name="height" min="0" step="0.1">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="room-type">Room Type</label>
-                                        <select id="room-type" name="room-type">
+                                    <div class="room-inputs">
+                                        <input type="number" id="room-length" data-room-detail="length" min="0" step="0.1" required>
+                                        <input type="number" id="room-width" data-room-detail="width" min="0" step="0.1" required>
+                                        <input type="number" id="room-height" data-room-detail="height" min="0" step="0.1" required>
+                                        <select id="room-type" data-room-detail="type" required>
                                             <option value="">Select Room Type</option>
                                             <option value="bedroom">Bedroom</option>
-                                            <option value="home-office">Home Office</option>
-                                            <option value="living-room">Living Room</option>
-                                            <option value="media-room">Media Room</option>
-                                            <option value="studio">Recording Studio</option>
-                                            <option value="practice-room">Music Practice Room</option>
+                                            <option value="living">Living Room</option>
+                                            <option value="office">Office</option>
                                         </select>
                                     </div>
                                 </div>
@@ -165,34 +128,31 @@
                     <section id="noise-details" class="section">
                         <div class="section-header">
                             <h2>Noise Details</h2>
-                            <p>Tell us about the noise you want to reduce</p>
+                            <p class="section-description">Describe the noise you want to reduce</p>
                         </div>
+
+                        <!-- Noise Type Selection -->
                         <div class="form-group">
                             <label for="noise-type">Type of Noise</label>
                             <select id="noise-type" required>
+                                <option value="">Select noise type</option>
                                 <option value="speech">Speech/Voices</option>
                                 <option value="music">Music/Bass</option>
-                                <option value="tv">TV/Media</option>
-                                <option value="traffic">Traffic</option>
-                                <option value="aircraft">Aircraft</option>
+                                <option value="machinery">Machinery/Equipment</option>
+                                <option value="impact">Impact Noise</option>
                                 <option value="footsteps">Footsteps</option>
-                                <option value="furniture">Furniture Moving</option>
-                                <option value="machinery">Machinery</option>
+                                <option value="mixed">Multiple Sources</option>
                             </select>
                         </div>
+
+                        <!-- Noise Intensity -->
                         <div class="form-group">
-                            <label>Noise Intensity</label>
-                            <div class="range-slider">
-                                <input type="range" id="noise-intensity" min="1" max="5" step="1" value="3">
-                                <div class="range-labels">
-                                    <span>Very Low</span>
-                                    <span>Low</span>
-                                    <span>Medium</span>
-                                    <span>High</span>
-                                    <span>Very High</span>
-                                </div>
-                            </div>
+                            <label for="noise-intensity">Noise Intensity (1-10)</label>
+                            <input type="range" id="noise-intensity" min="1" max="10" value="5">
+                            <span id="intensity-value">5</span>
                         </div>
+
+                        <!-- Noise Direction -->
                         <div class="form-group">
                             <label>When does the noise occur?</label>
                             <div class="checkbox-group">
@@ -244,62 +204,13 @@
                             </div>
                         </div>
 
-                        <!-- Recommendations Container -->
-                        <div id="soundproofing-solutions" class="calculator-section">
-                            <h2>Recommended Solutions</h2>
-                            <div class="surfaces-grid">
-                                <!-- North Wall -->
-                                <div class="surface-clickable" data-surface="wall" data-wall="north">
-                                    <div class="surface-header">North Wall</div>
-                                    <div class="surface-content">
-                                        <p>Click to view recommended solutions and costs for the north wall.</p>
-                                    </div>
-                                    <div class="cost-breakdown"></div>
-                                </div>
-                                
-                                <!-- South Wall -->
-                                <div class="surface-clickable" data-surface="wall" data-wall="south">
-                                    <div class="surface-header">South Wall</div>
-                                    <div class="surface-content">
-                                        <p>Click to view recommended solutions and costs for the south wall.</p>
-                                    </div>
-                                    <div class="cost-breakdown"></div>
-                                </div>
-                                
-                                <!-- East Wall -->
-                                <div class="surface-clickable" data-surface="wall" data-wall="east">
-                                    <div class="surface-header">East Wall</div>
-                                    <div class="surface-content">
-                                        <p>Click to view recommended solutions and costs for the east wall.</p>
-                                    </div>
-                                    <div class="cost-breakdown"></div>
-                                </div>
-                                
-                                <!-- West Wall -->
-                                <div class="surface-clickable" data-surface="wall" data-wall="west">
-                                    <div class="surface-header">West Wall</div>
-                                    <div class="surface-content">
-                                        <p>Click to view recommended solutions and costs for the west wall.</p>
-                                    </div>
-                                    <div class="cost-breakdown"></div>
-                                </div>
-                                
-                                <!-- Ceiling -->
-                                <div class="surface-clickable" data-surface="ceiling">
-                                    <div class="surface-header">Ceiling</div>
-                                    <div class="surface-content">
-                                        <p>Click to view recommended solutions and costs for the ceiling.</p>
-                                    </div>
-                                    <div class="cost-breakdown"></div>
-                                </div>
-                                
-                                <!-- Floor -->
-                                <div class="surface-clickable" data-surface="floor">
-                                    <div class="surface-header">Floor</div>
-                                    <div class="surface-content">
-                                        <p>Click to view recommended solutions and costs for the floor.</p>
-                                    </div>
-                                    <div class="cost-breakdown"></div>
+                        <!-- Add recommendations section in noise details -->
+                        <div class="recommendations-section">
+                            <h3>Recommended Solutions</h3>
+                            <div id="recommendations-container">
+                                <div class="loading-placeholder">
+                                    <div class="loading-spinner"></div>
+                                    <p>Complete the form to see recommendations</p>
                                 </div>
                             </div>
                         </div>
@@ -551,9 +462,22 @@
                             </div>
                         </div>
 
-                        <!-- Surface Panels -->
-                        <div class="surfaces-container">
-                            <!-- ... rest of the surface panels ... -->
+                        <!-- Surface panels -->
+                        <div class="surface-container">
+                            <!-- Wall solutions will be loaded here -->
+                            <div id="wallSolutionsContainer" class="solutions-panel">
+                                <!-- Wall solutions will be loaded here by wall-manager.js -->
+                            </div>
+                            
+                            <!-- Floor Solutions Container -->
+                            <div id="floorSolutionsContainer" class="solutions-panel">
+                                <!-- Floor solutions will be loaded here by floor-manager.js -->
+                            </div>
+                            
+                            <!-- Ceiling Solutions Container -->
+                            <div id="ceilingSolutionsContainer" class="solutions-panel">
+                                <!-- Ceiling solutions will be loaded here by ceiling-manager.js -->
+                            </div>
                         </div>
                     </section>
 
@@ -563,90 +487,11 @@
                             <h2>Review</h2>
                             <p class="section-description">Review your selections and get recommendations</p>
                         </div>
-
-                        <!-- Room Details -->
-                        <div class="review-section">
-                            <h3>Room Details</h3>
-                            <div class="review-grid">
-                                <div class="review-item">
-                                    <label>Dimensions</label>
-                                    <span id="summary-dimensions">-</span>
-                                </div>
-                                <div class="review-item">
-                                    <label>Room Type</label>
-                                    <span id="summary-room-type">-</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Noise Details -->
-                        <div class="review-section">
-                            <h3>Noise Details</h3>
-                            <div class="review-grid">
-                                <div class="review-item">
-                                    <label>Type</label>
-                                    <span id="summary-noise-type">-</span>
-                                </div>
-                                <div class="review-item">
-                                    <label>Intensity</label>
-                                    <span id="summary-noise-intensity">-</span>
-                                </div>
-                                <div class="review-item">
-                                    <label>Time of Day</label>
-                                    <span id="summary-noise-time">-</span>
-                                </div>
-                                <div class="review-item">
-                                    <label>Direction</label>
-                                    <span id="summary-noise-sources">-</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Recommendations -->
-                        <div class="review-section">
-                            <h3>Recommended Solutions</h3>
-                            <div id="summary-recommendations"></div>
-                        </div>
-
-                        <!-- Cost Breakdown -->
-                        <div class="review-section">
-                            <h3>Cost Breakdown</h3>
-                            <div class="review-grid">
-                                <div class="review-item">
-                                    <label>Wall Treatment</label>
-                                    <span id="summary-wall-cost">-</span>
-                                </div>
-                                <div class="review-item">
-                                    <label>Floor Treatment</label>
-                                    <span id="summary-floor-cost">-</span>
-                                </div>
-                                <div class="review-item">
-                                    <label>Ceiling Treatment</label>
-                                    <span id="summary-ceiling-cost">-</span>
-                                </div>
-                                <div class="review-item total-cost">
-                                    <label>Total Estimated Cost</label>
-                                    <span id="summary-total-cost">-</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Implementation Details -->
-                        <div class="review-section">
-                            <h3>Implementation Details</h3>
-                            <div class="review-grid">
-                                <div class="review-item">
-                                    <label>Estimated Time</label>
-                                    <span id="summary-install-time">-</span>
-                                </div>
-                                <div class="review-item">
-                                    <label>Skill Level Required</label>
-                                    <span id="summary-skill-level">-</span>
-                                </div>
-                                <div class="review-item">
-                                    <label>Special Requirements</label>
-                                    <span id="summary-special-reqs">-</span>
-                                </div>
+                        
+                        <!-- Summary recommendations can stay as a separate section -->
+                        <div id="summary-recommendations">
+                            <div class="recommendations-content">
+                                <!-- Summary content will be dynamically inserted here -->
                             </div>
                         </div>
                     </section>
@@ -667,20 +512,5 @@
             </div>
         </main>
     </div>
-
-    <script src="{{ url_for('static', filename='js/theme-toggle.js') }}" defer></script>
-
-    <!-- Add this right before closing body tag -->
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                await initializeApplication();
-                console.log('Application fully initialized');
-            } catch (error) {
-                console.error('Failed to initialize application:', error);
-                window.errorUtils?.displayError('Application initialization failed. Please refresh the page.');
-            }
-        });
-    </script>
 </body>
 </html>

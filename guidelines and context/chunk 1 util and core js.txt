@@ -1,0 +1,132 @@
+# Core Utilities & Services Documentation
+
+## Overview
+This document describes the core JavaScript utilities and services used in the application.
+
+## Core Services
+
+### Data Service (data-service.js)
+- Manages API data fetching and caching
+- Handles data transformation and validation
+- Provides fallback mechanisms
+
+### Endpoint Service (endpoint-service.js)
+- Manages API endpoint communication
+- Handles request/response processing
+- Provides error recovery mechanisms
+
+### Base Service (base-service.js)
+- Provides common service functionality
+- Manages service lifecycle
+- Handles service dependencies
+
+## Utility Modules
+
+### Constants (constants.js)
+- Centralizes application constants
+- Manages configuration values
+- Provides type definitions
+
+### Utils (utils.js)
+- Provides common utility functions
+- Handles data formatting
+- Manages type conversions
+
+### Event Bus (event-bus.js)
+- Manages application events
+- Handles event propagation
+- Provides event filtering
+
+## Error Management
+
+### Consolidated Error Manager (consolidated-error-manager.js)
+- Centralizes error handling
+- Manages error categorization
+- Provides error recovery
+
+### Error Manager Bridge (error-manager-bridge.js)
+- Bridges error handling systems
+- Manages error propagation
+- Provides error translation
+
+## Form Management
+
+### Form State (form-state.js)
+- Manages form state transitions
+- Handles validation state
+- Provides state persistence
+
+### Form Handlers (form-handlers.js)
+- Manages form event handling
+- Provides input validation
+- Handles form submission
+
+## Surface Management
+
+### Unified Surface Manager (unified-surface-manager.js)
+- Manages surface calculations
+- Handles surface updates
+- Provides surface validation
+
+### Room Manager (room-manager.js)
+- Manages room dimensions
+- Handles room calculations
+- Provides room validation
+
+## Cost Management
+
+### Cost Manager (cost-manager.js)
+- Manages cost calculations
+- Handles pricing updates
+- Provides cost validation
+
+## Solution Management
+
+### Solution Profiles (solution-profiles.js)
+- Manages solution definitions
+- Handles profile updates
+- Provides profile validation
+
+## Workflow Management
+
+### Workflow Manager (workflow-manager.js)
+- Manages application workflow
+- Handles state transitions
+- Provides workflow validation
+
+## UI Management
+
+### Theme Toggle (theme-toggle.js)
+- Manages UI themes
+- Handles theme switching
+- Provides theme persistence
+
+## Backend Integration
+- Services integrate with backend APIs
+- Error handling synchronizes with backend
+- Data management maintains consistency
+
+## Dependencies
+- Core services depend on base service
+- Utilities are self-contained
+- Error management is centralized
+
+## Usage Examples
+```javascript
+// Using data service
+const dataService = new DataService();
+const result = await dataService.fetchData();
+
+// Using error manager
+const errorManager = new ErrorManager();
+errorManager.handleError(error);
+
+// Using form handlers
+const formHandler = new FormHandler();
+formHandler.validateForm(formData);
+```
+
+## Maintenance Notes
+- Keep services decoupled
+- Maintain error handling consistency
+- Update documentation regularly

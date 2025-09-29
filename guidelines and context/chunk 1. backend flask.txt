@@ -1,0 +1,15 @@
+Chunk 1: Backend - Flask App
+Files:
+app.py
+calculator_router.py
+logger.py
+cache_manager.py
+
+Summaries:
+app.py: Flask application that serves as the main entry point for the soundproofing calculator API. Key elements: Flask initialization with proper configuration (CORS, CSRF protection, rate limiting), comprehensive API endpoints (/api/solutions, /api/materials, /api/recommendations, /api/calculate-costs, /api/calculate-acoustic-properties), solutions_manager integration for handling soundproofing calculations, and MongoDB connection management with retry logic. Data flow: Client requests → route handlers → solutions_manager/database → JSON responses. Dependencies: Flask, flask_cors, flask_limiter, flask_caching, and various solution modules. Features: Configurable caching (Redis/SimpleCache), robust error handling with fallback mechanisms, and detailed logging.
+
+calculator_router.py: API router module that defines calculator-specific endpoints with validation and error handling. Key elements: Route definitions for cost calculation endpoints, request validation, and integration with solution calculators. Data flow: JSON requests → validation → calculation logic → JSON responses. Dependencies: Flask routing, solutions modules, and cost_calculator. Features: Request validation, error handling with appropriate HTTP status codes, and integration with the solution mapping system.
+
+logger.py: Configures a comprehensive logging system for the application with specialized handlers. Key elements: get_logger() function that returns a configured logger instance, console and file handlers for different logging destinations, and convenience methods for common logging patterns (log_error, log_warning, log_info, log_debug). Data flow: Application events → formatted log messages → appropriate log destinations (console/files). Dependencies: Python's logging module, os, and datetime. Features: Daily log rotation with date-stamped filenames, configurable log levels (DEBUG for files, INFO for console), and structured log formatting.
+
+cache_manager.py: Manages caching of calculations and solution data with both in-memory and database-backed options. Key elements: CacheManager class with get/set methods, solution-specific caching functions, and database integration for persistent caching. Data flow: Calculation parameters → cache key generation → storage/retrieval → cached results. Dependencies: logging, typing, datetime, and db_init for database access. Features: TTL-based cache expiration, cache statistics tracking (hits/misses), solution-specific caching optimization, and fallback mechanisms when database is unavailable.
